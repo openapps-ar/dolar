@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { agent } from "./agent.js";
 import { HISTORIC_URLS, IDS, Id, VARIATION_URLS } from "./config.js";
-import { ItemDay, Item, SourceItemDays, SourceItemDay, SourceItem, compare_historic_day, map_historic_day, map_item_now, FullItem, date } from "./data.js";
+import { ItemDays, Item, SourceItemDays, SourceItem, sort_historic_day as sort_item_days, map_item_now, FullItem, map_item_days } from "./data.js";
 import { assert } from "typia";
 
 const default_from = () => new Date(2000, 0, 1);
@@ -39,17 +39,18 @@ export const get_item_now = async (id: Id): Promise<Item> => {
   return { id, ...map_item_now(source) };
 }
 
-export const get_source_item_days = async (id: Id, from = default_from(), to = new Date): Promise<SourceItemDay[]> => {
+export const get_source_item_days = async (id: Id, from = default_from(), to = new Date): Promise<SourceItemDays> => {
   const url = item_days_url(id, from, to);
   const raw = await get_json(url);
   const data = assert<SourceItemDays>(raw);
-  const [ header, ...rows ] = data;
-  return rows
+  return data;
 }
 
-export const get_item_days = async (id: Id, from = default_from(), to = new Date): Promise<ItemDay[]> => {
+export const get_item_days = async (id: Id, from = default_from(), to = new Date): Promise<ItemDays> => {
   const source = await get_source_item_days(id, from, to);
-  return source.map(map_historic_day).sort(compare_historic_day);
+  const mapped = map_item_days(source);
+  mapped.items.sort(sort_item_days);
+  return mapped;
 }
 
 export const get_full_item = async (id: Id, from = default_from(), to = new Date): Promise<FullItem> => {

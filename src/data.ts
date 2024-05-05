@@ -1,5 +1,6 @@
 import { tags } from "typia";
 import { Id } from "./config.js";
+import { assert_never } from "./assert_never.js";
 
 /** YYYY/MM/DD hh:mm */
 export type DateTimeString = `${number}/${number}/${number} ${number}:${number}`
@@ -36,6 +37,8 @@ export type SourceItemDayComplex = [ string & SourceDatePattern, string, string 
 export type SourceItemDaySimple = [ string & SourceDatePattern, string ]
 export type SourceItemDay = SourceItemDayComplex | SourceItemDaySimple
 
+export type DaysKind = "buy" | "sell" | "buy-sell" | "ref"
+
 export type SourceItemDays = 
   | [
       ["Fecha", "Referencia"],  
@@ -58,31 +61,36 @@ export type Item = {
   id: Id 
 
   /** buy */ 
-  b: number
+  buy: number
   
   /** sell */
-  s: number
+  sell: number
 
   /** date */
-  d: DateTimeString
+  date: DateTimeString
 
   /** variation */
-  v: number
+  variation: number
   
   /** variation_kind */
   /* up | down | equal */
-  k: "u" | "d" | "e" 
+  variation_kind: "up" | "down" | "equal" 
   
   /* previous_value */
   // p: number
 
 }
 
-export type FullItem = Item & { days: ItemDay[] }
+export type FullItem = Item & { days: ItemDays }
 
-export type ItemDay = 
-  | [ DateString, number, number ]
-  | [ DateString, number ];
+export type ItemDaySimple = [ DateString, number ]
+export type ItemDayComplex = [ DateString, number, number ]
+
+export type ItemDayAny = ItemDaySimple | ItemDayComplex;
+
+export type ItemDays = 
+  | { kind: "buy-sell", items: ItemDayComplex[] }
+  | { kind: "buy" | "sell" | "ref", items: ItemDaySimple[] };
 
 export const float = (src: string): number => {
   return parseFloat(src.replace(/\./g, "").replace(",", "."))
@@ -99,25 +107,37 @@ export const date = (src: string): DateString => {
 
 export const map_item_now = (src: SourceItem): Omit<Item, "id"> => {
   return {
-    b: float(src.compra),
-    s: float(src.venta),
-    d: datetime(src.fecha),
-    v: float(src.variacion),
-    k: src["class-variacion"][0] as "u" | "d" | "e",
+    buy: float(src.compra),
+    sell: float(src.venta),
+    date: datetime(src.fecha),
+    variation: float(src.variacion),
+    variation_kind: src["class-variacion"],
     // p: float(src.valor_cierre_ant)
   }
 }
 
-export const map_historic_day = (day: SourceItemDayComplex | SourceItemDaySimple): ItemDay => {
-  if(day.length === 2) {
-    const [d, r] = day
-    return [ date(d), float(r) ]
+export const map_item_days = (src: SourceItemDays): ItemDays => {
+  const [ header, ...entries ] = src;
+  const kind = map_item_days_kind(header);
+
+  if(kind === "buy-sell") {
+    const items: ItemDayComplex[] = entries.map(([d, b, s]) => [ date(d), float(b), float(s!) ])
+    return { kind, items }
   } else {
-    const [d, b, s] = day
-    return [ date(d), float(b), float(s) ]
+    const items: ItemDaySimple[] = entries.map(([d, r]) => [ date(d), float(r) ])
+    return { kind, items }
   }
 }
 
-export const compare_historic_day = (a: ItemDay, b: ItemDay) => {
+export const map_item_days_kind = (header: SourceItemDays[0]): DaysKind => {
+  const [_, h1, h2] = header;
+  if(h2 != null) return "buy-sell";
+  if(h1 === "Compra") return "buy";
+  if(h1 === "Venta") return "sell";
+  if(h1 === "Referencia") return "ref";
+  return assert_never(h1[1], "header kind")
+}
+
+export const sort_historic_day = (a: ItemDayAny, b: ItemDayAny) => {
   return a[0].localeCompare(b[0])
 }

@@ -118,7 +118,7 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
     buy: float(src.compra),
     sell: float(src.venta),
     date: to_date(src.fecha),
-    variation: float(src.variacion),
+    variation: float(src.variacion) / 100,
     variation_kind: src["class-variacion"],
     // p: float(src.valor_cierre_ant)
   }

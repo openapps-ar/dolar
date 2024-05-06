@@ -29,7 +29,7 @@ export type SourceItem = {
   venta: string
   fecha: string & SourceDataTimePattern,
   variacion: string
-  // valor_cierre_ant: string
+  valor_cierre_ant?: string
   "class-variacion": "up" | "down" | "equal"
 }
 
@@ -78,8 +78,8 @@ export type Item = {
   /* up | down | equal */
   variation_kind: "up" | "down" | "equal" 
   
-  /* previous_value */
-  // p: number
+  // previous_value
+  prev_value: number | null
 
 }
 
@@ -113,14 +113,21 @@ export const date = (src: string): DateString => {
   return src.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/, "$3/$2/$1") as DateString
 }
 
+const round = (num: number, decimals: number) => {
+  return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
 export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
   return {
     buy: float(src.compra),
     sell: float(src.venta),
     date: to_date(src.fecha),
-    variation: float(src.variacion) / 100,
+
+    // fix javascript rounding errors
+    variation: round(float(src.variacion) / 100, 4),
+    
     variation_kind: src["class-variacion"],
-    // p: float(src.valor_cierre_ant)
+    prev_value: src.valor_cierre_ant == null ? null : float(src.valor_cierre_ant),
   }
 }
 

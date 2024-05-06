@@ -47,16 +47,31 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: NPM ci
+      - name: Api npm ci
+        working-directory: ./api
         run: npm ci
 
-      - name: Build
+      - name: Api build
+        working-directory: ./api
         run: npm run build 
       
-      - name: Generate
+      - name: Api generate
+        working-directory: ./api
         run: npm run cron
 
-      - name: Setup Pages
+      - name: App npm ci
+        working-directory: ./app
+        run: npm ci
+
+      - name: App build
+        working-directory: ./app
+        run: npm run build
+
+      - name: App copy files
+        working-directory: ./app
+        run: npm run copy-app-files
+        
+      - name: Setup pages
         uses: actions/configure-pages@v5
       
       - name: Upload artifact
@@ -64,6 +79,6 @@ jobs:
         with:
           path: './generated/pages'
       
-      - name: Deploy to GitHub Pages
+      - name: Deploy to pages
         id: deployment
         uses: actions/deploy-pages@v4

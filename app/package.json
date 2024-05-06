@@ -1,0 +1,44 @@
+{
+  "name": "capacitor-app",
+  "version": "1.0.0",
+  "description": "An Amazing Capacitor App",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "capacitor",
+    "mobile"
+  ],
+  "scripts": {
+    "copy-app-files": "zx scripts/copy-app-files.js",
+    "build": "vite build",
+    "start": "vite --host --port 3000",
+    "preview": "vite preview --host --port 3000"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/dialog": "^6.0.0",
+    "@capacitor/share": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.0",
+    "@mdi/js": "^7.4.47",
+    "copy-to-clipboard": "^3.3.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest",
+    "@sveltejs/adapter-static": "^3.0.1",
+    "@sveltejs/vite-plugin-svelte": "^3.1.0",
+    "@types/etag": "^1.8.3",
+    "cssnano": "^7.0.1",
+    "etag": "^1.8.1",
+    "postcss": "^8.4.38",
+    "rollup": "^4.17.2",
+    "rollup-plugin-typescript": "^1.0.1",
+    "svelte": "^5.0.0-next.123",
+    "typescript": "^5.4.2",
+    "vite": "^5.2.10",
+    "zx": "^8.0.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

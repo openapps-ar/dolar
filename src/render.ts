@@ -19,9 +19,12 @@ export const slice_days = <T extends ItemDays>(src: ItemDays, n: number): T => {
   return { kind, items: items.slice(n) } as T;
 }
 
+const $write_raw = async (file: string, data: string | Buffer) => {
+  await fs.writeFile(file, data);
+}
 
-const $write = async (file: string, data: any) => {
-  await fs.writeFile(file, JSON.stringify(data));
+const $write = async (file: string, data: Record<string, any>) => {
+  await $write_raw(file, JSON.stringify(data));
 }
 
 const $dir = async (dir: string) => {
@@ -45,6 +48,12 @@ export const render = async (
   await $rmdir(dir);
 
   await $dir(dir)
+  
+  await $write_raw(`${dir}/_headers`, [ 
+      "access-control-allow-origin: *",
+      "cache-control: public, max-age=0, must-revalidate",
+    ].join("\n")
+  );
 
   const items = Object.values(data)
 

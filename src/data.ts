@@ -67,7 +67,7 @@ export type Item = {
   sell: number
 
   /** date */
-  date: DateTimeString
+  date: Date
 
   /** variation */
   variation: number
@@ -101,6 +101,12 @@ export const datetime = (d: string): DateTimeString => {
   return d.replace(re, "$3/$2/$1 $4:$5") as DateTimeString
 }
 
+export const to_date = (src: string): Date => {
+  const re = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) *\- *([0-9]{2})\:([0-9]{2})/
+  const [_, d, m, y, h, mm] = src.match(re) as RegExpMatchArray;
+  return new Date(`${y}-${m}-${d}T${h}:${mm}:00-03:00`)
+}
+
 export const date = (src: string): DateString => {
   return src.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/, "$3/$2/$1") as DateString
 }
@@ -109,7 +115,7 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id"> => {
   return {
     buy: float(src.compra),
     sell: float(src.venta),
-    date: datetime(src.fecha),
+    date: to_date(src.fecha),
     variation: float(src.variacion),
     variation_kind: src["class-variacion"],
     // p: float(src.valor_cierre_ant)

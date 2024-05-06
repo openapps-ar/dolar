@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export const DATA_DIR = path.resolve(__dirname, "..", "data")
+export const DATA_DIR = path.resolve(__dirname, "..", "pages/api")
 
 export type Id = 
   | "informal"

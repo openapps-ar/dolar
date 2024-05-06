@@ -82,3 +82,9 @@ jobs:
       - name: Deploy to pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Uptime beat
+        working-directory: ./api
+        env: 
+          UPTIME_BEAT_URL: ${{ secrets.UPTIME_URL }}
+        run: npm run uptime-beat

@@ -11,11 +11,7 @@ const config = {
 		vitePreprocess(),
 		{
 			name: "cssnano",
-			style: async ({
-				content,
-				attributes,
-				filename,
-			}) => {
+			style: async ({ content, attributes, }) => {
 				const { css, map } = await cssnano().process(content)
 				return {
 					code: css,

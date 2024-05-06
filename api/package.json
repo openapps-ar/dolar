@@ -13,6 +13,7 @@
   "type": "module",
   "scripts": {
     "cron": "node dist/cron.js",
+    "uptime-beat": "node dist/uptime-beat.js",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",

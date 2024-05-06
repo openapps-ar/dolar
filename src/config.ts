@@ -31,7 +31,7 @@ export type Id =
 export const NAMES: Record<Id, string> = {
   "informal": "Blue",
   "oficial": "Oficial",
-  "bna": "Banco Nación",
+  "bna": "BNA",
   "mep": "MEP",
   "ccl": "CCL",
   "turista": "Turista",

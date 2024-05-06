@@ -1,7 +1,8 @@
 import { type FullItem, type ItemDays, parse_date_string } from "./data.js";
-import { DATA_DIR, type Id } from "./config.js";
+import { API_DIR, type Id } from "./config.js";
 import { DaysData, type Api, type TimeframeKey } from "./api.js";
 import fs from "fs/promises";
+import { th } from "date-fns/locale";
 
 export const timeframes: Record<TimeframeKey, number> = {
   "1d": 1,
@@ -36,7 +37,11 @@ const $dir = async (dir: string, path: string) => {
 }
 
 const $rmdir = async (dir: string, path: string) => {
-  await fs.rmdir(`${dir}/${path}`, { recursive: true });
+  try {
+    await fs.rmdir(`${dir}/${path}`, { recursive: true });
+  } catch(e: any) {
+    if(e.code !== "ENOENT") throw e;
+  }
 }
 
 const p = (v: number | string, n = 2, c = "0"): `${number}` => String(v).padStart(n, c) as any;

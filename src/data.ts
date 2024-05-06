@@ -27,6 +27,7 @@ export type SourceDataTimePattern =  tags.Pattern<"^[0-9]{2}\\/[0-9]{2}\\/[0-9]{
 export type SourceItem = {
   compra: string
   venta: string
+  valor?: string
   fecha: string & SourceDataTimePattern,
   variacion: string
   valor_cierre_ant?: string
@@ -67,6 +68,9 @@ export type Item = {
   
   /** sell */
   sell: number
+
+  /** ref */
+  ref: number | null
 
   /** date */
   date: Date
@@ -121,6 +125,8 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
   return {
     buy: float(src.compra),
     sell: float(src.venta),
+    ref: src.valor == null ? null : float(src.valor),
+
     date: to_date(src.fecha),
 
     // fix javascript rounding errors

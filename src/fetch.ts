@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { agent } from "./agent.js";
-import { HISTORIC_URLS, IDS, Id, VARIATION_URLS } from "./config.js";
+import { HISTORIC_URLS, IDS, Id, NAMES, VARIATION_URLS } from "./config.js";
 import { ItemDays, Item, SourceItemDays, SourceItem, sort_historic_day as sort_item_days, map_item_now, FullItem, map_item_days } from "./data.js";
 import { assert } from "typia";
 
@@ -36,7 +36,7 @@ export const get_source_item_now = async (id: Id): Promise<SourceItem> => {
 
 export const get_item_now = async (id: Id): Promise<Item> => {
   const source = await get_source_item_now(id);
-  return { id, ...map_item_now(source) };
+  return { id, name: NAMES[id], ...map_item_now(source) };
 }
 
 export const get_source_item_days = async (id: Id, from = default_from(), to = new Date): Promise<SourceItemDays> => {

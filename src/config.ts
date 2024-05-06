@@ -28,6 +28,17 @@ export type Id =
     // "futuro",
   ]
 
+export const NAMES: Record<Id, string> = {
+  "informal": "Blue",
+  "oficial": "Oficial",
+  "bna": "Banco Nación",
+  "mep": "MEP",
+  "ccl": "CCL",
+  "turista": "Turista",
+  "mayorista": "Mayorista",
+  "cripto": "Cripto",
+  // "futuro": "Dolar Futuro",
+}
 
 export const VARIATION_URLS: Record<Id, string> = {
   "informal": "https://mercados.ambito.com/dolar/informal/variacion",

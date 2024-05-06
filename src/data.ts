@@ -60,6 +60,8 @@ export type SourceItemDays =
 export type Item = {
   id: Id 
 
+  name: string,
+
   /** buy */ 
   buy: number
   
@@ -111,7 +113,7 @@ export const date = (src: string): DateString => {
   return src.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/, "$3/$2/$1") as DateString
 }
 
-export const map_item_now = (src: SourceItem): Omit<Item, "id"> => {
+export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
   return {
     buy: float(src.compra),
     sell: float(src.venta),

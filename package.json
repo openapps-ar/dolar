@@ -8,8 +8,10 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "build:api": "cd api && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./api/dist/node/server.js",
+    "build": "cd api && npm run build",
+    "install": "cd api && npm i",
+    "test": "echo \"Error: no test specified\" && exit 1",
   },
   "keywords": [],
   "author": "",

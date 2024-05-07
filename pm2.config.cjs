@@ -5,7 +5,7 @@ module.exports = {
     script: "./api/dist/node/server.js",
     // args: ["start"],
     interpreter_args: [],
-    name: "opendeploy",
+    name: "dolar",
     time: true,
     // env: { 
     //   FORCE_COLOR: "1",

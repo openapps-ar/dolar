@@ -1,4 +1,4 @@
-import type { Api } from "../../../../dolar-api/src/api.js"; 
+import type { Api } from "../../../api/src/api"; 
 import { storage_var } from "../storage.svelte.js";
 
 const BASE_URL = "https://dolar.openapps.ar/api";
@@ -73,7 +73,8 @@ export const refresh = async () => {
   console.log("refreshing");
 
   const res = await fetch(`${BASE_URL}/${DATA_URL}`, {
-    mode: "cors"
+    mode: "cors",
+    cache: "reload",
   })
 
   if(!res.ok) throw new Error(`error fetching ${DATA_URL}: status code not OK: ${res.status} ${res.statusText}`);

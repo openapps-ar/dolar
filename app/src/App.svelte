@@ -16,6 +16,7 @@
   import { share, canShare } from "./share";
   import { get_code_from_network } from "./entry/network";
   import { run } from "./runtime";
+  import { env } from "./env/env";
 
   onMount(() => {
     refresh_if_stale().finally(() => {
@@ -24,7 +25,7 @@
 
       console.log("getting code from network");
       
-      if(run.current_code_origin != "network") {
+      if(!env.DEV && run.current_code_origin !== "network") {
         get_code_from_network().then(async entry => {
         
           console.log("network code obtained");

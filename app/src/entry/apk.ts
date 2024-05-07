@@ -1,8 +1,8 @@
 import "../font/font.css";
 import { __MODS__ } from "../capacitor/apk-mods";
-import { assert } from "typia";
 import { get_code_from_network } from "./network";
 import { type Runtime } from "../runtime";
+import { env } from "../env/env";
 
 const run: Runtime = {
   current_code_origin: null,
@@ -52,6 +52,17 @@ const get_code_from_storage = (): Code | null => {
 }
 
 const start = async () => {
+  
+  if(env.DEV) {
+    console.log("running in dev mode");
+    console.log("exec code", "apk");
+    run.current_code_origin = "dev";
+    // TODO: add hash to apk code
+    run.current_hash = null;
+    await import("./app");
+    return;
+  }
+
   try {
 
     const storage = get_code_from_storage();
@@ -97,7 +108,7 @@ const start = async () => {
 
       const { dialog: { Dialog } } = __MODS__;
       const message = [
-        "Ocurrio un error al iniciar la aplicación.",
+        "Ocurrió un error al iniciar la aplicación.",
         "Intentá borrar al almacenamiento de la app y probar de nuevo.",
         "Si el problema persiste, ponete en contacto con nuestro soporte.",
         `[error 1]: ${String(e1)}`,

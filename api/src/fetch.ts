@@ -20,7 +20,6 @@ const item_days_url = (id: Id, from = default_from(), _to = new Date) => {
 }
 
 export const get_json = async <T = unknown>(url: string): Promise<T> => {
-  console.log("get_json", url);
   const res = await fetch(url, { agent });
   if(!res.ok) throw new Error(`Failed to fetch ${url}: status not OK, ${res.status} ${res.statusText}`);
   const json = await res.json();
@@ -54,20 +53,27 @@ export const get_item_days = async (id: Id, from = default_from(), to = new Date
 }
 
 export const get_full_item = async (id: Id, from = default_from(), to = new Date): Promise<FullItem> => {
+  const start = performance.now();
   const [item, days] = await Promise.all([
     get_item_now(id),
     get_item_days(id, from, to)
   ])
+  const end = performance.now();
+  console.log(`fetched full item ${id} in`, end - start, "ms")
 
   return { ...item, days }
 }
 
 export const get_all = async (from = default_from(), to = new Date): Promise<Record<Id, FullItem>> => {
+  const start = performance.now();
   const items = await Promise.all(IDS.map(id => get_full_item(id, from, to)));
   const data: Record<Id, FullItem> = Object.create(null);
   for(const item of items) {
     data[item.id] = item;
   }
+
+  const end = performance.now();
+  console.log(`fetched all data in ${end - start}ms`);
 
   return data
 }

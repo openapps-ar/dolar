@@ -4,6 +4,8 @@ import { list_timeframes, p, p4, slice_days } from "../render.js";
 import type { Data } from "./data.js";
 
 export const create_api = (data: Data, { render_days = false } = {}): Api => {
+  const start = performance.now();
+  
   // @ts-ignore
   const api: Api = Object.create(null);
   
@@ -31,6 +33,9 @@ export const create_api = (data: Data, { render_days = false } = {}): Api => {
   for(const item of items) {
     render_item(api, item, render_days)
   }
+  
+  const end = performance.now();
+  console.log(`created api in ${end - start}ms`);
 
   return api;
 }

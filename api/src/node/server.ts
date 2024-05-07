@@ -1,5 +1,6 @@
 import express, { Router } from "express";
-import { get_api } from "./data.js";
+import { get_api, get_cache } from "./data.js";
+import { CacheItem } from "./cache.js";
 
 const api = () => {
   const api = Router();
@@ -7,11 +8,18 @@ const api = () => {
   api.use((req, res, next) => {
     const { method } = req;
     if(method !== "GET" && method !== "HEAD") return next();
-    const { api } = get_api();
-    // @ts-ignore
-    const body = api[req.path.slice(1)];
-    if(body == null) return next();
-    res.json(body);
+   
+    const cache = get_cache() as Record<string, CacheItem | undefined>;
+    const entry = cache[req.path.slice(1)];
+
+    if(entry == null) return next();
+    const req_etag = req.headers["if-none-match"];
+    
+    if(req_etag != null && req_etag == entry.etag) return res.status(304).end();
+
+    res.type(".json");
+    res.header("etag", entry.etag);
+    res.end(entry.payload_buf);
    })
 
    return api;

@@ -1,6 +1,6 @@
 import { get_all } from "../fetch.js";
 import { create_api } from "./api.js";
-import mkEtag from "etag"
+import { make_cache } from "./cache.js";
 
 const INTERVAL_MS = 1000 * 60 * 2;
 
@@ -10,7 +10,6 @@ const start_interval = async () => {
     try {
       data = await get_all();
       set_data(data);
-      console.log("data updated");
     } catch(e) {
       console.warn("error getting data", String(e));
     }
@@ -21,16 +20,20 @@ export type Data = typeof data;
 
 let data = await get_all();
 let api = create_api(data);
-let etag = mkEtag(JSON.stringify(api))
+let cache = make_cache(api);
 
 const set_data = (_data: typeof data) => {
+  const start = performance.now();
   data = _data;
   api = create_api(data);
-  etag = mkEtag(JSON.stringify(api))
+  cache = make_cache(api);
+  const end = performance.now();
+  console.log(`updated data in ${end - start}ms`);
 }
 
 export const get_data = () => data;
-export const get_api = () => ({ etag, api });
+export const get_api = () => api;
+export const get_cache = () => cache;
 
 
 start_interval()

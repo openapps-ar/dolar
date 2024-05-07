@@ -1,5 +1,5 @@
 import { type Api } from "../api.js"
-import makeEtag from "etag";
+import { make_etag } from "./etag.js"
 
 export type CacheItem = {
   etag: string
@@ -16,7 +16,7 @@ export const make_cache = (api: Api): Cache => {
   for(const [key, data] of Object.entries(api) as [keyof Api, any]) {
     const payload = JSON.stringify(data)
     const payload_buf = Buffer.from(payload, "utf-8")
-    const etag = makeEtag(payload);
+    const etag = make_etag(payload_buf);
     cache[key] = { etag, payload, payload_buf }
   }
 

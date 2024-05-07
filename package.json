@@ -8,7 +8,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "start": "node ./api/dist/node/server.js",
+    "start": "node --no-warnings --experimental-fetch ./api/dist/node/server.js",
     "build": "cd api && npm run build",
     "install": "cd api && npm i",
     "test": "echo \"Error: no test specified\" && exit 1"

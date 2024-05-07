@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
-import { agent } from "./agent.js";
+// import fetch from "node-fetch";
+// import { agent } from "./agent.js";
 import { HISTORIC_URLS, IDS, Id, NAMES, VARIATION_URLS } from "./config.js";
 import { ItemDays, Item, SourceItemDays, SourceItem, sort_historic_day as sort_item_days, map_item_now, FullItem, map_item_days } from "./data.js";
 import { assert } from "typia";
@@ -20,7 +20,8 @@ const item_days_url = (id: Id, from = default_from(), _to = new Date) => {
 }
 
 export const get_json = async <T = unknown>(url: string): Promise<T> => {
-  const res = await fetch(url, { agent });
+  // const res = await fetch(url, { agent });
+  const res = await fetch(url);
   if(!res.ok) throw new Error(`Failed to fetch ${url}: status not OK, ${res.status} ${res.statusText}`);
   const json = await res.json();
   return json as T;

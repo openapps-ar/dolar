@@ -1,6 +1,6 @@
 module.exports = {
   apps: {
-    mode: "fork",
+    mode: "cluster",
     instances: 1,
     script: "./api/dist/node/server.js",
     // args: ["start"],

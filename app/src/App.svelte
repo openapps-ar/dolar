@@ -266,6 +266,11 @@
     --shadow-top-menu: rgba(255,255,255,0.05) 0 0 0.25rem 0.1rem;
     --shadow-item: rgba(0,0,0,0.05) 0 2px 1px 1px;
   }
+
+  * {
+    line-height: 1.25em; 
+  }
+
   .app {
     width: 100%;
     height: 100%;
@@ -439,7 +444,7 @@
   }
 
   .item {
-    padding: 0.4rem 0.5rem 0.4rem 0.5rem;
+    padding: 0 0.5rem 0 0.5rem;
     background: var(--color-item-bg);
     box-shadow: var(--shadow-item);
     transition:
@@ -771,6 +776,14 @@
                     &nbsp;
                   </div>
                 </div>
+              </div>
+            </div>
+            <div class="variation">
+              <div class="variation-kind">
+                <Icon d="" />
+              </div>
+              <div class="variation-num">
+                &nbsp;
               </div>
             </div>
           </div>

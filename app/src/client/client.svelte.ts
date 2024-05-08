@@ -1,7 +1,7 @@
 import type { Api } from "../../../api/src/api"; 
 import { storage_var } from "../storage.svelte.js";
 
-const BASE_URL = "https://dolar.openapps.ar/api";
+const BASE_URL = "https://ar.dolar.openapps.ar/api/v1";
 const DATA_URL = `1d.json`;
 // const DATA_URL = `data.json`;
 

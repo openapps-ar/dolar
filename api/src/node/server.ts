@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { get_api, get_cache } from "./data.js";
 import { CacheItem } from "./cache.js";
+import { shell } from "./app.js";
 
 const api = () => {
   const api = Router();
@@ -27,7 +28,8 @@ const api = () => {
 
 
 const app = express();
-app.use("/api", api());
+app.use("/api/v1", api());
+app.use("/shell/v1", shell());
 
 // TODO: get from env
 app.listen(4000, () => {

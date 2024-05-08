@@ -1,6 +1,6 @@
 import { Code } from "./apk"
 
-const ENTRY_NETWORK_URL = "https://dolar.openapps.ar/_app/v1/app-entry.json";
+const ENTRY_NETWORK_URL = "https://ar.dolar.openapps.ar/shell/v1/app-entry.json";
 
 export const get_code_from_network = async (): Promise<Code> => {
   const res = await fetch(ENTRY_NETWORK_URL, {

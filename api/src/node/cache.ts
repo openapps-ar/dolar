@@ -1,38 +1,54 @@
 import { type Api } from "../api.js"
-import brotli from "brotli";
-import zstand from "@toondepauw/node-zstd"
 import { make_etag } from "./etag.js"
-import zlib from "node:zlib";
+import { LRUCache } from "lru-cache";
+import { Compressed, compress } from "./compress.js";
 
-const encoder = new zstand.Encoder(3)
+const compress_cache = new LRUCache<string, Compressed>({
+  // aprox files in Api is 3500
+  max: 5_000,
+})
+
 
 export type CacheItem = {
   etag: string
   payload: string
   buf: Buffer
-  gzip: Buffer
-  br: Buffer
-  zstd: Buffer
+  compressed: Compressed
 }
 
 export type Cache = Record<keyof Api, CacheItem>
 
 export const make_cache = (api: Api): Cache => {
+  
+  // let size = {
+  //   br: 0,
+  //   gzip: 0,
+  //   zstd: 0
+  // }
+
   const start = performance.now();
   const cache: Cache = Object.create(null)
   
   for(const [key, data] of Object.entries(api) as [keyof Api, any]) {
     const payload = JSON.stringify(data)
     const buf = Buffer.from(payload, "utf-8")
-    const gzip = zlib.gzipSync(payload)
-    const br = zlib.brotliCompressSync(payload)
-    const zstd = encoder.encodeSync(buf);
     const etag = make_etag(buf);
-    cache[key] = { etag, payload, buf, zstd, br, gzip,  }
+    
+    let compressed: Compressed | null = compress_cache.get(etag) ?? null;
+    if(compressed == null) compressed = compress(buf);
+    
+    // size.br += compressed.br.byteLength
+    // size.gzip += compressed.gzip.byteLength
+    // size.zstd += compressed.zstd.byteLength
+
+    compress_cache.set(etag, compressed)
+    
+    cache[key] = { etag, payload, buf, compressed  }
   }
 
   const end = performance.now();
-  console.log(`created cache in ${end - start}ms`);
+  console.log(`created cache in ${(end - start).toFixed(2)}ms`);
+  // console.log("cache size", size);
 
   return cache
 }

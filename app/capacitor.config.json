@@ -9,6 +9,12 @@
     "host": "app.dolar.openapps.ar"
   },
 
+  "android": {
+    "buildOptions": {
+      "signingType": "apksigner"
+    }
+  },
+
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0

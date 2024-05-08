@@ -15,8 +15,9 @@ const entry_code = (entry: Entry) => `export default ${JSON.stringify(entry)};`
 
 export const appCode = async (): Promise<Plugin> => {
   const mod = '$app-code'
-  const rmod = '\0' + mod
 
+  
+  await $`rm -rf ${`${dir}/*`}`;
   await $`npx vite build -c vite.app.config.ts`;
   const js = fs.readFileSync(`${dir}/app.js`, "utf-8");
   const hash = crypto.createHash("md5").update(js).digest("hex");

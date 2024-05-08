@@ -2,7 +2,7 @@ import type { Api } from "../../../api/src/api";
 import { storage_var } from "../storage.svelte.js";
 
 const BASE_URL = "https://ar.dolar.openapps.ar/api/v1";
-const DATA_URL = `1d.json`;
+const DATA_URL = `data.json`;
 // const DATA_URL = `data.json`;
 
 const CHECK_INTERVAL_MS = 1_000;
@@ -72,10 +72,7 @@ export const refresh = async () => {
   
   console.log("refreshing");
 
-  const res = await fetch(`${BASE_URL}/${DATA_URL}`, {
-    mode: "cors",
-    cache: "reload",
-  })
+  const res = await fetch(`${BASE_URL}/${DATA_URL}`, { mode: "cors" })
 
   if(!res.ok) throw new Error(`error fetching ${DATA_URL}: status code not OK: ${res.status} ${res.statusText}`);
 

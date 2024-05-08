@@ -1,6 +1,7 @@
 // import fetch from "node-fetch";
 // import { agent } from "./agent.js";
 import { HISTORIC_URLS, IDS, Id, NAMES, VARIATION_URLS } from "./config.js";
+import { default_headers } from "./config/headers.js";
 import { ItemDays, Item, SourceItemDays, SourceItem, sort_historic_day as sort_item_days, map_item_now, FullItem, map_item_days } from "./data.js";
 import { assert } from "typia";
 
@@ -21,7 +22,7 @@ const item_days_url = (id: Id, from = default_from(), _to = new Date) => {
 
 export const get_json = async <T = unknown>(url: string): Promise<T> => {
   // const res = await fetch(url, { agent });
-  const res = await fetch(url);
+  const res = await fetch(url, { headers: default_headers });
   if(!res.ok) throw new Error(`Failed to fetch ${url}: status not OK, ${res.status} ${res.statusText}`);
   const json = await res.json();
   return json as T;
@@ -60,7 +61,7 @@ export const get_full_item = async (id: Id, from = default_from(), to = new Date
     get_item_days(id, from, to)
   ])
   const end = performance.now();
-  console.log(`fetched full item ${id} in`, end - start, "ms")
+  console.log(`fetched full item ${id} in ${(end - start).toFixed(2)}ms`);
 
   return { ...item, days }
 }
@@ -74,7 +75,7 @@ export const get_all = async (from = default_from(), to = new Date): Promise<Rec
   }
 
   const end = performance.now();
-  console.log(`fetched all data in ${end - start}ms`);
+  console.log(`fetched all data in ${(end - start).toFixed(2)}ms`);
 
   return data
 }

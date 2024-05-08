@@ -35,7 +35,7 @@ export const create_api = (data: Data, { render_days = false } = {}): Api => {
   }
   
   const end = performance.now();
-  console.log(`created api in ${end - start}ms`);
+  console.log(`created api in ${(end - start).toFixed(2)}ms`);
 
   return api;
 }

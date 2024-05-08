@@ -2,7 +2,7 @@ import { get_all } from "../fetch.js";
 import { create_api } from "./api.js";
 import { make_cache } from "./cache.js";
 
-const INTERVAL_MS = 1000 * 60 * 2;
+const INTERVAL_MS = 1000 * 60 * 1;
 
 const start_interval = async () => {
   while(true) {
@@ -28,7 +28,7 @@ const set_data = (_data: typeof data) => {
   api = create_api(data);
   cache = make_cache(api);
   const end = performance.now();
-  console.log(`updated data in ${end - start}ms`);
+  console.log(`updated data in ${(end - start).toFixed(2)}ms`);
 }
 
 export const get_data = () => data;

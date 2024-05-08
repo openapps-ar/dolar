@@ -21,9 +21,24 @@ const api = () => {
     
     if(req_etag != null && req_etag == entry.etag) return res.status(304).end();
 
+    const req_encodings = req.header("accept-encoding")
+                            ?.split(",")
+                            .map(s => s.trim())
+                            .filter(Boolean) 
+                            ?? [];
+
     res.type(".json")
       .header("etag", entry.etag)
-      .end(entry.payload_buf);
+      .vary("accept-encoding");
+
+    for(const enc of ["zstd", "br", "gzip"] as const) {
+      if(req_encodings.includes(enc)) {
+        res.header("content-encoding", enc).end(entry[enc]);
+        return;
+      } 
+    }
+
+    res.end(entry.buf);
    })
 
    return api;
@@ -33,7 +48,6 @@ const api = () => {
 const app = express();
 
 app.use(cors());
-app.use(compression({ level: 9 })),
 
 app.get("/request", (req, res) => {
   res.json({

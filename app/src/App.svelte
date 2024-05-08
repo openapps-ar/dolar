@@ -30,7 +30,9 @@
       NOW.start_interval();
 
       if(env.DEV || run.current_code_origin === "network") {
-        HISTORIC.start_interval();
+        sleep(2_500).then(() => {
+          HISTORIC().start_interval();
+        })
 
       } else {
         console.log("getting code from network");
@@ -38,32 +40,32 @@
         get_code_from_network()
           .then(async entry => {
         
-          console.log("network code obtained");
+            console.log("network code obtained");
 
-          if(entry.hash === run.current_hash) {
-            console.log("network code hash matches, skipping");
-            return;
-          }
+            if(entry.hash === run.current_hash) {
+              console.log("network code hash matches, skipping");
+              return;
+            }
 
-          console.log("exec code", "network");
-          const fn = new Function(`return () => { ${entry.js} }`)();
-          
-          console.log("calling destoyers");
-          for(const destroyer of run.destroyers) destroyer();
-          run.destroyers = [];
-          
-          run.current_code_origin = "network";
-          run.current_hash = entry.hash;
-          await fn();
+            console.log("exec code", "network");
+            const fn = new Function(`return () => { ${entry.js} }`)();
+            
+            console.log("calling destoyers");
+            for(const destroyer of run.destroyers) destroyer();
+            run.destroyers = [];
+            
+            run.current_code_origin = "network";
+            run.current_hash = entry.hash;
+            await fn();
 
-          console.log("network code execured"),
-          console.log("storing code in storage");
-          
-          localStorage.setItem(run.code_storage_key, JSON.stringify(entry));
+            console.log("network code execured"),
+            console.log("storing code in storage");
+            
+            localStorage.setItem(run.code_storage_key, JSON.stringify(entry));
           })
           .finally(async () => {
-            await sleep(1_000);
-            HISTORIC.start_interval();
+            await sleep(2_500);
+            HISTORIC().start_interval();
           });
       }
     })
@@ -80,7 +82,7 @@
     return () => {
       mounted = false;
       NOW.stop_interval();
-      HISTORIC.stop_interval();
+      HISTORIC().stop_interval();
       listener?.remove();
     }
   })

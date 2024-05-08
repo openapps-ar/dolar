@@ -117,9 +117,20 @@ export const NOW = stored_api("now.json", {
   initial: null
 })
 
-export const HISTORIC = stored_api("10y.json", {
-  stale_ms: 1000 * 60 * 60 * 1, // 1 hour
-  check_interval_ms: 1000 * 5, // 5 seconds
-  storage_key: "data-historic-v1",
-  initial: null
-})
+type HistoricStore = ReturnType<typeof stored_api<"10y.json">>;
+
+let _HISTORIC: HistoricStore | null = null;
+
+export const HISTORIC = () => {
+
+  if(_HISTORIC == null) {
+    _HISTORIC = stored_api("10y.json", {
+      stale_ms: 1000 * 60 * 60 * 1, // 1 hour
+      check_interval_ms: 1000 * 5, // 5 seconds
+      storage_key: "data-historic-v1",
+      initial: null
+    })
+  }
+
+  return _HISTORIC;
+}

@@ -1,8 +1,9 @@
 import express, { Router } from "express";
-import { get_api, get_cache } from "./data.js";
+import { get_cache } from "./data.js";
 import { CacheItem } from "./cache.js";
 import { shell } from "./app.js";
 import cors from "cors";
+import compression from "compression";
 
 const api = () => {
   
@@ -32,6 +33,16 @@ const api = () => {
 const app = express();
 
 app.use(cors());
+app.use(compression({ level: 9 })),
+
+app.get("/request", (req, res) => {
+  res.json({
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+  })
+})
+
 app.use("/api/v1", api());
 app.use("/shell/v1", shell());
 

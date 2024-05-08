@@ -717,7 +717,7 @@
 
   <div class="items">
     
-    {#each [] || show_items as { id, date, name, ref, buy, sell, variation, variation_kind} (id)}
+    {#each show_items as { id, date, name, ref, buy, sell, variation, variation_kind} (id)}
       <div class="item">
         <div class="start">
           <div class="name">{name}</div>

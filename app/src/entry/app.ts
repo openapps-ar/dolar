@@ -2,14 +2,22 @@ import { mount, unmount } from "svelte";
 import App from "../App.svelte";
 import { run } from "../runtime";
 
-const app = mount(App, {
-  target: document.querySelector("#app")!,
-  props: {}
-})
+declare const RUN_UID: number;
 
-run.current_app = app;
+export const start = () => {
+  const app = mount(App, {
+    target: document.querySelector("#app")!,
+    props: {
+      onready: () => {
+        window.dispatchEvent(new CustomEvent("x-app-ready", { detail: { RUN_UID } }));
+      }
+    }
+  })
 
-run.destroyers.push(() => {
-  unmount(app)
-  if(run.current_app === app) run.current_app = null;
-});
+  run.current_app = app;
+
+  run.destroyers.push(() => {
+    unmount(app)
+    if(run.current_app === app) run.current_app = null;
+  })
+}

@@ -1,5 +1,11 @@
 <script lang="ts">
   
+  const {
+    onready
+  }: {
+    onready: () => void
+  } = $props();
+
   const page_title = "Dolarg";
   const title = "Dolarg";
 
@@ -19,7 +25,7 @@
   import { env } from "./env/env";
   import { sleep } from "./sleep";
   import { mods } from "./capacitor/mods";
-  import { replace_app } from "./replace";
+  import { replace_app } from "./exec/replace";
   const { app: { App }, splash_screen: { SplashScreen } } = mods;
   
   let mounted = true;
@@ -63,6 +69,8 @@
       if(mounted) App.minimizeApp();
       else listener?.remove()
     }).then(list => listener = list)
+
+    onready();
 
     return () => {
       mounted = false;

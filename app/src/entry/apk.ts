@@ -3,6 +3,7 @@ import { __MODS__ } from "../capacitor/apk-mods";
 import { get_code_from_network } from "./network";
 import { type Runtime } from "../runtime";
 import { env } from "../env/env";
+import { exec_code, parse_code } from "../exec/exec";
 
 const run: Runtime = {
   current_code_origin: null,
@@ -69,10 +70,10 @@ const start = async () => {
     const storage = get_code_from_storage();
     if(storage != null) {
       console.log("exec code", "storage");
-      const fn = new Function(`return () => { ${storage.js} }`)();
+      const fn = parse_code(storage.js);
       run.current_code_origin = "storage";
       run.current_hash = storage.hash;
-      await fn();
+      await exec_code(fn)
     } else {
       console.log("no code in storage");
       console.log("exec code", "apk");
@@ -90,15 +91,17 @@ const start = async () => {
       const network = await get_code_from_network();
       
       console.log("exec code", "network");
-      const fn = new Function(`return () => { ${network.js} }`)();
       
+      const fn = parse_code(network.js);
+
       console.log("calling destroyers");
       destroy();
 
       run.current_code_origin = "network";
       run.current_hash = network.hash;
      
-      await fn();
+      exec_code(fn);
+      
       console.log("network code executed");
       console.log("saving network code to storage");
 

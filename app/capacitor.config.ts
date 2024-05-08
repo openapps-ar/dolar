@@ -3,7 +3,7 @@
 import { CapacitorConfig } from "@capacitor/cli"
 
 const config: CapacitorConfig = {
-  appId: "ar.openapps.dolar.a1",
+  appId: "ar.openapps.dolar.a3",
   appName: "Dolarg",
   bundledWebRuntime: false,
   webDir: "dist",
@@ -22,8 +22,11 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchShowDuration: 100,
-      // launchFadeOutDuration: 300,
+      launchFadeOutDuration: 0,
       launchAutoHide: true,
+      splashImmersive: false,
+      splashFullScreen: false,
+      useDialog: true,
       // backgroundColor: "#ffffff",
       // androidScaleType: "CENTER_CROP",
       // splashFullScreen: false,

@@ -15,7 +15,9 @@ await within(async () => {
   
   cd("app")
   
+
   await $`npm run build`;
+  // await $`npm run assets`;
   await $`npx cap sync android`;
 
   const args = [

@@ -1,5 +1,7 @@
-import type { Code } from "./entry/apk";
-import { run } from "./runtime";
+import type { Code } from "../entry/apk";
+import { exec_code, parse_code } from "./exec";
+import { run } from "../runtime";
+import { sleep } from "../sleep";
 
 export const replace_app = async (entry: Code) => {
     if(entry.hash === run.current_hash) {
@@ -8,7 +10,7 @@ export const replace_app = async (entry: Code) => {
     }
 
     console.log("exec code", "network");
-    const fn = new Function(`return () => { ${entry.js} }`)();
+    const fn = parse_code(entry.js)
     
     const replace = async () => {
       console.log("calling destoyers");
@@ -17,7 +19,8 @@ export const replace_app = async (entry: Code) => {
       
       run.current_code_origin = "network";
       run.current_hash = entry.hash;
-      await fn();
+      await exec_code(fn);
+      await sleep(1);
       console.log("network code execured");
     }
 

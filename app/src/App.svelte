@@ -3,7 +3,7 @@
   const page_title = "Dolarg";
   const title = "Dolarg";
 
-  import { mdiArrowDown, mdiArrowUp, mdiEqual, mdiExponentBox, mdiMenuDown, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
+  import { mdiArrowDown, mdiArrowUp, mdiEqual, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
   import Icon from "./Icon.svelte";
   import { ripple } from "./ripple";
   import { COLOR_SCHEME } from "./storage.svelte";
@@ -19,16 +19,17 @@
   import { env } from "./env/env";
   import { sleep } from "./sleep";
   import { mods } from "./capacitor/mods";
+  import { replace_app } from "./replace";
   const { app: { App }, splash_screen: { SplashScreen } } = mods;
   
   let mounted = true;
 
   onMount(() => {
 
-    // if(!run.splash_screen_hide_called) {
-    //   run.splash_screen_hide_called = true;
-    //   SplashScreen.hide()
-    // }
+    if(!run.splash_screen_hide_called) {
+      run.splash_screen_hide_called = true;
+      SplashScreen.hide()
+    }
 
     NOW.refresh_if_stale().finally(() => {
       
@@ -44,29 +45,8 @@
       
         get_code_from_network()
           .then(async entry => {
-        
             console.log("network code obtained");
-
-            if(entry.hash === run.current_hash) {
-              console.log("network code hash matches, skipping");
-              return;
-            }
-
-            console.log("exec code", "network");
-            const fn = new Function(`return () => { ${entry.js} }`)();
-            
-            console.log("calling destoyers");
-            for(const destroyer of run.destroyers) destroyer();
-            run.destroyers = [];
-            
-            run.current_code_origin = "network";
-            run.current_hash = entry.hash;
-            await fn();
-
-            console.log("network code execured"),
-            console.log("storing code in storage");
-            
-            localStorage.setItem(run.code_storage_key, JSON.stringify(entry));
+            await replace_app(entry)
           })
           .finally(async () => {
             await sleep(2_500);

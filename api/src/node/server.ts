@@ -26,19 +26,30 @@ const api = () => {
                             .map(s => s.trim())
                             .filter(Boolean) 
                             ?? [];
+    const compressed = req_encodings
+      .filter(enc => ["zstd", "br", "gzip"].includes(enc))
+      .map(enc => ({ enc: enc as "zstd" | "br" | "gzip", data: entry[enc as "zstd" | "br" | "gzip"] }))
+      .sort((a, b) => a.data.length - b.data.length)
+      [0];
 
-    res.type(".json")
-      .header("etag", entry.etag)
-      .vary("accept-encoding");
-
-    for(const enc of ["zstd", "br", "gzip"] as const) {
-      if(req_encodings.includes(enc)) {
-        res.header("content-encoding", enc).end(entry[enc]);
-        return;
-      } 
+    if(compressed != null) {
+      res
+        .type(".json")
+        .vary("accept-encoding")
+        .header("etag", entry.etag)
+        .header("content-length", compressed.data.byteLength.toString())
+        .header("content-encoding", compressed.enc)
+        .end(compressed.data);
+      return;  
     }
 
-    res.end(entry.buf);
+    res
+      .type(".json")
+      .vary("accept-encoding")
+      .header("etag", entry.etag)
+      .header("content-length", entry.buf.byteLength.toString())
+      .header("content-encoding", "identity")
+      .end(entry.buf);
    })
 
    return api;

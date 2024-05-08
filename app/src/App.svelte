@@ -3,11 +3,11 @@
   const page_title = "Dolarg";
   const title = "Dolarg";
 
-  import { mdiArrowDown, mdiArrowUp, mdiEqual, mdiMenuDown, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
+  import { mdiArrowDown, mdiArrowUp, mdiEqual, mdiExponentBox, mdiMenuDown, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
   import Icon from "./Icon.svelte";
   import { ripple } from "./ripple";
   import { COLOR_SCHEME } from "./storage.svelte";
-  import { DATA, refresh_if_stale, start_interval, stop_interval } from "./client/client.svelte";
+  import { NOW, HISTORIC }  from "./client/client.svelte";
   import { click_out } from "./actions";
   import { fly } from "svelte/transition";
   import copy from "copy-to-clipboard";
@@ -17,20 +17,26 @@
   import { get_code_from_network } from "./entry/network";
   import { run } from "./runtime";
   import { env } from "./env/env";
+  import { sleep } from "./sleep";
   import { mods } from "./capacitor/mods";
   const { app: { App } } = mods;
+  
   let mounted = true;
 
   onMount(() => {
     
-    refresh_if_stale().finally(() => {
+    NOW.refresh_if_stale().finally(() => {
       
-      start_interval();
+      NOW.start_interval();
 
-      console.log("getting code from network");
+      if(env.DEV || run.current_code_origin === "network") {
+        HISTORIC.start_interval();
+
+      } else {
+        console.log("getting code from network");
       
-      if(!env.DEV && run.current_code_origin !== "network") {
-        get_code_from_network().then(async entry => {
+        get_code_from_network()
+          .then(async entry => {
         
           console.log("network code obtained");
 
@@ -54,7 +60,11 @@
           console.log("storing code in storage");
           
           localStorage.setItem(run.code_storage_key, JSON.stringify(entry));
-        });
+          })
+          .finally(async () => {
+            await sleep(1_000);
+            HISTORIC.start_interval();
+          });
       }
     })
     
@@ -69,13 +79,10 @@
 
     return () => {
       mounted = false;
-      stop_interval();
+      NOW.stop_interval();
+      HISTORIC.stop_interval();
       listener?.remove();
     }
-
-    
-
-
   })
 
   const share_params = {
@@ -91,7 +98,7 @@
   }
 
   // let source = $derived(SOURCE_ID.$ && Object.hasOwn(sources, SOURCE_ID.$) ? sources[SOURCE_ID.$] : source_ambito);
-  let items = $derived(DATA.$?.data.items ?? []);
+  let items = $derived(NOW.$?.data.items ?? []);
 
   // const show_items = $derived(items.filter(item => {
   //   return item.buy != null || item.sell != null;

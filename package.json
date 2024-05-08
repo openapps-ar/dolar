@@ -9,7 +9,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "start": "node --no-warnings --experimental-fetch ./api/dist/node/server.js",
+    "start": "node ./api/dist/node/server.js",
     "install": "run-s install:api install:app",
     "install:api": "cd api && npm ci",
     "install:app": "cd app && npm ci",

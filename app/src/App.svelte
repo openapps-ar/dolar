@@ -3,7 +3,7 @@
   const page_title = "Dolarg";
   const title = "Dolarg";
 
-  import { mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
+  import { mdiArrowDown, mdiArrowUp, mdiEqual, mdiMenuDown, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
   import Icon from "./Icon.svelte";
   import { ripple } from "./ripple";
   import { COLOR_SCHEME } from "./storage.svelte";
@@ -17,8 +17,12 @@
   import { get_code_from_network } from "./entry/network";
   import { run } from "./runtime";
   import { env } from "./env/env";
+  import { mods } from "./capacitor/mods";
+  const { app: { App } } = mods;
+  let mounted = true;
 
   onMount(() => {
+    
     refresh_if_stale().finally(() => {
       
       start_interval();
@@ -56,9 +60,22 @@
     
     canShare().then(v => can_share = v).catch(() => can_share = false);
 
+    let listener: Awaited<ReturnType<typeof App["addListener"]>>;
+    App.addListener("backButton", () => {
+      console.log("backButton", mounted);
+      if(mounted) App.exitApp();
+      else listener?.remove()
+    }).then(list => listener = list)
+
     return () => {
+      mounted = false;
       stop_interval();
+      listener?.remove();
     }
+
+    
+
+
   })
 
   const share_params = {
@@ -111,6 +128,21 @@
       maximumFractionDigits: decimals,
     }).format(n);
   }
+
+  const p = (s: string | number, n = 2, c = "0") => String(s).padStart(2, c) 
+  const format_date = (date: string | Date) => {
+    const d = new Date(date);
+    return `${p(d.getDate())}/${p(d.getMonth() + 1)} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
+  const format_variation = (vari: number) => {
+    const percent = new Intl.NumberFormat(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(vari * 100);
+    
+    return `${percent}%`
+  }
 </script>
 
 <style>
@@ -129,7 +161,7 @@
 
       --theme-color-transition-duration: 300ms;
       --theme-color-transition-timing-function: ease;
-  
+
       font-size: 16px;
       font-family: var(--font-family);
       -webkit-tap-highlight-color: transparent;
@@ -177,9 +209,14 @@
     --color-item-price: var(--green-dark);
     --color-item-price-sign-opacity: 0.8;
     --color-item-price-sign: var(--green-dark);
-    
+    --color-item-date: rgba(0,0,0,0.5);
+
     --color-copied-bg: #414141;
     --color-copied-text: #fff;
+
+    --color-vari-up: #0fa54f;
+    --color-vari-down: #e54747;
+    --color-vari-equal: #194781;
 
     --shadow-top: rgba(0,0,0,0.25) 0 2px 8px 4px;
     --shadow-item: rgba(0,0,0,0.05) 0 2px 10px 2px;
@@ -202,14 +239,19 @@
     --color-item-list-bg: var(--green-dark);
     --color-item-bg: var(--green-darker);
     --color-item-border: rgba(255,255,255,0.6);
-    --color-item-title: rgba(255,255,255,0.75);    
+    --color-item-title: rgba(255,255,255,0.9);    
     --color-item-price-title: rgba(255,255,255,0.8);
-    --color-item-price: rgba(255,255,255,0.85);
+    --color-item-price: rgba(255,255,255,0.9);
     --color-item-price-sign: #fff;
     --color-item-price-sign-opacity: 0.7;
-    
+    --color-item-date: rgba(255,255,255,0.7);
+
     --color-copied-bg: #414141;
     --color-copied-text: rgba(255,255,255,0.8);
+
+    --color-vari-up: #aaffa9;
+    --color-vari-down: #ffa0a0;
+    --color-vari-equal: #b1d3ff;
 
     --shadow-top: rgba(0,0,0,0.25) 0 0 0.5rem 0.25rem;
     --shadow-top-menu: rgba(255,255,255,0.05) 0 0 0.25rem 0.1rem;
@@ -379,9 +421,12 @@
   }
   .items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100% - 3rem), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(306px, 100% - 3rem), 1fr));
     gap: 1rem;
     padding: 1.25rem 1rem;
+    align-self: center;
+    width: min(100%, 1100px);
+    min-width: 0;
   }
 
   .item {
@@ -396,17 +441,68 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
+  
+    .start {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex: 1;
+      padding: 0.75rem 0.5rem;
+    }
+
+    .name {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--color-item-title);
+      transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+    }
+
+    .date {
+      font-size: 0.8rem;
+      white-space: nowrap;
+      font-weight: 400;
+      color: var(--color-item-date);
+      transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+    }
+
+    .end {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 0.75rem 0.5rem;
+      margin-inline-end: -0.5rem;
+    }
   }
 
-  .name {
-    text-align: center;
-    font-size: 1.25rem;
-    font-weight: 400;
-    padding: 0.75rem 0.5rem;
-    color: var(--color-item-title);
-    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+  .variation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-top: -0.4rem;
+    padding: 0 0.5rem;
+
+    &[data-kind=up] {
+      color: var(--color-vari-up);
+    }
+
+    &[data-kind=down] {
+      color: var(--color-vari-down);
+    }
+
+    &[data-kind=equal] {
+      color: var(--color-vari-equal);
+    }
   }
+
+  .variation-kind {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 
   .buy-sell-row {
     display: flex;
@@ -417,9 +513,6 @@
   }
 
   .buy-sell-space {
-    flex-shrink: 1;
-    flex-grow: none;
-    flex-basis: 2rem;
     color: var(--color-item-title)
   }
 
@@ -610,23 +703,41 @@
   </div>
 
   <div class="items">
-    {#each show_items as { id, name, ref, buy, sell} (id)}
+    {#each show_items as { id, date, name, ref, buy, sell, variation, variation_kind} (id)}
       <div class="item">
-        <div class="name">{name}</div>
-        <div class="buy-sell-row">
-          {#if ref !=  null}
-            {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
-          {:else}
-            {#if buy != null}
-              {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
+        <div class="start">
+          <div class="name">{name}</div>
+          <div class="date">{format_date(date)}</div>
+        </div>
+        <div class="end">
+          <div class="buy-sell-row">
+            {#if ref !=  null}
+              {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
+            {:else}
+              {#if buy != null}
+                {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
+              {/if}
+              {#if buy != null && sell != null && buy !== sell}
+                <div class="buy-sell-space">/</div>
+              {/if}
+              {#if buy !== sell}
+                {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
+              {/if}
             {/if}
-            {#if buy != null && sell != null && buy !== sell}
-              <div class="buy-sell-space">/</div>
-            {/if}
-            {#if buy !== sell}
-              {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
-            {/if}
-          {/if}
+          </div>
+          <div class="variation" data-kind={variation_kind}>
+            <div class="variation-kind">
+              <Icon d={
+                  variation_kind === "up" ? mdiArrowUp :
+                  variation_kind === "down" ? mdiArrowDown :
+                  mdiEqual
+                }
+              />
+            </div>
+            <div class="variation-num">
+              {format_variation(variation)}
+            </div>
+          </div>
         </div>
       </div>
     {/each}

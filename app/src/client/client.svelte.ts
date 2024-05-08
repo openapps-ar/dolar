@@ -41,6 +41,7 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
   const is_interval_started = () => timer != null;
   
   const start_interval = () => {
+    
     if(timer == null) {
       const fn = async () => {
         try {
@@ -49,8 +50,8 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
           if(timer != null) timer = setTimeout(fn, options.check_interval_ms)
         }
       }
-  
-      timer = setTimeout(fn, options.check_interval_ms);
+      
+      fn();
     }
   }
   
@@ -89,7 +90,11 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
     
     const data = await api_get(key);
     const stored: Stored<Data> = { obtained_at: new Date(), data };
+    
+    const start_set = Date.now();
     storage.set(stored);
+    const elapsed_set = Date.now() - start_set;
+    console.log(`refresh set ${key} ${options.storage_key} in ${elapsed_set}ms`)
     
     const elapsed = Date.now() - start;
     console.log(`refreshed ${key} ${options.storage_key} in ${elapsed}ms`);

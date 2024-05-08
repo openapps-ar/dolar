@@ -110,7 +110,7 @@ const start = async () => {
       const { dialog: { Dialog } } = __MODS__;
       const message = [
         "Ocurrió un error al iniciar la aplicación.",
-        "Intentá borrar al almacenamiento de la app y probar de nuevo.",
+        "Intentá borrar el almacenamiento de la app y probar de nuevo.",
         "Si el problema persiste, ponete en contacto con nuestro soporte.",
         `[error 1]: ${String(e1)}`,
         `[error 2]: ${String(e2)}`,

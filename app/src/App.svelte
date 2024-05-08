@@ -80,7 +80,7 @@
     let listener: Awaited<ReturnType<typeof App["addListener"]>>;
     App.addListener("backButton", () => {
       console.log("backButton", mounted);
-      if(mounted) App.exitApp();
+      if(mounted) App.minimizeApp();
       else listener?.remove()
     }).then(list => listener = list)
 

@@ -17,9 +17,9 @@ const api = () => {
     
     if(req_etag != null && req_etag == entry.etag) return res.status(304).end();
 
-    res.type(".json");
-    res.header("etag", entry.etag);
-    res.end(entry.payload_buf);
+    res.type(".json")
+      .header("etag", entry.etag)
+      .end(entry.payload_buf);
    })
 
    return api;

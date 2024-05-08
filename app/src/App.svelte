@@ -25,10 +25,10 @@
 
   onMount(() => {
 
-    if(!run.splash_screen_hide_called) {
-      run.splash_screen_hide_called = true;
-      SplashScreen.hide()
-    }
+    // if(!run.splash_screen_hide_called) {
+    //   run.splash_screen_hide_called = true;
+    //   SplashScreen.hide()
+    // }
 
     NOW.refresh_if_stale().finally(() => {
       

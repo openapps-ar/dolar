@@ -2,8 +2,10 @@ import express, { Router } from "express";
 import { get_api, get_cache } from "./data.js";
 import { CacheItem } from "./cache.js";
 import { shell } from "./app.js";
+import cors from "cors";
 
 const api = () => {
+  
   const api = Router();
   
   api.use((req, res, next) => {
@@ -28,6 +30,8 @@ const api = () => {
 
 
 const app = express();
+
+app.use(cors());
 app.use("/api/v1", api());
 app.use("/shell/v1", shell());
 

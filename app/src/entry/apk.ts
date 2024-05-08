@@ -8,6 +8,7 @@ const run: Runtime = {
   current_code_origin: null,
   current_app: null,
   current_hash: null,
+  splash_screen_hide_called: false,
   code_storage_key: "app-v2",
   destroyers: []
 }

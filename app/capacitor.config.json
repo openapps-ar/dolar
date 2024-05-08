@@ -1,6 +1,6 @@
 {
   "appId": "ar.openapps.dolar",
-  "appName": "Dolar Hoy",
+  "appName": "Dolarg",
   "bundledWebRuntime": false,
   "webDir": "dist",
   
@@ -17,7 +17,7 @@
 
   "plugins": {
     "SplashScreen": {
-      "launchShowDuration": 0
+      "autoHide": true
     }
   }
 }

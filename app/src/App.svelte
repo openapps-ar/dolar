@@ -19,12 +19,14 @@
   import { env } from "./env/env";
   import { sleep } from "./sleep";
   import { mods } from "./capacitor/mods";
-  const { app: { App } } = mods;
+  const { app: { App }, splash_screen: { SplashScreen } } = mods;
   
   let mounted = true;
 
   onMount(() => {
     
+    SplashScreen.hide();
+
     NOW.refresh_if_stale().finally(() => {
       
       NOW.start_interval();

@@ -48,4 +48,6 @@ app.use("/shell/v1", shell());
 // TODO: get from env
 app.listen(4000, () => {
   console.log("listening on http://localhost:4000");
+  // pm2
+  process.send && process.send("ready");
 });

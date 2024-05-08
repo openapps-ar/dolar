@@ -8,6 +8,7 @@ module.exports = {
     name: "dolar",
     merge_logs: true,
     time: true,
+    wait_ready: true,
     // env: { 
     //   FORCE_COLOR: "1",
     //   LOG_TS: "1",

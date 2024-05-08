@@ -11,10 +11,10 @@ export const parse_code = (js: string): Code => {
   return { fn, uid };
 }
 
-export const exec_code = async (code: Code) => {
+export const exec_code = async ({ fn, uid }: Code) => {
   const ready = new Promise<void>(resolve => {
-    const listener = (event: CustomEvent<{ RUN_UID: string }>) => {
-      if(event.detail.RUN_UID === code.uid) {
+    const listener = (event: CustomEvent<{ uid: string | number }>) => {
+      if(event.detail.uid === uid) {
         resolve();
         // @ts-expect-error
         window.removeEventListener("x-app-ready", listener);
@@ -25,6 +25,6 @@ export const exec_code = async (code: Code) => {
     window.addEventListener("x-app-ready", listener);
   })
 
-  await code.fn();
+  await fn();
   await ready;
 }

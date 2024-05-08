@@ -17,6 +17,11 @@ const run: Runtime = {
 // @ts-expect-error
 window._run = run;
 
+// @ts-ignore
+addEventListener("x-app-ready", (event: CustomEvent<{ uid: string }>) => {
+  console.log(`app ready called with uid`, event.detail.uid)  
+})
+
 export type Code = {
   hash: string
   js: string
@@ -101,7 +106,7 @@ const start = async () => {
       run.current_hash = network.hash;
      
       exec_code(fn);
-      
+
       console.log("network code executed");
       console.log("saving network code to storage");
 

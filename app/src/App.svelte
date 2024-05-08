@@ -25,7 +25,7 @@
   import { env } from "./env/env";
   import { sleep } from "./sleep";
   import { mods } from "./capacitor/mods";
-  import { replace_app } from "./exec/replace";
+  import { replace_app } from "./code/replace";
   const { app: { App }, splash_screen: { SplashScreen } } = mods;
   
   let mounted = true;

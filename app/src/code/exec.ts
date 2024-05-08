@@ -7,7 +7,7 @@ export type Code = {
 
 export const parse_code = (js: string): Code => {
   const uid = run_uid();
-  const fn = new Function(`const RUN_UID=${uid}; ${js}`);
+  const fn = new Function(`const RUN_UID=${JSON.stringify(uid)};${js}`);
   return { fn, uid };
 }
 

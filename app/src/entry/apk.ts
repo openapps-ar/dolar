@@ -3,7 +3,7 @@ import { __MODS__ } from "../capacitor/apk-mods";
 import { get_code_from_network } from "./network";
 import { type Runtime } from "../runtime";
 import { env } from "../env/env";
-import { exec_code, parse_code } from "../exec/exec";
+import { exec_code, parse_code } from "../code/exec";
 
 const run: Runtime = {
   current_code_origin: null,

@@ -452,6 +452,10 @@
     align-items: center;
     border-radius: 0.5rem;
   
+    &.placeholder {
+      pointer-events: none;  
+    }
+
     .start {
       display: flex;
       flex-direction: column;
@@ -712,7 +716,8 @@
   </div>
 
   <div class="items">
-    {#each show_items as { id, date, name, ref, buy, sell, variation, variation_kind} (id)}
+    
+    {#each [] || show_items as { id, date, name, ref, buy, sell, variation, variation_kind} (id)}
       <div class="item">
         <div class="start">
           <div class="name">{name}</div>
@@ -749,6 +754,28 @@
           </div>
         </div>
       </div>
+    {:else}
+      {#each Array(8).fill(0) as _}
+        <!-- placeholder -->
+        <div class="item placeholder">
+          <div class="start">
+            <div class="name">&nbsp;</div>
+            <div class="date">&nbsp;</div>
+          </div>
+          <div class="end">
+            <div class="buy-sell-row">
+              <div class="price-cell">
+                <div class="price-out">
+                  <div class="price ripple-c">
+                    <span class="sign">&nbsp;</span>
+                    &nbsp;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/each}
     {/each}
   </div>
 </div>

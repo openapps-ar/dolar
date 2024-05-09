@@ -22,6 +22,7 @@
     "deploy:ci": "npm ci",
     "deploy:reload": "pm2 reload pm2.config.cjs",
     "deploy:reset": "pm2 reset all",
+    "apk": "zx apk.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

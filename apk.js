@@ -1,7 +1,9 @@
 import "zx/globals";
 
-/** @param {string} key */
-/** @param {string | null | undefined} key */
+/** 
+ * @param {string} key 
+ * @param {string | null | undefined} def
+ * */
 const env = (key, def = null) => {
   const v = process.env[key];
   if(v == null) {
@@ -28,7 +30,7 @@ await within(async () => {
     "--keystorealiaspass", env("DOLAR_KEYSTORE_ALIAS_PASS")
   ];
 
-  await $`npx cap build android ${args} `
+  await $`npx cap build android ${args}`
 })
 
 await $`mkdir -p apk`;

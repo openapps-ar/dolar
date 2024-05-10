@@ -46,7 +46,7 @@
     const percent = new Intl.NumberFormat(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(vari * 100);
+    }).format(Math.abs(vari * 100));
     
     return `${percent}%`
   }

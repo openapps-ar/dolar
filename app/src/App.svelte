@@ -163,16 +163,17 @@
       --z-copied: 9000;
       --z-top-menu: 9500;
 
-      /* --theme-color-transition-duration: 300ms;
-      --theme-color-transition-timing-function: ease; */
-      
-      --theme-color-transition-duration: 0ms;
+      --theme-color-transition-duration: 300ms;
       --theme-color-transition-timing-function: linear;
+      
+      /* --theme-color-transition-duration: 0ms;
+      --theme-color-transition-timing-function: linear; */
 
       --screen-max-width: 1100px;
 
       font-size: 16px;
       font-family: var(--font-family);
+
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -305,8 +306,9 @@
     flex-direction: column;
     align-items: stretch;
     background: var(--color-item-list-bg);
-    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     user-select: none;
+
+    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .top {

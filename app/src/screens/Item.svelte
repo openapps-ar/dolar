@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-  import { crossfade, fade } from "svelte/transition";
   import type { Item, Days, Range } from "../chart/PancakeDaysChart.svelte";
   export type { Item, Days, Range };
   import { ranges } from "../chart/PancakeDaysChart.svelte"
@@ -16,20 +15,44 @@
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
-
+  import { tick } from "svelte";
+  import { crossfade, fade } from "svelte/transition";
+  import { sleep } from "../sleep";
+ 
   const item = $derived(NOW.$?.data.items.find(item => item.id === id) ?? null);
   const days = $derived(HISTORIC().$?.data.items.find(item => item.id === id)?.days ?? null);
 
   let range: Range = $state("7D");
+ 
+  // let setting_range = $state(false);
 
   const set_range = async (v: Range) => {
-    await document_transition(() => range = v)
+    // setting_range = true;
+    // await tick();
+    await document_transition(async () => {
+      range = v
+    })
+    // setting_range = false;
   }
+
+
+  // fix quirk in view transition
+  let show_selection = $state(false);
+  
+  $effect(() => {
+    sleep(10).then(() => show_selection = true);
+  })
+
+
+  // const [selection_enter, selection_leave] = crossfade({
+  //   duration: 200,
+  //   fallback: (node) => fade(node, { duration: 200 }),
+  // })
 </script>
 
 <style>
   .screen {
-    padding: 1rem;
+    padding: 1rem 0.75rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -42,9 +65,10 @@
     flex-direction: column;
     border-radius: 0.5rem;
     background-color: var(--color-box-bg);
-    transition: background-color var(--theme-color-transiton-duration) var(--theme-color-transition-timing-function);
     width: min(100%, var(--screen-max-width));
     align-self: center;
+    
+    transition: background-color var(--theme-color-transiton-duration) var(--theme-color-transition-timing-function);
   }
 
   .summary {
@@ -80,7 +104,6 @@
     pointer-events: none;
     border-radius: 0.25rem;
     background: var(--color-chart-range-selected-bg);
-    view-transition-name: screen-item-chart-range-selection;
   }
 
   .chart {
@@ -88,30 +111,28 @@
     position: relative;
     height: 300px;
   }
-
-  .chart-in {
-    position: absolute;
-    inset: 0;  
-  }
 </style>
 
 <div class="screen">
   
-  <div class="box">
-    <div class="summary">
-      {#if item}
+  <div class="box" style:view-transition-name="item-box--{item?.id}">
+    <div class="summary" >
+      {#if item != null}
         <ItemSummary {item} />
       {/if}
     </div>
 
     <div class="chart-and-ranges">
+
       <div class="ranges">
-        {#each ranges as item (item)}
-          {@const selected = item === range}
-          <button class="range-btn" class:selected onclick={() => set_range(item)}>
-            {item}
-            {#if selected}
-              <span class="selection"></span>
+        {#each ranges as r (r)}
+          {@const selected = range === r}
+          <button class="range-btn" class:selected onclick={() => set_range(r)}>
+            {r}
+            {#if show_selection && selected}
+              <!-- <span class="selection" style:view-transition-name={setting_range ? `item-range-selection--${item?.id}` : undefined}></span> -->
+              <!-- <span class="selection" in:selection_enter={{ key: null }} out:selection_leave={{ key: null }} ></span> -->
+              <span class="selection" style:view-transition-name="item-selection-selection--{item?.id}"></span>
             {/if}
           </button>
         {/each}

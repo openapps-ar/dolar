@@ -65,6 +65,10 @@
 </script>
 
 <style>
+  * {
+    line-height: 1.25em;
+  }
+
   .item {
     padding: 0 0.5rem 0 0.5rem;
     display: flex;
@@ -72,9 +76,10 @@
     flex-wrap: wrap;
     align-items: center;
     background: var(--background);
-    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     border-radius: inherit;
-
+    
+    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+    
     &.placeholder {
       pointer-events: none;  
     }
@@ -92,6 +97,7 @@
       font-size: 1.25rem;
       font-weight: 600;
       color: var(--color-item-title);
+      
       transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     }
 
@@ -179,8 +185,9 @@
     padding: 0.25rem 0.6rem;
     margin: -0.25rem -0.6rem;
     color: var(--color-item-price);
-    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     cursor: pointer;
+
+    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .price-copied-anchor {
@@ -206,13 +213,14 @@
   .price-copied-text {
     background: var(--color-copied-bg);
     color: var(--color-copied-text);
-    transition:ç
-      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
-      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     font-weight: 600;
     font-size: 0.8rem;
     border-radius: 0.25rem;
     padding: 0.5rem;
+
+    transition:
+      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .price-copied-arrow {
@@ -221,8 +229,9 @@
     border-left: 0.5rem solid transparent;
     border-right: 0.5rem solid transparent;
     border-top: 0.5rem solid var(--color-copied-bg);
-    transition: border-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     margin-block-start: -1px;
+
+    transition: border-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .sign {
@@ -231,6 +240,7 @@
     margin-inline-end: 0.15rem;
     color: var(--color-item-price-sign);
     opacity: var(--color-item-price-sign-opacity);
+    
     transition:
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       opacity var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
@@ -241,12 +251,12 @@
   {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item}
   <button
     class="item"
-    style:view-transition-name="summary-item-{id}"
+    style:view-transition-name="summary--{id}"
     onclick={() => onclick?.()}
   >
     <div class="start">
-      <div class="name">{name}</div>
-      <div class="date">{format_date(date)}</div>
+      <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
+      <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
     </div>
     <div class="end">
       <div class="buy-sell-row">
@@ -257,7 +267,7 @@
             {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
           {/if}
           {#if buy != null && sell != null && buy !== sell}
-            <div class="buy-sell-space">/</div>
+            <div class="buy-sell-space" style:view-transition-name="summary-price-sep--{id}">/</div>
           {/if}
           {#if buy !== sell}
             {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
@@ -265,7 +275,7 @@
         {/if}
       </div>
       <div class="variation" data-kind={variation_kind}>
-        <div class="variation-kind">
+        <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
           <Icon d={
               variation_kind === "up" ? mdiArrowUp :
               variation_kind === "down" ? mdiArrowDown :
@@ -273,7 +283,7 @@
             }
           />
         </div>
-        <div class="variation-num">
+        <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
           {format_variation(variation)}
         </div>
       </div>
@@ -332,12 +342,13 @@
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)
         }}
+        style:view-transition-name="summary-price--{id}"
       >
-        <span class="sign">$</span>{format_price(price, decimals)}
+        <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
       </button>
       {#if show_copied === id}
         <div class="price-copied-anchor" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
-          <div class="price-copied">
+          <div class="price-copied" style:view-transition-name="summary-price-copied--{id}">
             <div class="price-copied-text">Copiado</div>
             <div class="price-copied-arrow"></div>
           </div>

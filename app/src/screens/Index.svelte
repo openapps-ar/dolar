@@ -15,16 +15,11 @@
 </script>
 
 <style>
-  * {
-    line-height: 1.25em; 
-  }
-
   .screen {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-
   .items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(306px, 100% - 3rem), 1fr));
@@ -41,19 +36,20 @@
     align-items: stretch;
     background: var(--color-box-bg);
     box-shadow: var(--shadow-item);
+    border-radius: 0.5rem;
+    --background: var(--color-box-bg);
+    
     transition:
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       border-top-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
-    border-radius: 0.5rem;
-    --background: var(--color-box-bg);
   }
 </style>
 
 <div class="screen">
   <div class="items">
     {#each items as item (item.id)}
-      <div class="summary">  
+      <div class="summary" style:view-transition-name="item-box--{item.id}">  
         <ItemSummary {item} onclick={() => onitemclick(item.id)} />
       </div>
     {:else}

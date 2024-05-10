@@ -39,9 +39,9 @@
   let theme_menu_open: boolean = $state(false);
 
   const set_color_scheme = async (v: typeof COLOR_SCHEME.$) => {
-    await document_transition(() => {
+    // await document_transition(async () => {
       COLOR_SCHEME.set(v)
-    })
+    // })
   }
 </script>
 
@@ -51,10 +51,6 @@
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);
-    transition: 
-      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
-      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
-      box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -64,7 +60,13 @@
     font-weight: 900;
     flex: none;
     z-index: var(--z-top);
+    overflow-x: clip;
     view-transition-name: top;
+    
+    transition: 
+      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   ::view-transition-group(top) {
@@ -80,7 +82,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
   }
 
   .btn {
@@ -95,11 +97,12 @@
     justify-content: center;
     background: transparent;
     color: var(--color-top-btn-text);
-    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function), background-color 200ms ease;;
     font-size: 1.5rem;
     border: none;
     border-radius: 50%;
     cursor: pointer;
+    
+    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function), background-color 200ms ease;
     
     &.open, &:hover {
       background: var(--color-top-btn-hover-bg);
@@ -125,6 +128,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    
     transition: 
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),

@@ -113,7 +113,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      padding: 0.75rem 0.5rem;
+      padding: .25rem .5rem 0.75rem 0.5rem;
       margin-inline-end: -0.5rem;
     }
   }

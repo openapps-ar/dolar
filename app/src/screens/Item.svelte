@@ -68,7 +68,7 @@
     width: min(100%, var(--screen-max-width));
     align-self: center;
     
-    transition: background-color var(--theme-color-transiton-duration) var(--theme-color-transition-timing-function);
+    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .summary {

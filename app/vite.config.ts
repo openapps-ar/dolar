@@ -21,7 +21,7 @@ export default defineConfig({
         // }
       // }),
       compilerOptions: {
-        runes: true,
+        // runes: true,
         preserveComments: false,
         preserveWhitespace: false,
       }

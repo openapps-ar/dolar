@@ -21,12 +21,12 @@ const config: CapacitorConfig = {
 
   plugins: {
     SplashScreen: {
-      launchShowDuration: 0,
-      launchFadeOutDuration: 1000,
-      launchAutoHide: true,
-      splashImmersive: false,
-      splashFullScreen: false,
-      useDialog: false,
+      // launchShowDuration: 0,
+      // launchFadeOutDuration: 1000,
+      // launchAutoHide: true,
+      // splashImmersive: false,
+      // splashFullScreen: false,
+      // useDialog: false,
       // backgroundColor: "#ffffff",
       // androidScaleType: "CENTER_CROP",
       // splashFullScreen: false,

@@ -13,6 +13,8 @@ export type Stored<T> = {
   obtained_at: Date | string
 }
 
+export type NowItem = Api["now.json"]["items"][number];
+
 export const api_get = async <K extends keyof Api>(key: K): Promise<Api[K]> => {
   const res = await fetch(`${BASE_URL}/${key}`, { mode: "cors" })
   if(!res.ok) throw new Error(`error fetching ${key}: status code not OK: ${res.status} ${res.statusText}`);

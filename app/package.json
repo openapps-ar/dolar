@@ -24,7 +24,11 @@
     "@capacitor/share": "^6.0.0",
     "@capacitor/splash-screen": "^6.0.0",
     "@mdi/js": "^7.4.47",
-    "copy-to-clipboard": "^3.3.3"
+    "@sveltejs/pancake": "^0.0.18",
+    "@sveltejs/panckage": "./packages/pancake/package",
+    "apexcharts": "^3.49.0",
+    "copy-to-clipboard": "^3.3.3",
+    "d3": "^7.9.0"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",

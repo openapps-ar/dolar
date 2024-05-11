@@ -25,6 +25,7 @@
   import { ripple } from '../ripple';
   import { fly } from 'svelte/transition';
   import { portal } from '../portal/portal.svelte';
+  import Anchor from '../portal/Anchor.svelte';
 
   const format_price = (n: number, decimals = 2) => {
     return new Intl.NumberFormat(undefined, {
@@ -184,7 +185,6 @@
   }
 
   .price {
-    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -200,46 +200,29 @@
     transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
-  .price-copied-portal {
+  .sign {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-inline-end: 0.15rem;
+    color: var(--color-item-price-sign);
+    opacity: var(--color-item-price-sign-opacity);
+    
+    transition:
+      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      opacity var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+  }
+
+  .copied {
     position: absolute;
-    top: 0;
-    left: 50%;
-    width: 0;
-    height: 0;
-  }
-
-  .price-copied-anchor {
-    position: fixed;
-    z-index: var(--z-copied);
-    top: var(--y);
-    left: var(--x);
-    width: 0;
-    height: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
-  .price-copied-relative {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .price-copied {
-    position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-100%) translateX(-50%);
+    transform: translateX(-50%);
   }
 
-  .price-copied-text {
+  .copied-text {
     background: var(--color-copied-bg);
     color: var(--color-copied-text);
     font-weight: 600;
@@ -252,7 +235,7 @@
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
-  .price-copied-arrow {
+  .copied-arrow {
     width: 0;
     height: 0;
     border-left: 0.5rem solid transparent;
@@ -261,18 +244,6 @@
     margin-block-start: -1px;
 
     transition: border-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
-  }
-
-  .sign {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-inline-end: 0.15rem;
-    color: var(--color-item-price-sign);
-    opacity: var(--color-item-price-sign-opacity);
-    
-    transition:
-      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
-      opacity var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 </style>
 
@@ -385,21 +356,16 @@
       >
 
         <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
-
-        {#if show_copied === id}
-          {#snippet copied(position: { x: number, y: number })}
-            <div class="price-copied-anchor" style:--x="{position.x}px" style:--y="{position.y}px" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
-              <div class="price-copied-relative">
-                <div class="price-copied" style:view-transition-name="summary-price-copied--{id}">
-                  <div class="price-copied-text">Copiado</div>
-                  <div class="price-copied-arrow"></div>
-                </div>
-              </div>
-            </div>
-          {/snippet}
-          <div class="price-copied-portal" use:portal={{ snippet: copied }}></div>
-        {/if}
       </button>
+      
+      {#if show_copied === id}
+        <Anchor inline="center" block="start" z="var(--z-copied)">
+          <div class="copied" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }} style:view-transition-name="summary-price-copied--{id}">
+            <div class="copied-text">Copiado</div>
+            <div class="copied-arrow"></div>
+          </div>
+        </Anchor>
+      {/if}
     </div>
   </div>
 {/snippet}

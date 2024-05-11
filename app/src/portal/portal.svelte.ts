@@ -11,38 +11,44 @@ export type PortalSnippet = Snippet<[{ x: number, y: number }]>;
 
 export const portals: Set<{ snippet: PortalSnippet, x: number, y: number }> = $state(new Set());
 
-const add = (target: EventTarget, event: string, listener: EventListener, options: EventListenerOptions = {}) => {
-  target.addEventListener(event, listener, options);
-  return () => target.removeEventListener(event, listener, options);
-}
+// const add = (target: EventTarget, event: string, listener: EventListener, options: EventListenerOptions = {}) => {
+//   target.addEventListener(event, listener, options);
+//   return () => target.removeEventListener(event, listener, options);
+// }
 
 export const portal = (node: HTMLElement, _opts: PortalOptions) => {
 
   let opts = _opts;
 
-  let x = $state(0);
-  let y = $state(0);
+  const { left, top } = node.getBoundingClientRect();
+  let x = $state(left);
+  let y = $state(top);
+
+  const create_entry = () => {
+    return {
+      snippet: opts.snippet,
+      get x() { return x },
+      get y() { return y }
+    }
+  }
+
+  let entry = create_entry();
 
   const update = () => {
-    const rect = node.getBoundingClientRect();
-    x = rect.left;
-    y = rect.top;
+    const { left, top } = node.getBoundingClientRect();
+    x = left;
+    y = top;
   }
+
+  update();
 
   let frame = requestAnimationFrame(function fn() {
     update();
     frame = requestAnimationFrame(fn);
   })
 
-  update();
   // const remove_resize = add(window, "resize", update, { capture: true });
   // const remove_scroll = add(window, "scroll", update, { capture: true });
-
-  let entry = {
-    snippet: opts.snippet,
-    get x() { return x },
-    get y() { return y }
-  };
 
   portals.add(entry);
 
@@ -51,11 +57,7 @@ export const portal = (node: HTMLElement, _opts: PortalOptions) => {
       opts = _opts;
       update();
       const prev_entry = entry;
-      entry = {
-        snippet: opts.snippet,
-        get x() { return x },
-        get y() { return y }
-      };
+      entry = create_entry();
       portals.delete(prev_entry);
       portals.add(entry);
     },

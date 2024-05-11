@@ -19,6 +19,7 @@
   import { COLOR_SCHEME } from '../storage.svelte';
   import type { Snippet } from "svelte";
   import { portal } from '../portal/portal.svelte';
+  import Anchor from '../portal/Anchor.svelte';
   // import { document_transition } from '../transitions';
 
   const share_params = {
@@ -49,6 +50,7 @@
 <style>
   .top {
     height: 4rem;
+    padding: 0 0.25rem;
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);
@@ -111,21 +113,13 @@
     }
   }
 
-  .menu-anchor {
+  .menu-btn-out {
     position: relative;
   }
 
-  .menu-portal-theme {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
   .menu {
-    position: fixed;
-    left: calc(var(--x) - 0.25rem);
-    top: var(--y);
-    transform: translateX(-100%);
+    position: absolute;
+    top: 0;
     z-index: var(--z-top-menu);
     color: var(--color-top-menu-text);
     background: var(--color-top-menu-bg);
@@ -140,6 +134,14 @@
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+
+    &:not(.reverse) {
+      left: 0;
+    }
+
+    &.reverse {
+      right: 0;
+    }
   }
 
   .menu-item {
@@ -183,7 +185,6 @@
     margin-inline-end: 0.6rem;
     transition: color 200ms ease;
   }
-
 
   .selected {
     &.menu-item {
@@ -261,19 +262,17 @@
   </div>
 
   {#if can_share}
-    <div class="menu-anchor">
-      <button
-        class="btn ripple-c"  
-        aria-label={"Compartir esta app"}
-        onclick={() => share_app()}
-        use:ripple
-      >
-        <Icon d={mdiShare} />
-      </button>
-    </div>
+    <button
+      class="btn ripple-c"  
+      aria-label={"Compartir esta app"}
+      onclick={() => share_app()}
+      use:ripple
+    >
+      <Icon d={mdiShare} />
+    </button>
   {/if}
 
-  <div class="menu-anchor">
+  <div class="menu-btn-out">
     <button
       class="btn ripple-c"
       class:open={theme_menu_open}
@@ -291,8 +290,8 @@
     </button>
 
     {#if theme_menu_open}
-      {#snippet menu(position: { x: number, y: number })}
-        <div class="menu menu-theme" style:--x="{position.x}px" style:--y="{position.y}px" transition:fly={{ duration: 300, y: -16, x: 8 }}>
+      <Anchor z="var(--z-top-menu)" inline="end" block="end">
+        <div class="menu reverse menu-theme" transition:fly={{ duration: 300, y: -16, x: 8 }}>
           {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
             <button
               class="menu-item ripple-c"
@@ -308,7 +307,7 @@
               </span>
             </button>
           {/snippet}
-
+          
           {#snippet light()}Tema <b>claro</b>{/snippet}
           {#snippet dark()}Tema <b>oscuro</b>{/snippet}
           {#snippet system()}Tema del <b>sistema</b>{/snippet}
@@ -317,9 +316,7 @@
           {@render item("dark", mdiMoonWaningCrescent, dark)}
           {@render item(null, mdiThemeLightDark, system)}
         </div>
-      {/snippet}
-
-      <div class="menu-portal menu-portal-theme" use:portal={{ snippet: menu }}></div>
+      </Anchor>
     {/if}
   </div>
 </div>

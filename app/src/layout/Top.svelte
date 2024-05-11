@@ -18,6 +18,7 @@
   import { fly, scale } from "svelte/transition";
   import { COLOR_SCHEME } from '../storage.svelte';
   import type { Snippet } from "svelte";
+  import { portal } from '../portal/portal.svelte';
   // import { document_transition } from '../transitions';
 
   const share_params = {
@@ -112,15 +113,20 @@
 
   .menu-anchor {
     position: relative;
-    isolation: isolate;
-    z-index: var(--z-top-menu);
-    display: flex;
+  }
+
+  .menu-portal-theme {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 
   .menu {
-    position: absolute;
-    top: 100%;
-    left: 0.25rem;
+    position: fixed;
+    left: calc(var(--x) - 0.25rem);
+    top: var(--y);
+    transform: translateX(-100%);
+    z-index: var(--z-top-menu);
     color: var(--color-top-menu-text);
     background: var(--color-top-menu-bg);
     box-shadow: var(--shadow-top-menu);
@@ -134,11 +140,6 @@
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
-
-    &.reverse {
-      left: unset;
-      right: 0.25rem; 
-    }
   }
 
   .menu-item {
@@ -289,32 +290,36 @@
       />
     </button>
 
-    {#if theme_menu_open}
-      <div class="menu reverse" transition:fly={{ duration: 300, y: -16, x: 8 }}>
-        {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
-          <button
-            class="menu-item ripple-c"
-            class:selected={COLOR_SCHEME.$ === v}
-            onclick={() => set_color_scheme(v)}
-            use:ripple
-          >
-            <span class="menu-item-icon">
-              <Icon d={icon} />
-            </span>
-            <span>
-              {@render label()}
-            </span>
-          </button>
-        {/snippet}
+    {#snippet menu(position: { x: number, y: number })}
+      {#if theme_menu_open}
+        <div class="menu menu-theme" style:--x="{position.x}px" style:--y="{position.y}px" transition:fly={{ duration: 300, y: -16, x: 8 }}>
+          {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
+            <button
+              class="menu-item ripple-c"
+              class:selected={COLOR_SCHEME.$ === v}
+              onclick={() => set_color_scheme(v)}
+              use:ripple
+            >
+              <span class="menu-item-icon">
+                <Icon d={icon} />
+              </span>
+              <span>
+                {@render label()}
+              </span>
+            </button>
+          {/snippet}
 
-        {#snippet light()}Tema <b>claro</b>{/snippet}
-        {#snippet dark()}Tema <b>oscuro</b>{/snippet}
-        {#snippet system()}Tema del <b>sistema</b>{/snippet}
+          {#snippet light()}Tema <b>claro</b>{/snippet}
+          {#snippet dark()}Tema <b>oscuro</b>{/snippet}
+          {#snippet system()}Tema del <b>sistema</b>{/snippet}
 
-        {@render item("light", mdiWeatherSunny, light)}
-        {@render item("dark", mdiMoonWaningCrescent, dark)}
-        {@render item(null, mdiThemeLightDark, system)}
-      </div>
-    {/if}
+          {@render item("light", mdiWeatherSunny, light)}
+          {@render item("dark", mdiMoonWaningCrescent, dark)}
+          {@render item(null, mdiThemeLightDark, system)}
+        </div>
+      {/if}
+    {/snippet}
+
+    <div class="menu-portal menu-portal-theme" use:portal={{ snippet: menu }}></div>
   </div>
 </div>

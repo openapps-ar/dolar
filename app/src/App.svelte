@@ -96,6 +96,7 @@
 
   import ItemScreen from "./screens/Item.svelte";
   import { document_transition } from "./transitions";
+  import { Portals } from "./portal/portal.svelte";
 
   const STATE_VERSION = 0;
 
@@ -361,6 +362,14 @@
     align-items: stretch;
     justify-content: stretch;
   }
+
+  .portals {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+  }
 </style>
 
 <svelte:head>
@@ -379,4 +388,9 @@
       <ItemScreen id={state.id} />
     {/if}
    </div>
+
+
+  <div class="portals">
+    <Portals />
+  </div>
 </div>

@@ -6,6 +6,8 @@
 </script>
 
 <script lang="ts">
+  import { mdiDatabaseSync } from "@mdi/js";
+
   const {
     item,
     days,
@@ -38,7 +40,14 @@
   const p = (s: string | number, n = 2, c = "0") => String(s).padStart(n, c);
 
   const filter_days = (days: Days, range: Range): Days => {
-    const limit = new Date(Date.now() - limits[range] - DAY);
+    if(range === "7D") {
+      return {
+        kind: days.kind,
+        items: days.items.slice(-7),
+      } as Days
+    }
+
+    const limit = new Date(Date.now() - limits[range]);
     const limit_date_string = `${limit.getFullYear()}/${p(limit.getMonth() + 1)}/${p(limit.getDate())}`
     const filter = <T extends { 0: string }>(items: T[]): T[] => {
       // items are always sorted in date ascending order
@@ -47,17 +56,12 @@
       const index_helper = items.findLastIndex(item => item[0] < limit_date_string);
       return items.slice(index_helper == null ? undefined : index_helper + 1);
     }
-    if(days.kind === "buy-sell") {
-      return {
-        kind: days.kind,
-        items: filter(days.items),
-      }
-    } else {
-      return {
-        kind: days.kind,
-        items: filter(days.items),
-      }
-    }
+
+    return {
+      kind: days.kind,
+      // @ts-expect-error
+      items: filter(days.items),
+    } as Days
   }
 
   const re = /([0-9]{4})\/([0-9]{2})\/([0-9]{2})/
@@ -113,8 +117,6 @@
   const format_y_label = (v: number) => {
     return v % 1 === 0 ? fmt0.format(v) : fmt2.format(v);
   }
-
-  const y_label_width = $derived(format_y_label(max).length);
 
   const format_x_label = (i: number) => {
     const item = visible_days.items[i];

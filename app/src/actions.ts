@@ -86,15 +86,6 @@ export const click_out = (node: Node, handler: (event: MouseEvent) => void) => {
   }
 }
 
-export const portal = (node: HTMLElement) => {
-  document.body.appendChild(node);
-  return {
-    destroy() {
-      node.parentElement?.removeChild(node);
-    }
-  }
-}
-
 export const intelliHide = (node: HTMLElement) => {
 
   let lastScroll: number | null = null;

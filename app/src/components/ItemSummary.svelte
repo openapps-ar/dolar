@@ -24,6 +24,7 @@
   import copy from "copy-to-clipboard";
   import { ripple } from '../ripple';
   import { fly } from 'svelte/transition';
+  import { portal } from '../portal/portal.svelte';
 
   const format_price = (n: number, decimals = 2) => {
     return new Intl.NumberFormat(undefined, {
@@ -199,11 +200,19 @@
     transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
-  .price-copied-anchor {
+  .price-copied-portal {
     position: absolute;
-    z-index: var(--z-copied);
-    top: -0.35rem;
+    top: 0;
     left: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .price-copied-anchor {
+    position: fixed;
+    z-index: var(--z-copied);
+    top: var(--y);
+    left: var(--x);
     width: 0;
     height: 0;
     display: flex;
@@ -212,11 +221,22 @@
     justify-content: center;
   }
 
-  .price-copied {
+  .price-copied-relative {
     position: relative;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .price-copied {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    transform: translateY(-100%) translateX(-50%);
   }
 
   .price-copied-text {
@@ -363,16 +383,24 @@
         }}
         style:view-transition-name="summary-price--{id}"
       >
+
         <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
+
+        {#snippet copied(position: { x: number, y: number })}
+          {#if show_copied === id}
+            <div class="price-copied-anchor" style:--x="{position.x}px" style:--y="{position.y}px" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
+              <div class="price-copied-relative">
+                <div class="price-copied" style:view-transition-name="summary-price-copied--{id}">
+                  <div class="price-copied-text">Copiado</div>
+                  <div class="price-copied-arrow"></div>
+                </div>
+              </div>
+            </div>
+          {/if}
+        {/snippet}
+
+        <div class="price-copied-portal" use:portal={{ snippet: copied }}></div>
       </button>
-      {#if show_copied === id}
-        <div class="price-copied-anchor" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
-          <div class="price-copied" style:view-transition-name="summary-price-copied--{id}">
-            <div class="price-copied-text">Copiado</div>
-            <div class="price-copied-arrow"></div>
-          </div>
-        </div>
-      {/if}
     </div>
   </div>
 {/snippet}

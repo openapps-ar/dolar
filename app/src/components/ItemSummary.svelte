@@ -386,8 +386,8 @@
 
         <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
 
-        {#snippet copied(position: { x: number, y: number })}
-          {#if show_copied === id}
+        {#if show_copied === id}
+          {#snippet copied(position: { x: number, y: number })}
             <div class="price-copied-anchor" style:--x="{position.x}px" style:--y="{position.y}px" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
               <div class="price-copied-relative">
                 <div class="price-copied" style:view-transition-name="summary-price-copied--{id}">
@@ -396,10 +396,9 @@
                 </div>
               </div>
             </div>
-          {/if}
-        {/snippet}
-
-        <div class="price-copied-portal" use:portal={{ snippet: copied }}></div>
+          {/snippet}
+          <div class="price-copied-portal" use:portal={{ snippet: copied }}></div>
+        {/if}
       </button>
     </div>
   </div>

@@ -29,9 +29,14 @@ export const portal = (node: HTMLElement, _opts: PortalOptions) => {
     y = rect.top;
   }
 
+  let frame = requestAnimationFrame(function fn() {
+    update();
+    frame = requestAnimationFrame(fn);
+  })
+
   update();
-  const remove_resize = add(window, "resize", update, { capture: true });
-  const remove_scroll = add(window, "scroll", update, { capture: true });
+  // const remove_resize = add(window, "resize", update, { capture: true });
+  // const remove_scroll = add(window, "scroll", update, { capture: true });
 
   let entry = {
     snippet: opts.snippet,
@@ -56,8 +61,9 @@ export const portal = (node: HTMLElement, _opts: PortalOptions) => {
     },
 
     destroy() {
-      remove_scroll();
-      remove_resize();
+      // remove_scroll();
+      // remove_resize();
+      cancelAnimationFrame(frame);
       portals.delete(entry);
     }
   }

@@ -126,18 +126,6 @@
     return (limits[range] <= limits["1A"]) ? `${d}/${m}` : `${m}/${yy}`;
   }
 
-  // --color-vari-up: #0fa54f;
-  // --color-vari-down: #e54747;
-  // --color-vari-equal: #194781;
-
-  const variation_colors = {
-    up: "#0fa54f",
-    down: "#e54747",
-    equal: "#0074D9",
-  }
-  
-  const color = $derived(variation_colors[variation_kind])
-
   let rect: { width: number } = $state({ width: 0 });
 
   const y_label_widths = $state(new Map<number, number>());
@@ -161,7 +149,7 @@
 
 <div
   class="chart"
-  style:--color={color}
+  style:--color="var(--color-chart-{variation_kind})"
   style:--y-label-width="{y_label_max_width}px"
   bind:contentRect={rect}
 >
@@ -239,8 +227,8 @@
     position: absolute;
     text-align: right;
     font-size: 0.75rem;
-    line-height: 1em;
     font-weight: 400;
+    line-height: 1em;
     color: var(--color-chart-label);
     transform: translateX(-100%) translateY(-58%);
     left: -1rem;
@@ -252,7 +240,7 @@
     left: -2em;
     bottom: -2rem;
     text-align: center;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--color-chart-label);
     font-size: 0.75rem;
   }

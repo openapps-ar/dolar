@@ -78,9 +78,6 @@
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       filter 200ms linear;      
     
-
-    
-
     &.clickable {
 
       &:hover {
@@ -139,15 +136,15 @@
     padding: 0 0.5rem;
 
     &[data-kind=up] {
-      color: var(--color-vari-up);
+      color: var(--color-up);
     }
 
     &[data-kind=down] {
-      color: var(--color-vari-down);
+      color: var(--color-down);
     }
 
     &[data-kind=equal] {
-      color: var(--color-vari-equal);
+      color: var(--color-equal);
     }
   }
 

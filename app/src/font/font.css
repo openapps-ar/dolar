@@ -1,8 +1,9 @@
 @import url("./cir/font.css");
-/* @import url("./fira-sans/font.css"); */
+@import url("./fira-sans/font.css");
+@import url("./signika/font.css");
 
 :root {
-  --apk-font-family: cir, sans-serif;
+  --apk-font-family: Signika, sans-serif;
   /* --apk-font-secondary: "Fira Sans", sans-serif; */
 }
 

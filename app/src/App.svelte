@@ -266,11 +266,17 @@
     --color-chart-label: rgba(0,0,0,0.5);
     --color-chart-range-selected-bg: rgba(0,0,0,0.05);
     --color-chart-range-btn-text: #222;
-    --color-chart-up: #0fa54f;
-    --color-chart-down: #e54747;
-    --color-chart-equal: #0074D9;
     --color-item-sep: rgba(0,0,0,0.1);
   
+    --color-up: #0fa54f;
+    --color-down: #e54747;
+    --color-equal: #0074D9;
+
+    --color-chart-up: var(--color-up);
+    --color-chart-down: var(--color-down);
+    --color-chart-equal: var(--color-equal);
+
+
     --shadow-top: rgba(0,0,0,0.25) 0 2px 8px 4px;
     --shadow-item: rgba(0,0,0,0.05) 0 2px 10px 2px;
     --shadow-top-menu: rgba(0,0,0,0.25) 0 0 4px 2px;
@@ -312,9 +318,15 @@
     --color-chart-label: rgba(255,255,255,0.8);
     --color-chart-range-selected-bg: rgba(255,255,255,0.151);
     --color-chart-range-btn-text: rgba(255,255,255,0.8);
+    
+    --color-up: #aaffa9;
+    --color-down: #ffa0a0;
+    --color-equal: #b1d3ff;
+
     --color-chart-up: #0fa54f;
     --color-chart-down: #e54747;
     --color-chart-equal: #0074D9;
+    
     --color-item-sep: rgba(255,255,255,0.25);
 
     --shadow-top: rgba(0,0,0,0.25) 0 0 0.5rem 0.25rem;

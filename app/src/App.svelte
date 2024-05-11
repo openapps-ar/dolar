@@ -124,21 +124,25 @@
     update_current_scroll();
     const new_state = { ...screen, scroll: 0, version: STATE_VERSION };
     push(new_state);
-    await document_transition(() => state = new_state);  
+    state = new_state;
+    // await document_transition(() => state = new_state);  
   }
   const back = () => history.back();
 
 
   onMount(() => {
     const onpop = () => {
-      document_transition(async () => {
+      const fn = async () => {
         state = get();
         if(state.scroll !== 0) {
           await tick();
           document.scrollingElement && (document.scrollingElement.scrollTop = state.scroll);
         }
-      })
-    };
+      }
+
+      fn();
+      // document_transition(fn)
+    }
 
     window.addEventListener("popstate", onpop);
   
@@ -212,12 +216,28 @@
     }
   }
 
+  /* ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(*) {
+    z-index: 11000000;
+  } */
+
   .app[data-color-scheme=light] {
     
     --color-top-bg: var(--green-dark);
     --color-top-text: #fff;
     --color-top-btn-text: #fff;
     --color-top-btn-hover-bg: rgba(255,255,255,0.1);
+
+    /* --color-top-bg: var(--green-darker);
+    --color-top-text: var(--green-lite);
+    --color-top-btn-text: var(--green-lite);
+    --color-top-btn-hover-bg: rgba(255,255,255,0.1); */
+
 
     --color-top-menu-text: #111;
     --color-top-menu-bg: #fff;
@@ -254,6 +274,9 @@
     --shadow-top: rgba(0,0,0,0.25) 0 2px 8px 4px;
     --shadow-item: rgba(0,0,0,0.05) 0 2px 10px 2px;
     --shadow-top-menu: rgba(0,0,0,0.25) 0 0 4px 2px;
+
+    --color-item-hover-filter: brightness(0.975);
+    --color-item-active-filter: brightness(0.925);
   }
 
   .app[data-color-scheme=dark] {
@@ -294,10 +317,12 @@
     --color-chart-equal: #0074D9;
     --color-item-sep: rgba(255,255,255,0.25);
 
-
     --shadow-top: rgba(0,0,0,0.25) 0 0 0.5rem 0.25rem;
     --shadow-top-menu: rgba(255,255,255,0.05) 0 0 0.25rem 0.1rem;
     --shadow-item: rgba(0,0,0,0.05) 0 2px 1px 1px;
+
+    --color-item-hover-filter: brightness(1.04);
+    --color-item-active-filter: brightness(1.1);
   }
 
   .app {

@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
   let show_copied: string | null = $state(null);
   let show_copied_timer: NodeJS.Timeout | undefined = undefined;
 </script>
@@ -16,11 +16,7 @@
       onclick?: undefined
     };
 
-  const {
-    item,
-    placeholder = undefined,
-    onclick,
-  }: Props = $props();
+  const { item, onclick }: Props = $props();
 
   import type { NowItem } from '../client/client.svelte';
   import { mdiArrowDown, mdiArrowUp, mdiEqual } from '@mdi/js';
@@ -78,8 +74,24 @@
     background: var(--background);
     border-radius: inherit;
     
-    transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+    transition: 
+      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      filter 200ms linear;      
     
+
+    
+
+    &.clickable {
+
+      &:hover {
+        filter: var(--color-item-hover-filter)
+      }
+
+      &:active {
+        filter: var(--color-item-active-filter);
+      }
+    }
+
     &.placeholder {
       pointer-events: none;  
     }
@@ -247,48 +259,58 @@
   }
 </style>
 
-{#if item}
+{#snippet content({ item }: { item: NowItem })}
   {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item}
-  <button
-    class="item"
-    style:view-transition-name="summary--{id}"
-    onclick={() => onclick?.()}
-  >
-    <div class="start">
-      <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
-      <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
-    </div>
-    <div class="end">
-      <div class="buy-sell-row">
-        {#if ref !=  null}
-          {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
-        {:else}
-          {#if buy != null}
-            {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
-          {/if}
-          {#if buy != null && sell != null && buy !== sell}
-            <div class="buy-sell-space" style:view-transition-name="summary-price-sep--{id}">/</div>
-          {/if}
-          {#if buy !== sell}
-            {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
-          {/if}
+  <div class="start">
+    <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
+    <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
+  </div>
+  <div class="end">
+    <div class="buy-sell-row">
+      {#if ref !=  null}
+        {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
+      {:else}
+        {#if buy != null}
+          {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
         {/if}
+        {#if buy != null && sell != null && buy !== sell}
+          <div class="buy-sell-space" style:view-transition-name="summary-price-sep--{id}">/</div>
+        {/if}
+        {#if buy !== sell}
+          {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
+        {/if}
+      {/if}
+    </div>
+    <div class="variation" data-kind={variation_kind}>
+      <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
+        <Icon d={
+            variation_kind === "up" ? mdiArrowUp :
+            variation_kind === "down" ? mdiArrowDown :
+            mdiEqual
+          }
+        />
       </div>
-      <div class="variation" data-kind={variation_kind}>
-        <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
-          <Icon d={
-              variation_kind === "up" ? mdiArrowUp :
-              variation_kind === "down" ? mdiArrowDown :
-              mdiEqual
-            }
-          />
-        </div>
-        <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
-          {format_variation(variation)}
-        </div>
+      <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
+        {format_variation(variation)}
       </div>
     </div>
-  </button>
+  </div>
+{/snippet}
+
+{#if item}
+  {#if onclick}
+    <button
+      class="item clickable"
+      style:view-transition-name="summary--{item.id}"
+      onclick={() => onclick()}
+    >
+      {@render content({ item })}
+    </button>
+  {:else}
+    <div class="item" style:view-transition-name="summary--{item.id}">
+      {@render content({ item })}
+    </div>
+  {/if}
 {:else}
   <div class="item placeholder">
     <div class="start">

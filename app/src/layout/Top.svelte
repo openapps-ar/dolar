@@ -18,7 +18,7 @@
   import { fly, scale } from "svelte/transition";
   import { COLOR_SCHEME } from '../storage.svelte';
   import type { Snippet } from "svelte";
-  import { document_transition } from '../transitions';
+  // import { document_transition } from '../transitions';
 
   const share_params = {
     title: title,

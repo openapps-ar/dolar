@@ -15,8 +15,9 @@
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
-  import { tick } from "svelte";
-  import { crossfade, fade } from "svelte/transition";
+  // import { tick } from "svelte";
+  // import { crossfade, fade } from "svelte/transition";
+  import { screen_enter } from "../transitions";
   import { sleep } from "../sleep";
  
   const item = $derived(NOW.$?.data.items.find(item => item.id === id) ?? null);
@@ -24,29 +25,19 @@
 
   let range: Range = $state("7D");
  
-  // let setting_range = $state(false);
-
   const set_range = async (v: Range) => {
-    // setting_range = true;
-    // await tick();
-    await document_transition(async () => {
-      range = v
-    })
-    // setting_range = false;
+    // range = v;
+    await document_transition(async () => range = v);
   }
-
 
   // fix quirk in view transition
   let show_selection = $state(false);
-  
-  $effect(() => {
-    sleep(10).then(() => show_selection = true);
-  })
+  $effect(() => {sleep(10).then(() => show_selection = true) });
 
-
+  // const show_selection = true;
   // const [selection_enter, selection_leave] = crossfade({
-  //   duration: 200,
-  //   fallback: (node) => fade(node, { duration: 200 }),
+  //   duration: 300,
+  //   fallback: (node) => fade(node, { duration: 200 })
   // })
 </script>
 
@@ -113,7 +104,7 @@
   }
 </style>
 
-<div class="screen">
+<div class="screen" in:screen_enter|global>
   
   <div class="box" style:view-transition-name="item-box--{item?.id}">
     <div class="summary" >

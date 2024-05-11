@@ -1,10 +1,12 @@
 import { tick } from "svelte";
 import { fly } from "svelte/transition"
 
-export const enter_screen = (node: HTMLElement, params = {}) => {
+export const screen_enter = (node: HTMLElement, params = {}) => {
+  // return { duration: 0 };
   return fly(node, {
-    x: -25,
+    x: -16,
     duration: 200,
+    opacity: 0.25,
   })
 }
 

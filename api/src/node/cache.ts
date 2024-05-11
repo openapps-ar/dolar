@@ -1,5 +1,5 @@
 import { type Api } from "../api.js"
-import { make_etag } from "./etag.js"
+import { make_hash } from "./hash.js"
 import { LRUCache } from "lru-cache";
 import { Compressed, compress } from "./compress.js";
 
@@ -10,6 +10,7 @@ const compress_cache = new LRUCache<string, Compressed>({
 
 
 export type CacheItem = {
+  hash: string
   etag: string
   payload: string
   buf: Buffer
@@ -32,7 +33,7 @@ export const make_cache = (api: Api): Cache => {
   for(const [key, data] of Object.entries(api) as [keyof Api, any]) {
     const payload = JSON.stringify(data)
     const buf = Buffer.from(payload, "utf-8")
-    const etag = make_etag(buf);
+    const { hash, etag } = make_hash(buf);
     
     let compressed: Compressed | null = compress_cache.get(etag) ?? null;
     if(compressed == null) compressed = compress(buf);
@@ -43,7 +44,7 @@ export const make_cache = (api: Api): Cache => {
 
     compress_cache.set(etag, compressed)
     
-    cache[key] = { etag, payload, buf, compressed  }
+    cache[key] = { hash, etag, payload, buf, compressed  }
   }
 
   const end = performance.now();

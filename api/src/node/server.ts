@@ -20,6 +20,7 @@ const api = () => {
 
     send(req, res, {
       type: ".json",
+      hash: entry.hash,
       etag: entry.etag,
       plain: entry.buf,
       compressed: entry.compressed
@@ -32,7 +33,9 @@ const api = () => {
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  exposedHeaders: "*",
+}));
 
 app.get("/request", (req, res) => {
   res.json({

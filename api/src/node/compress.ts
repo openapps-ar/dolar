@@ -54,13 +54,15 @@ export const send = <Algo extends string>(
   res: Response,
   {
     type,
+    hash,
     etag,
     plain,
     compressed
   }: {
-    type: string,
-    etag: string,
-    plain: Buffer,
+    type: string
+    hash: string
+    etag: string
+    plain: Buffer
     compressed: Record<Algo, Buffer>
 }) => {
 
@@ -76,6 +78,7 @@ export const send = <Algo extends string>(
       .type(type)
       .vary("accept-encoding")
       .header("etag", etag)
+      .header("x-hash", hash)
       .header("content-length", selected.data.byteLength.toString())
       .header("content-encoding", selected.encoding)
       .end(selected.data);
@@ -84,6 +87,7 @@ export const send = <Algo extends string>(
       .type(type)
       .vary("accept-encoding")
       .header("etag", etag)
+      .header("x-hash", hash)
       .header("content-length", plain.byteLength.toString())
       .header("content-encoding", "identity")
       .end(plain);

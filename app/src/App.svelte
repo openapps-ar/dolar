@@ -345,6 +345,7 @@
     align-items: stretch;
     background: var(--color-item-list-bg);
     user-select: none;
+    overflow-x: clip;
 
     transition: background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
@@ -367,8 +368,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 0;
-    height: 0;
   }
 </style>
 

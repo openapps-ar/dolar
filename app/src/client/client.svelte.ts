@@ -1,25 +1,39 @@
 import type { Api } from "../../../api/src/api"; 
+import { assert_never } from "../../../api/src/assert_never";
 import { storage_var } from "../storage.svelte.js";
 
 const BASE_URL = "https://ar.dolar.openapps.ar/api/v1";
 
 export type NowStored = {
+  hash: string,
   data: Api["now.json"],
   obtained_at: Date | string 
 };
 
 export type Stored<T> = {
-  data: T,
   obtained_at: Date | string
+  hash: string
+  data: T
 }
 
 export type NowItem = Api["now.json"]["items"][number];
 
-export const api_get = async <K extends keyof Api>(key: K): Promise<Api[K]> => {
-  const res = await fetch(`${BASE_URL}/${key}`, { mode: "cors" })
+export type ApiResult<T> = 
+  | { kind: "not-modified" }
+  | { kind: "new-data", hash: string, data: T };
+
+export const api_get = async <K extends keyof Api>(key: K, if_none_match: string | null): Promise<ApiResult<Api[K]>> => {
+  const controller = new AbortController();
+  const res = await fetch(`${BASE_URL}/${key}`, { signal: controller.signal, mode: "cors" })
   if(!res.ok) throw new Error(`error fetching ${key}: status code not OK: ${res.status} ${res.statusText}`);
+  const hash = res.headers.get("x-hash") ?? null;
+  if(hash == null) throw new Error(`error fetching ${key}: no hash in headers`);
+  if(if_none_match != null && if_none_match === hash) {
+    controller.abort();
+    return { kind: "not-modified" }
+  }
   const data: Api[K] = await res.json();
-  return data;
+  return { kind: "new-data", hash, data };
 }
 
 export type StoredApiOptions<T> = {
@@ -30,7 +44,9 @@ export type StoredApiOptions<T> = {
 }
 
 export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOptions<Stored<Api[K]>>) => {
+  
   type Data = Api[K]
+  
   const storage = storage_var<Stored<Data> | null>(options.storage_key, {
     initial: options.initial,
     parse: JSON.parse,
@@ -71,6 +87,7 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
     if(v == null) {
       
       await refresh();
+
       return true;
   
     } else {
@@ -87,25 +104,37 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
   }
   
   const refresh = async () => {
+
     const start = Date.now();
     console.log(`refreshing ${key} ${options.storage_key}`);
     
-    const data = await api_get(key);
-    const stored: Stored<Data> = { obtained_at: new Date(), data };
-    
-    const start_set = Date.now();
-    storage.set(stored);
-    const elapsed_set = Date.now() - start_set;
-    console.log(`refresh set ${key} ${options.storage_key} in ${elapsed_set}ms`)
-    
-    const elapsed = Date.now() - start;
-    console.log(`refreshed ${key} ${options.storage_key} in ${elapsed}ms`);
+    const prev_hash = storage.$?.hash ?? null;
+
+    const r = await api_get(key, prev_hash);
+
+    if(r.kind === "not-modified") {
+      console.log(`obtained not modified response for ${key}`)
+    } else if(r.kind === "new-data") {
+      console.log(`obtained new data for ${key}`)
+
+      const { hash, data } = r;
+      const stored = { obtained_at: new Date(), hash, data };
+
+      const start_set = Date.now();
+      storage.set(stored);
+
+      const elapsed_set = Date.now() - start_set;
+      console.log(`refresh set ${key} ${options.storage_key} in ${elapsed_set}ms`)
+      
+      const elapsed = Date.now() - start;
+      console.log(`refreshed ${key} ${options.storage_key} in ${elapsed}ms`);
+    } else {
+      assert_never(r, "api_get().r.kind")  
+    }
   }
 
   return {
-    get $() {
-      return storage.$;  
-    },
+    get $() { return storage.$ },
     set: storage.set,
     remove: storage.remove,
 

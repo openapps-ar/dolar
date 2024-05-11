@@ -291,7 +291,6 @@
     </button>
 
     {#if theme_menu_open}
-  
       {#snippet menu(position: { x: number, y: number })}
         <div class="menu menu-theme" style:--x="{position.x}px" style:--y="{position.y}px" transition:fly={{ duration: 300, y: -16, x: 8 }}>
           {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}

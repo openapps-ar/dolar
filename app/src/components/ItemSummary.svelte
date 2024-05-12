@@ -18,14 +18,15 @@
 
   const { item, onclick }: Props = $props();
 
-  import type { NowItem } from '../client/client.svelte';
-  import { mdiArrowDown, mdiArrowUp, mdiEqual } from '@mdi/js';
-  import Icon from '../Icon.svelte';
+  import type { NowItem } from "../client/client.svelte";
+  import { mdiArrowDown, mdiArrowUp, mdiEqual } from "@mdi/js";
+  import Icon from "../Icon.svelte";
   import copy from "copy-to-clipboard";
-  import { ripple } from '../ripple';
-  import { fly } from 'svelte/transition';
-  import { portal } from '../portal/portal.svelte';
-  import Anchor from '../portal/Anchor.svelte';
+  import { ripple } from "../ripple";
+  import { fly } from "svelte/transition";
+  import Anchor from "../portal/Anchor.svelte";
+  import { mods } from "../capacitor/mods";
+  const { haptics: { Haptics } } = mods; 
 
   const format_price = (n: number, decimals = 2) => {
     return new Intl.NumberFormat(undefined, {
@@ -348,6 +349,7 @@
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
+          Haptics.vibrate();
           show_copied = id;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)

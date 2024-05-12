@@ -171,7 +171,7 @@
         <path class="area" {d} />
       </Pancake.SvgArea>
       <Pancake.SvgLine data={points} let:d>
-        <path class="line" in:fade={{ duration: 300 }} {d} />
+        <path class="line" in:fade={{ duration: 400 }} {d} />
       </Pancake.SvgLine>
     </Pancake.Svg>
 

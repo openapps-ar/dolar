@@ -142,7 +142,17 @@ export const map_item_days = (src: SourceItemDays): ItemDays => {
   const kind = map_item_days_kind(header);
 
   if(kind === "buy-sell") {
-    const items: ItemDayComplex[] = entries.map(([d, b, s]) => [ date(d), float(b), float(s!) ])
+    let items: ItemDayComplex[] = entries.map(([d, b, s]) => [ date(d), float(b), float(s!) ] as ItemDayComplex)
+      // fix: typo in source
+      // see: https://mercados.ambito.com/dolar/mayorista/historico-general/2024-05-01/2024-05-20
+      // "8776.5" => "876.5"
+      .map(item => {
+        if(item[0] === "2024/05/02" && item[1] === 846.5 && item[2] === 8776.5) {
+          return [ "2024/05/02", 846.5, 876.5 ] as ItemDayComplex;
+        } else {
+          return item;
+        }
+      })
     return { kind, items }
   } else {
     const items: ItemDaySimple[] = entries.map(([d, r]) => [ date(d), float(r) ])

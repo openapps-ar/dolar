@@ -353,7 +353,7 @@
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
-          Haptics?.selectionStart();
+          Haptics?.vibrate({ duration: 100 });
           show_copied = id;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)

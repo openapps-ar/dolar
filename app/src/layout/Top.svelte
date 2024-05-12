@@ -50,7 +50,7 @@
 <style>
   .top {
     height: 4rem;
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);
@@ -59,8 +59,6 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 1.75rem;
-    font-weight: 900;
     flex: none;
     z-index: var(--z-top);
     overflow-x: clip;
@@ -86,6 +84,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 1.5rem;
     font-weight: 600;
   }
 
@@ -162,7 +161,7 @@
     }
   }
 
-  .menu-item-radio {
+  /* .menu-item-radio {
     --color: currentColor;
     position: relative;
     width: 1.1rem;
@@ -174,7 +173,7 @@
     align-items: center;
     justify-content: center;
     margin-inline-end: 0.75rem;
-  }
+  } */
 
   .menu-item-icon {
     color: currentColor;
@@ -195,7 +194,7 @@
       color: var(--color-top-menu-item-icon-selected);
     }
 
-    .menu-item-radio {
+    /* .menu-item-radio {
       --color: var(--color-top-menu-item-icon-selected);
       
       &:after {
@@ -207,7 +206,7 @@
         position: absolute;
         inset: 3px;
       }
-    }
+    } */
   }
 </style>
 
@@ -264,7 +263,7 @@
   {#if can_share}
     <button
       class="btn ripple-c"  
-      aria-label={"Compartir esta app"}
+      aria-label="Compartir esta app"
       onclick={() => share_app()}
       use:ripple
     >
@@ -276,7 +275,7 @@
     <button
       class="btn ripple-c"
       class:open={theme_menu_open}
-      aria-label={"Cambiar a tema claro/oscuro"}
+      aria-label="Cambiar a tema claro/oscuro"
       onclick={() => theme_menu_open = !theme_menu_open}
       use:ripple
       use:click_out={() => setTimeout(() => theme_menu_open = false)}
@@ -290,7 +289,7 @@
     </button>
 
     {#if theme_menu_open}
-      <Anchor z="var(--z-top-menu)" inline="end" block="end">
+      <Anchor inline="end" block="end" z="var(--z-top-menu)">
         <div class="menu reverse menu-theme" transition:fly={{ duration: 300, y: -16, x: 8 }}>
           {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
             <button

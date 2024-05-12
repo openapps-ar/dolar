@@ -56,7 +56,7 @@ export const VARIATION_URLS: Record<Id, string> = {
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/variacion",
   "cripto": "https://mercados.ambito.com/dolarcripto/variacion",
   "euro-oficial": "https://mercados.ambito.com/euro/variacion",
-  "euro-blue": "https://mercados.ambito.com/euro/blue/variacion",
+  "euro-blue": "https://mercados.ambito.com/euro/informal/variacion",
   // "futuro": "https://mercados.ambito.com/dolarfuturo/variacion",
 }
 
@@ -70,7 +70,7 @@ export const HISTORIC_URLS: Record<Id, string> = {
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/historico-general",
   "cripto": "https://mercados.ambito.com/dolarcripto/historico-general",
   "euro-oficial": "https://mercados.ambito.com/euro/historico-general",
-  "euro-blue": "https://mercados.ambito.com/euro/blue/historico-general",
+  "euro-blue": "https://mercados.ambito.com/euro/informal/historico-general",
   // "futuro": "https://mercados.ambito.com/dolarfuturo/historico-general",
 }
 

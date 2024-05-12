@@ -32,7 +32,7 @@
     "1A": YEAR,
     "5A": YEAR * 5,
     "10A": YEAR * 10,
-    "25A": YEAR * 25,
+    "MAX": Number.MAX_SAFE_INTEGER,
   }
 
   const item = $derived(NOW.$?.data.items.find(item => item.id === id) ?? null);

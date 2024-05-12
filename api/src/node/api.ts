@@ -21,8 +21,12 @@ export const create_api = (data: Data, { render_days = false } = {}): Api => {
   api[`meta.json`] = { date };
 
   for(const [key, n] of list_timeframes()) {
-    const filtered = items.map(item => ({ ...item, days: slice_days(item.days, -n) }));
-    api[`${key}.json`] = { items: filtered };
+    const mapped = items.map(item => ({
+      id: item.id,
+      name: item.name,
+      days: slice_days(item.days, -n)
+    }));
+    api[`${key}.json`] = { items: mapped };
   }
 
   const now = items.map(({ days, ...keep }) => keep);

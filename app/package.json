@@ -32,7 +32,8 @@
     "@mdi/js": "^7.4.47",
     "@sveltejs/pancake": "^0.0.18",
     "copy-to-clipboard": "^3.3.3",
-    "pancake": "./packages/pancake/package"
+    "pancake": "./packages/pancake/package",
+    "svelte-check": "^3.7.1"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",

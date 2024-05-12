@@ -5,7 +5,7 @@ export type TimeframeKey = "1d" | "7d" | "30d" | "90d" | "6m" | "1y" | "5y" | "1
 
 export type FullData = { items: FullItem[] }
 
-export type TimeframeAll = { items: FullItem[] }
+export type TimeframeAll = { items: Pick<FullItem, "id" | "name" | "days">[] }
 
 export type NowAll = { items: Item[] }
 

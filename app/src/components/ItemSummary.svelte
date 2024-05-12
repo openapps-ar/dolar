@@ -26,7 +26,7 @@
   import { fly } from "svelte/transition";
   import Anchor from "../portal/Anchor.svelte";
   import { mods } from "../capacitor/mods";
-  const { haptics: { Haptics } } = mods; 
+  const { haptics: { Haptics = null } = {} } = mods; 
 
   const format_price = (n: number, decimals = 2) => {
     return new Intl.NumberFormat(undefined, {
@@ -353,7 +353,7 @@
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
-          Haptics.selectionStart();
+          Haptics?.selectionStart();
           show_copied = id;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)

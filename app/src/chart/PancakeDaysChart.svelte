@@ -22,7 +22,7 @@
   // @ts-expect-error
   import * as Pancake from '@sveltejs/pancake';
   import { Map } from "svelte/reactivity";
-  import { draw, fade } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;

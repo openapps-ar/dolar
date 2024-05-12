@@ -49,7 +49,7 @@
 
 <style>
   .top {
-    height: 4rem;
+    height: 3.5rem;
     padding: 0 0.5rem;
     background: var(--color-top-bg);
     color: var(--color-top-text);
@@ -84,15 +84,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
   }
 
   .btn {
     position: relative;
     overflow: hidden;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
     flex: none;
     display: flex;
     flex-direction: row;

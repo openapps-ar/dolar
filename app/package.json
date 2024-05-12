@@ -12,6 +12,8 @@
     "copy-app-files": "zx scripts/copy-app-files.js",
     "build": "vite build",
     "start": "vite --host --port 3000",
+    "android:device": "cap run android",
+    "android": "run-s build android:device",
     "preview": "vite preview --host --port 3000",
     "assets": "npx @capacitor/assets generate --iconBackgroundColor='#4bae4f' --iconBackgroundColorDark='#4bae4f' --splashBackgroundColor='#4bae4f' --splashBackgroundColorDark='#4bae4f'"
   },

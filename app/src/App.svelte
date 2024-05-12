@@ -31,27 +31,25 @@
       SplashScreen.hide()
     }
 
-    NOW.refresh_if_stale().finally(() => {
+    NOW.refresh_if_stale().finally(async () => {
       
       NOW.start_interval();
 
       if(env.DEV || run.current_code_origin === "network") {
-        sleep(2_500).then(() => {
-          HISTORIC().start_interval();
-        })
-
+        await sleep(300);
+        HISTORIC().start_interval();
+        
       } else {
         console.log("getting code from network");
       
-        get_code_from_network()
-          .then(async entry => {
-            console.log("network code obtained");
-            await replace_app(entry)
-          })
-          .finally(async () => {
-            await sleep(2_500);
-            HISTORIC().start_interval();
-          });
+        try {
+          const entry = await get_code_from_network()
+          console.log("network code obtained");
+          await replace_app(entry)
+        } finally{
+          await sleep(300);
+          HISTORIC().start_interval();
+        }
       }
     })
     

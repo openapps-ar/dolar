@@ -12,7 +12,7 @@ const compress_cache = new LRUCache<string, Compressed>({
 export type CacheItem = {
   hash: string
   etag: string
-  payload: string
+  text: string
   buf: Buffer
   compressed: Compressed
 }
@@ -31,20 +31,21 @@ export const make_cache = (api: Api): Cache => {
   const cache: Cache = Object.create(null)
   
   for(const [key, data] of Object.entries(api) as [keyof Api, any]) {
-    const payload = JSON.stringify(data)
-    const buf = Buffer.from(payload, "utf-8")
+    const text = JSON.stringify(data)
+    const buf = Buffer.from(text, "utf-8")
     const { hash, etag } = make_hash(buf);
     
-    let compressed: Compressed | null = compress_cache.get(etag) ?? null;
-    if(compressed == null) compressed = compress(buf);
+    let compressed: Compressed | null = compress_cache.get(hash) ?? null;
+    if(compressed == null) {
+      compressed = compress(buf);
+      compress_cache.set(hash, compressed)
+    }
     
     // size.br += compressed.br.byteLength
     // size.gzip += compressed.gzip.byteLength
     // size.zstd += compressed.zstd.byteLength
 
-    compress_cache.set(etag, compressed)
-    
-    cache[key] = { hash, etag, payload, buf, compressed  }
+    cache[key] = { hash, etag, text, buf, compressed  }
   }
 
   const end = performance.now();

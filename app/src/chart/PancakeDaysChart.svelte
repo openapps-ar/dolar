@@ -19,7 +19,8 @@
   } = $props();
 
   import type { HISTORIC, NOW } from "../client/client.svelte";
-  import * as Pancake from 'pancake';
+  // @ts-ignore
+  import * as Pancake from '@sveltejs/pancake';
   import { Map } from "svelte/reactivity";
   import { fade } from "svelte/transition";
 

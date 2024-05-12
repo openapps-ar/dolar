@@ -1,6 +1,6 @@
 <script>
 	// import * as Pancake from '@sveltejs/pancake';
-	import * as Pancake from '../../../../../index.mjs';
+	import * as Pancake from 'pancake';
 	import { spring } from 'svelte/motion';
 	import { onMount } from 'svelte';
 	import data from './data.js';

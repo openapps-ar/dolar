@@ -81,6 +81,7 @@
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       filter 200ms linear;      
     
+    /*
     &.clickable {
 
       &:hover {
@@ -91,6 +92,7 @@
         filter: var(--color-item-active-filter);
       }
     }
+    */
 
     &.placeholder {
       pointer-events: none;  
@@ -167,7 +169,8 @@
   }
 
   .buy-sell-space {
-    color: var(--color-item-title)
+    color: var(--color-item-title);
+    transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
 
   .price-cell {
@@ -289,8 +292,9 @@
 {#if item}
   {#if onclick}
     <button
-      class="item clickable"
+      class="item clickable ripple-c"
       style:view-transition-name="summary--{item.id}"
+      use:ripple
       onclick={() => onclick()}
     >
       {@render content({ item })}
@@ -349,7 +353,7 @@
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
-          Haptics.vibrate();
+          Haptics.selectionStart();
           show_copied = id;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)

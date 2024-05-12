@@ -6,15 +6,15 @@
 </script>
 
 <script lang="ts">
-  import { mdiDatabaseSync } from "@mdi/js";
-
   const {
     item,
     days,
+    ranges,
     range,
   }: {
     item: Item
     days: Days
+    ranges: Record<Range, number>,
     range: Range
   } = $props();
 
@@ -22,20 +22,11 @@
   // @ts-expect-error
   import * as Pancake from '@sveltejs/pancake';
   import { Map } from "svelte/reactivity";
+  import { draw, fade } from "svelte/transition";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
   const YEAR = DAY * 365;
-
-  const limits: Record<Range, number> = {
-    "7D": DAY * 7,
-    "1M": MONTH,
-    "3M": MONTH * 3,
-    "6M": MONTH * 6,
-    "1A": YEAR,
-    "5A": YEAR * 5,
-    "10A": YEAR * 10,
-  }
 
   const p = (s: string | number, n = 2, c = "0") => String(s).padStart(n, c);
 
@@ -47,7 +38,7 @@
       } as Days
     }
 
-    const limit = new Date(Date.now() - limits[range]);
+    const limit = new Date(Date.now() - ranges[range]);
     const limit_date_string = `${limit.getFullYear()}/${p(limit.getMonth() + 1)}/${p(limit.getDate())}`
     const filter = <T extends { 0: string }>(items: T[]): T[] => {
       // items are always sorted in date ascending order
@@ -93,6 +84,8 @@
 
   const x1 = 0;
   const x2 = $derived(points.length - 1);
+  // const y1 = $derived(min);
+  // const y2 = $derived(max);
   const y1 = $derived(Math.max(0, Math.floor(min - (max - min) * 0.1)));
   const y2 = $derived(Math.ceil(max + (max - min) * 0.1));
 
@@ -125,7 +118,7 @@
     const d = date.getDate();
     const m = date.getMonth() + 1;
     const yy = String(date.getFullYear()).slice(-2);
-    return (limits[range] <= limits["1A"]) ? `${d}/${m}` : `${m}/${yy}`;
+    return (ranges[range] <= ranges["1A"]) ? `${d}/${m}` : `${m}/${yy}`;
   }
 
   let rect: { width: number } = $state({ width: 0 });
@@ -144,9 +137,7 @@
         y_label_widths.delete(id)
       } 
     }
-  }
-
-  
+  } 
 </script>
 
 <div
@@ -180,7 +171,7 @@
         <path class="area" {d} />
       </Pancake.SvgArea>
       <Pancake.SvgLine data={points} let:d>
-        <path class="line" {d} />
+        <path class="line" in:fade={{ duration: 300 }} {d} />
       </Pancake.SvgLine>
     </Pancake.Svg>
 

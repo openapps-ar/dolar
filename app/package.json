@@ -28,11 +28,8 @@
     "@capawesome/capacitor-app-update": "^6.0.0",
     "@capawesome/capacitor-screen-orientation": "^6.0.0",
     "@mdi/js": "^7.4.47",
-    "@sveltejs/pancake": "^0.0.18",
-    "@sveltejs/panckage": "./packages/pancake/package",
-    "apexcharts": "^3.49.0",
-    "copy-to-clipboard": "^3.3.3",
-    "d3": "^7.9.0"
+    "@sveltejs/pancake": "./packages/pancake/package",
+    "copy-to-clipboard": "^3.3.3"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
@@ -42,7 +39,7 @@
     "postcss": "^8.4.38",
     "rollup": "^4.17.2",
     "rollup-plugin-typescript": "^1.0.1",
-    "svelte": "^5.0.0-next.127",
+    "svelte": "^5.0.0-next.130",
     "typescript": "^5.4.2",
     "vite": "^5.2.10",
     "zx": "^8.0.2"

@@ -153,17 +153,17 @@ export const NOW = stored_api("now.json", {
   initial: null
 })
 
-type HistoricStore = ReturnType<typeof stored_api<"10y.json">>;
+type HistoricStore = ReturnType<typeof stored_api<"all.json">>;
 
 let _HISTORIC: HistoricStore | null = null;
 
 export const HISTORIC = () => {
 
   if(_HISTORIC == null) {
-    _HISTORIC = stored_api("10y.json", {
+    _HISTORIC = stored_api("all.json", {
       stale_ms: 1000 * 60 * 60 * 1, // 1 hour
       check_interval_ms: 1000 * 5, // 5 seconds
-      storage_key: "data-historic-v1",
+      storage_key: "data-historic-v2",
       initial: null
     })
   }

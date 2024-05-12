@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
   export type Item = Exclude<typeof NOW.$, null>["data"]["items"][number];
   export type Days = Exclude<ReturnType<typeof HISTORIC>["$"], null>["data"]["items"][number]["days"]
-  export type Range = "7D" | "1M" | "3M" | "6M" | "1A" | "5A" | "10A";
-  export const ranges: Range[] = ["7D", "1M", "3M", "6M", "1A", "5A", "10A"];
+  export type Range = "7D" | "1M" | "3M" | "6M" | "1A" | "5A" | "10A" | "25A";
+  export const ranges: Range[] = ["7D", "1M", "3M", "6M", "1A", "5A", "10A", "25A"];
 </script>
 
 <script lang="ts">

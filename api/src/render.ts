@@ -3,6 +3,7 @@ import { type Id } from "./config.js";
 import { DaysData, type Api, type TimeframeKey } from "./api.js";
 import fs from "fs/promises";
 
+// TODO: use date based filter instead of count
 export const timeframes: Record<TimeframeKey, number> = {
   "1d": 1,
   "7d": 7,
@@ -12,6 +13,8 @@ export const timeframes: Record<TimeframeKey, number> = {
   "1y": 365,
   "5y": 365 * 5,
   "10y": 365 * 10,
+  "25y": 365 * 25,
+  "all": Number.MAX_VALUE,
 }
 
 export const list_timeframes = () => {

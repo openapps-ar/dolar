@@ -64,10 +64,13 @@
     const now = new Date();
     const diff = now.getTime() - first_day_date.getTime();
     const keys = Object.keys(ranges) as Range[];
-    return keys.filter((_, i) => {
+    const all = keys.filter((_, i) => {
       const n = i === 0 ? 0 : ranges[keys[i - 1]];
       return diff > n
     })
+
+    all[all.length - 1] = "MAX";
+    return all;
   })
 
 

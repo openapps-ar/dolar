@@ -36,6 +36,8 @@
         kind: days.kind,
         items: days.items.slice(-7),
       } as Days
+    } else if(range === "MAX") {
+      return { ...days }
     }
 
     const limit = new Date(Date.now() - ranges[range]);

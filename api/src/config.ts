@@ -14,8 +14,8 @@ export type Id =
   | "turista"
   | "mayorista"
   | "cripto"
-  | "euro-oficial"
-  | "euro-blue"
+  // | "euro-oficial"
+  // | "euro-blue"
   // | "futuro"
 
   export const IDS: Id[] = [
@@ -27,8 +27,8 @@ export type Id =
     "turista",
     "mayorista",
     "cripto",
-    "euro-oficial",
-    "euro-blue"
+    // "euro-oficial",
+    // "euro-blue"
     // "futuro",
   ]
 
@@ -41,8 +41,8 @@ export const NAMES: Record<Id, string> = {
   "turista": "Turista",
   "mayorista": "Mayorista",
   "cripto": "Cripto",
-  "euro-oficial": "Euro Oficial",
-  "euro-blue": "Euro Blue",
+  // "euro-oficial": "Euro Oficial",
+  // "euro-blue": "Euro Blue",
   // "futuro": "Dolar Futuro",
 }
 
@@ -55,8 +55,8 @@ export const VARIATION_URLS: Record<Id, string> = {
   "turista": "https://mercados.ambito.com/dolarturista/variacion",
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/variacion",
   "cripto": "https://mercados.ambito.com/dolarcripto/variacion",
-  "euro-oficial": "https://mercados.ambito.com/euro/variacion",
-  "euro-blue": "https://mercados.ambito.com/euro/informal/variacion",
+  // "euro-oficial": "https://mercados.ambito.com/euro/variacion",
+  // "euro-blue": "https://mercados.ambito.com/euro/informal/variacion",
   // "futuro": "https://mercados.ambito.com/dolarfuturo/variacion",
 }
 
@@ -69,8 +69,8 @@ export const HISTORIC_URLS: Record<Id, string> = {
   "turista": "https://mercados.ambito.com/dolarturista/historico-general",
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/historico-general",
   "cripto": "https://mercados.ambito.com/dolarcripto/historico-general",
-  "euro-oficial": "https://mercados.ambito.com/euro/historico-general",
-  "euro-blue": "https://mercados.ambito.com/euro/informal/historico-general",
+  // "euro-oficial": "https://mercados.ambito.com/euro/historico-general",
+  // "euro-blue": "https://mercados.ambito.com/euro/informal/historico-general",
   // "futuro": "https://mercados.ambito.com/dolarfuturo/historico-general",
 }
 

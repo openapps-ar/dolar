@@ -12,7 +12,7 @@ import { type TransitionConfig } from "svelte/transition"
 
 const duration = 350;
 const offset = 20;
-import { expoInOut as easing } from "svelte/easing";
+import { expoOut as easing } from "svelte/easing";
 
 let direction: "forward" | "backward" = "forward";
 

@@ -7,7 +7,7 @@
     onitemclick: (id: string) => void
   } = $props();
 
-  import { screen_enter } from "../transitions";
+  import { screen_enter, screen_leave } from "../transitions";
   import type { NOW } from '../client/client.svelte';
   import ItemSummary from '../components/ItemSummary.svelte';
 
@@ -46,12 +46,12 @@
   }
 </style>
 
-<div class="screen" in:screen_enter|global>
+<div class="screen" in:screen_enter out:screen_leave>
   
   <div class="items">
     {#each items as item (item.id)}
       <div class="summary" style:view-transition-name="item-box--{item.id}">  
-        <ItemSummary {item} onclick={() => onitemclick(item.id)} />
+        <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />
       </div>
     {:else}
       {#each Array(8).fill(0) as _}

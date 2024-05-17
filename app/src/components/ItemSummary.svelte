@@ -7,16 +7,18 @@
   type Props = 
     | {
       item: NowItem,
+      kind: "index" | "item",
       placeholder?: false,
       onclick?: () => void
     }
     | {
       item?: undefined
+      kind?: undefined
       placeholder: true
       onclick?: undefined
     };
 
-  const { item, onclick }: Props = $props();
+  const { item, kind, onclick }: Props = $props();
 
   import type { NowItem } from "../client/client.svelte";
   import { mdiArrowDown, mdiArrowUp, mdiEqual } from "@mdi/js";
@@ -353,8 +355,8 @@
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
-          Haptics?.vibrate({ duration: 100 });
-          show_copied = id;
+          Haptics?.selectionStart();
+          show_copied = `${id}--${kind}`;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)
         }}
@@ -364,7 +366,7 @@
         <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
       </button>
       
-      {#if show_copied === id}
+      {#if show_copied === `${id}--${kind}`}
         <Anchor inline="center" block="start" z="var(--z-copied)">
           <div class="copied" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }} style:view-transition-name="summary-price-copied--{id}">
             <div class="copied-text">Copiado</div>

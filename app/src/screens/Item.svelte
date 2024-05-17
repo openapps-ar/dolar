@@ -10,7 +10,7 @@
     id: string;
   } = $props();
 
-  import { document_transition } from "../transitions";
+  import { document_transition, screen_leave } from "../transitions";
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
@@ -90,7 +90,7 @@
 
   let selection_pos: { x: number, y: number, width: number, height: number } | null = $state(null);
 
-  const selection_mount = (node: HTMLElement) => {
+  const selection_anchor = (node: HTMLElement) => {
     const parent = node.parentElement?.parentElement?.getBoundingClientRect();
     if(parent == null) return; 
     const rect = node.getBoundingClientRect();
@@ -184,11 +184,11 @@
   }
 </style>
 
-<div class="screen" in:screen_enter|global>
+<div class="screen" in:screen_enter out:screen_leave>
   <div class="box" style:view-transition-name="item-box--{item?.id}">
     <div class="summary">
       {#if item != null}
-        <ItemSummary {item} />
+        <ItemSummary {item} kind="item" />
       {/if}
     </div>
 
@@ -199,7 +199,7 @@
           <button class="range-btn" class:selected onclick={() => set_range(r)}>
             {r}
             {#if show_selection && selected}
-              <span class="selection-anchor" use:selection_mount></span>
+              <span class="selection-anchor" use:selection_anchor></span>
               <!-- <span class="selection" style:view-transition-name={setting_range ? `item-range-selection--${item?.id}` : undefined}></span> -->
               <!-- <span class="selection" in:selection_enter={{ key: null }} out:selection_leave={{ key: null }} ></span> -->
               <!-- <span class="selection" style:view-transition-name="item-selection-selection--{item?.id}"></span> -->
@@ -208,13 +208,14 @@
         {/each}
 
         {#if selection_pos != null}
+          {@const { x, y, width, height } = selection_pos}
           <span
             class="selection"
             transition:fade={{ duration: 200 }}
-            style:left="{selection_pos.x}px"
-            style:top="{selection_pos.y}px"
-            style:width="{selection_pos.width}px"
-            style:height="{selection_pos.height}px"
+            style:left="{x}px"
+            style:top="{y}px"
+            style:width="{width}px"
+            style:height="{height}px"
           >
           </span>
         {/if}

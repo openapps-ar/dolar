@@ -93,8 +93,9 @@
   const color_scheme = $derived(COLOR_SCHEME.$ ?? media_color_scheme);
 
   import ItemScreen from "./screens/Item.svelte";
-  import { document_transition } from "./transitions";
+  import { set_direction } from "./transitions";
   import { Portals } from "./portal/portal.svelte";
+  import { assert_never } from "../../api/src/assert_never";
 
   const STATE_VERSION = 0;
 
@@ -115,6 +116,8 @@
   
   let state: State = $state(saved_state);
   
+  history.scrollRestoration = "manual";
+
   const replace = (state: State) => history.replaceState(state, "", null);
   const push = (state: State) => history.pushState(state, "", null);
   const get = (): State => history.state
@@ -123,20 +126,41 @@
     update_current_scroll();
     const new_state = { ...screen, scroll: 0, version: STATE_VERSION };
     push(new_state);
+
+    if(state.screen === "index") {
+      set_direction("forward")
+    } else if(state.screen === "item") {
+      set_direction("backward")
+    } else {
+      return assert_never(state, "state.screen");
+    }
+
+    document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     state = new_state;
     // await document_transition(() => state = new_state);  
   }
+
   const back = () => history.back();
 
 
   onMount(() => {
+    
     const onpop = () => {
+      
       const fn = async () => {
-        state = get();
-        if(state.scroll !== 0) {
-          await tick();
-          document.scrollingElement && (document.scrollingElement.scrollTop = state.scroll);
+        
+        if(state.screen === "index") {
+          set_direction("forward")
+        } else if(state.screen === "item") {
+          set_direction("backward")
+        } else {
+          return assert_never(state, "prev.screen");
         }
+
+      
+        state = get();
+        await tick();
+        document.scrollingElement?.scrollTo({ top: state.scroll, left: 0, behavior: "smooth" });
       }
 
       fn();
@@ -356,10 +380,14 @@
 
   .screen {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: stretch;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .screen > :global(*) {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .portals {

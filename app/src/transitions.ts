@@ -1,5 +1,5 @@
 import { tick } from "svelte";
-import { TransitionConfig, fly } from "svelte/transition"
+import { type TransitionConfig } from "svelte/transition"
 
 // export const screen_enter = (node: HTMLElement, params = {}) => {
 //   // return { duration: 0 };
@@ -10,9 +10,9 @@ import { TransitionConfig, fly } from "svelte/transition"
 //   })
 // }
 
-const duration = 250;
+const duration = 600;
 const offset = 100;
-import { expoInOut as easing } from "svelte/easing";
+import { expoOut as easing } from "svelte/easing";
 
 let direction: "forward" | "backward" = "forward";
 

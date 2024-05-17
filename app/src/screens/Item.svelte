@@ -10,15 +10,12 @@
     id: string;
   } = $props();
 
-  import { document_transition, screen_leave } from "../transitions";
+  import { screen_leave } from "../transitions";
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
-  // import { tick } from "svelte";
-  // import { crossfade, fade } from "svelte/transition";
   import { screen_enter } from "../transitions";
-  import { sleep } from "../sleep";
-  import { crossfade, fade } from "svelte/transition";
+  import { tick } from "svelte";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
@@ -46,14 +43,7 @@
 
   const set_range = async (v: Range) => {
     range = v;
-    // await document_transition(async () => range = v);
   };
-
-  // fix quirk in view transition
-  let show_selection = $state(true);
-  $effect(() => {
-    sleep(10).then(() => (show_selection = true));
-  });
 
   const first_day_date = $derived.by(() => {
     if (days == null) return null;
@@ -65,7 +55,7 @@
     return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
   });
 
-  const show_ranges = $derived.by(() => {
+  const selectable_ranges = $derived.by(() => {
     if (first_day_date == null) return [];
     const now = new Date();
     const diff = now.getTime() - first_day_date.getTime();
@@ -79,27 +69,18 @@
     return all;
   });
 
-  // const [selection_enter, selection_leave] = crossfade({
-  //   duration: 300,
-  //   fallback: (node) => fade(node, { duration: 200 })
-  // })
-
-  // const sizes: Record<Range, ResizeObserverSize[] | undefined> = $state(
-  //   Object.create(null)
-  // );
-
   let selection_pos: { x: number, y: number, width: number, height: number } | null = $state(null);
 
   const selection_anchor = (node: HTMLElement) => {
     const parent = node.parentElement?.parentElement?.getBoundingClientRect();
     if(parent == null) return; 
-    const rect = node.getBoundingClientRect();
+    const { left, top, width, height } = node.getBoundingClientRect();
     selection_pos = {
-      x: rect.left - parent.left,
-      y: rect.top - parent.top,
-      width: rect.width,
-      height: rect.height,
-    };
+      x: left - parent.left,
+      y: top - parent.top,
+      width,
+      height,
+    }
   }
 </script>
 
@@ -194,15 +175,12 @@
 
     <div class="chart-and-ranges">
       <div class="ranges">
-        {#each show_ranges as r (r)}
+        {#each selectable_ranges as r (r)}
           {@const selected = range === r}
           <button class="range-btn" class:selected onclick={() => set_range(r)}>
             {r}
-            {#if show_selection && selected}
+            {#if selected}
               <span class="selection-anchor" use:selection_anchor></span>
-              <!-- <span class="selection" style:view-transition-name={setting_range ? `item-range-selection--${item?.id}` : undefined}></span> -->
-              <!-- <span class="selection" in:selection_enter={{ key: null }} out:selection_leave={{ key: null }} ></span> -->
-              <!-- <span class="selection" style:view-transition-name="item-selection-selection--{item?.id}"></span> -->
             {/if}
           </button>
         {/each}
@@ -211,7 +189,6 @@
           {@const { x, y, width, height } = selection_pos}
           <span
             class="selection"
-            transition:fade={{ duration: 200 }}
             style:left="{x}px"
             style:top="{y}px"
             style:width="{width}px"

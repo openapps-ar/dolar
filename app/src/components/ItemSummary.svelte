@@ -63,6 +63,11 @@
 
     return Math.max(...decs);
   }
+
+  const price_btn_out = (node: HTMLElement, id: string) => {
+    if(show_copied === id) show_copied =  null;    
+    return { duration: 0 }
+  }
 </script>
 
 <style>
@@ -71,7 +76,8 @@
   }
 
   .item {
-    padding: 0 0.5rem 0 0.5rem;
+    --vertical-gap: 0.1rem;
+    padding: 0.75rem 0.9rem 0.8rem 0.9rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -105,7 +111,7 @@
       flex-direction: column;
       align-items: flex-start;
       flex: 1;
-      padding: 0.75rem 0.5rem;
+      gap: var(--vertical-gap);
     }
 
     .name {
@@ -129,8 +135,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      padding: .25rem .5rem 0.75rem 0.5rem;
-      margin-inline-end: -0.5rem;
+      gap: var(--vertical-gap);
     }
   }
 
@@ -139,9 +144,7 @@
     flex-direction: row;
     align-items: center;
     font-size: 0.8rem;
-    margin-top: -0.4rem;
-    padding: 0 0.5rem;
-
+    
     &[data-kind=up] {
       color: var(--color-up);
     }
@@ -170,9 +173,13 @@
     margin-inline-start: auto;
   }
 
-  .buy-sell-space {
+  .price-sep {
     color: var(--color-item-title);
     transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+    margin: 0 0.3rem 0 0.45rem;
+    font-size: 0.7rem;
+    line-height: 1.1rem;
+    opacity: 0.7;
   }
 
   .price-cell {
@@ -180,7 +187,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem;
   }
 
   .price-out {
@@ -198,8 +204,6 @@
     font-size: 1.25rem;
     font-weight: 600;
     border-radius: 0.25rem;
-    padding: 0.25rem 0.6rem;
-    margin: -0.25rem -0.6rem;
     color: var(--color-item-price);
     cursor: pointer;
 
@@ -268,7 +272,7 @@
           {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
         {/if}
         {#if buy != null && sell != null && buy !== sell}
-          <div class="buy-sell-space" style:view-transition-name="summary-price-sep--{id}">/</div>
+          <div class="price-sep" style:view-transition-name="summary-price-sep--{id}">/</div>
         {/if}
         {#if buy !== sell}
           {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
@@ -345,6 +349,7 @@
   price: number
   decimals: number
 })}
+  {@const target = `${id}--${kind}`}
   <div class="price-cell">
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div class="price-out">
@@ -352,11 +357,12 @@
         class="price ripple-c"
         tabindex="-1"
         use:ripple
+        out:price_btn_out|global={target}
         onclick={event => {
           event.stopPropagation();
           copy(price.toFixed(2));
           Haptics?.selectionStart();
-          show_copied = `${id}--${kind}`;
+          show_copied = target;
           clearTimeout(show_copied_timer);
           show_copied_timer = setTimeout(() => show_copied = null, 1500)
         }}
@@ -366,7 +372,7 @@
         <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
       </button>
       
-      {#if show_copied === `${id}--${kind}`}
+      {#if show_copied === target}
         <Anchor inline="center" block="start" z="var(--z-copied)">
           <div class="copied" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }} style:view-transition-name="summary-price-copied--{id}">
             <div class="copied-text">Copiado</div>

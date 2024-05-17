@@ -230,6 +230,7 @@
       appearance: none;
       font: inherit;
       border: none;
+      padding: 0;
       background: transparent;
       cursor: pointer;
     }

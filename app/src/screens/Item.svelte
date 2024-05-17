@@ -82,6 +82,38 @@
       height,
     }
   }
+
+  const prev_value = $derived(item?.prev_value ?? null)
+
+  const brecha = $derived.by(() => {
+    if(item == null) return null;
+    if(item.id === "oficial") return null;
+    const oficial = NOW.$?.data.items.find(item => item.id === "oficial");
+    if(oficial == null) return null;
+    const oficial_value = oficial.ref ?? oficial.sell ?? oficial.buy;    
+    const self_value = item.ref ?? item.sell ?? item.buy;
+    return self_value - oficial_value;
+  })
+
+  const variation = $derived.by(() => {
+    if(prev_value == null || item == null) return null;
+    const value = item.ref ?? item.sell ?? item.buy;
+    return  value - prev_value;    
+  })
+
+  const f0 = new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  const f2 = new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const format_prev_close = (v: number) => v % 1 === 0 ? f0.format(v) : f2.format(v);
+  const format_brecha = format_prev_close;
+  const format_variation = (v: number) => v % 1 === 0 ? f0.format(v) : f2.format(v);
 </script>
 
 <style>
@@ -92,6 +124,7 @@
     flex-direction: column;
     align-items: stretch;
     min-width: 0;
+    gap: 1rem;
   }
 
   .box {
@@ -163,10 +196,58 @@
     position: relative;
     height: 300px;
   }
+
+  .day-summary-out {
+    width: min(100%, var(--screen-max-width));
+    margin: 0 auto;
+  }
+
+  .day-summary-title {
+    margin: 1rem 0.75rem 0.5rem 0.75rem;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-title-over-background);
+    transition: color var(--theme-color-transition-duration)  var(--theme-color-transition-timing-function);
+  }
+
+  .day-summary-items {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1px;
+    padding: 0.5rem 0;
+  }
+
+  .day-summary-item {
+    display: flex;
+    flex-direction: row;
+    padding: 0.9rem 1rem;
+    background-color: var(--color-box-bg);
+    color: var(--color-text-over-box);
+    font-weight: 400;
+    --border-radius: 0.5rem;
+    transition:
+      background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
+      color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
+    }
+
+    &:last-child {
+      border-bottom-left-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
+    }
+  }
+
+  .day-summary-item-name {
+    flex: 1;
+  }
 </style>
 
 <div class="screen">
-  <div class="box" style:view-transition-name="item-box--{item?.id}">
+  <div class="box box-1" style:view-transition-name="item-box--{item?.id}">
     <div class="summary">
       {#if item != null}
         <ItemSummary {item} kind="item" />
@@ -206,5 +287,42 @@
         {/if}
       </div>
     </div>
+  </div>
+
+  <div class="day-summary-out">
+
+    {#if variation != null || prev_value != null || (item && item?.id !== "oficial")}
+      <div class="day-summary-title">
+        Resumen de la jornada
+      </div>
+    
+      <div class="day-summary-items">
+        <div class="day-summary-item">
+          <div class="day-summary-item-name">Variación</div>
+          <div class="day-summary-item-value">
+            {(variation || 0) > 0 ? `+${format_variation(variation!)}` : format_variation(variation!)}
+          </div>
+        </div>
+        
+        {#if prev_value != null}
+          <div class="day-summary-item">
+            <div class="day-summary-item-name">Cierre anterior</div>
+            <div class="day-summary-item-value">
+              <span class="prev-close-sign">
+                $
+              </span>
+              {format_prev_close(prev_value)}
+            </div>
+          </div>
+        {/if}
+        
+        {#if brecha != null}
+          <div class="day-summary-item">
+            <div class="day-summary-item-name">Brecha</div>
+            <div class="day-summary-item-value">{brecha > 0 ? "+" : ""}{format_brecha(brecha)}</div>
+          </div>
+        {/if}
+      </div>
+    {/if}
   </div>
 </div>

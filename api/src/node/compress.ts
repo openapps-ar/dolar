@@ -67,7 +67,7 @@ export const send = <Algo extends string>(
 }) => {
 
   const req_etag = req.header("if-none-match");
-  if(req_etag == null && req_etag === etag) {
+  if(req_etag != null && req_etag === etag) {
     res.status(304).end();
     return;
   }

@@ -273,6 +273,9 @@
     
     --color-box-bg: var(--white-almost);
     
+    --color-title-over-background: rgba(0,0,0,0.7);
+    --color-title-over-box: rgba(0,0,0,1);
+
     --color-item-list-bg: var(--green-lite);
     --color-item-title: rgba(0,0,0,0.6);    
     --color-item-price-title: rgba(0,0,0,0.6);
@@ -323,6 +326,9 @@
     --color-top-menu-item-hover-bg: rgba(255,255,255,0.05);
     --color-top-menu-item-selected-bg: rgba(255,255,255,0.1);
     --color-top-menu-item-icon-selected: var(--green-dark);
+
+    --color-title-over-background: rgba(255,255,255,1);
+    --color-text-over-box: rgba(255,255,255,1);
 
     --color-item-list-bg: var(--green-dark);
     --color-box-bg: var(--green-darker);

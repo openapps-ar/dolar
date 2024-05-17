@@ -11,7 +11,7 @@ import { TransitionConfig, fly } from "svelte/transition"
 // }
 
 const duration = 250;
-const offset = 50;
+const offset = 100;
 import { expoInOut as easing } from "svelte/easing";
 
 let direction: "forward" | "backward" = "forward";
@@ -26,7 +26,7 @@ export const screen_enter = (node: HTMLElement, params = {}): TransitionConfig =
     easing,
     css: (t, u) => `
       transform: translateX(${(direction === "forward" ? offset : -offset) * u}%);
-      opacity: ${t}`,
+      /*opacity: ${t}*/`,
   }
 }
 
@@ -36,7 +36,7 @@ export const screen_leave = (node: HTMLElement, params = {}): TransitionConfig =
     easing,
     css: (t, u) => 
       `transform: translateX(${(direction === "forward" ? -offset : offset) * u}%);
-      opacity: ${t}`
+      /*opacity: ${t}*/`
   }
 }
 

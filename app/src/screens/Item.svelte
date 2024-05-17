@@ -165,7 +165,7 @@
   }
 </style>
 
-<div class="screen" in:screen_enter out:screen_leave>
+<div class="screen">
   <div class="box" style:view-transition-name="item-box--{item?.id}">
     <div class="summary">
       {#if item != null}

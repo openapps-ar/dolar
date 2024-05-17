@@ -46,7 +46,7 @@
   }
 </style>
 
-<div class="screen" in:screen_enter out:screen_leave>
+<div class="screen">
   
   <div class="items">
     {#each items as item (item.id)}

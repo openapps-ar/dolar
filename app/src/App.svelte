@@ -93,7 +93,7 @@
   const color_scheme = $derived(COLOR_SCHEME.$ ?? media_color_scheme);
 
   import ItemScreen from "./screens/Item.svelte";
-  import { set_direction } from "./transitions";
+  import { screen_enter, screen_leave, set_direction } from "./transitions";
   import { Portals } from "./portal/portal.svelte";
   import { assert_never } from "../../api/src/assert_never";
 
@@ -115,13 +115,15 @@
   }
   
   let state: State = $state(saved_state);
-  
+  let scroll: HTMLElement | null = null;
+  let set_scroll = (node: HTMLElement) => {scroll = node};
+
   history.scrollRestoration = "manual";
 
   const replace = (state: State) => history.replaceState(state, "", null);
   const push = (state: State) => history.pushState(state, "", null);
   const get = (): State => history.state
-  const update_current_scroll = () => replace({ ...get(), scroll: document.scrollingElement?.scrollTop || 0 });
+  const update_current_scroll = () => replace({ ...get(), scroll: scroll?.scrollTop || 0 });
   const go = async (screen: StateScreen) => {
     update_current_scroll();
     const new_state = { ...screen, scroll: 0, version: STATE_VERSION };
@@ -135,7 +137,7 @@
       return assert_never(state, "state.screen");
     }
 
-    document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    // document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     state = new_state;
     // await document_transition(() => state = new_state);  
   }
@@ -160,7 +162,8 @@
       
         state = get();
         await tick();
-        document.scrollingElement?.scrollTo({ top: state.scroll, left: 0, behavior: "smooth" });
+        if(state.scroll !== 0 && scroll != null) scroll.scrollTop = state.scroll
+        // document.scrollingElement?.scrollTo({ top: state.scroll, left: 0, behavior: "smooth" });
       }
 
       fn();
@@ -211,14 +214,13 @@
       justify-content: stretch;
       margin: 0;
       padding: 0;
+      flex: 1;
+      height: 100%;
+      min-height: 0;
     }
 
     html {
-      height: 100%;
-    }
-
-    body, #app {
-      flex-grow: 1;  
+      overflow: hidden;
     }
 
     .ripple-c {
@@ -362,7 +364,9 @@
   }
 
   .app {
-    flex-grow: 1;
+    flex: 1;
+    height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -381,14 +385,23 @@
 
   .screen {
     flex: 1;
+    min-height: 0;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
 
-  .screen > :global(*) {
+  .scroll {
     grid-column: 1;
     grid-row: 1;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    scrollbar-color: rgba(0,0,0,0.1) rgba(0,0,0,0.05);
   }
 
   .portals {
@@ -409,9 +422,13 @@
 
   <div class="screen">
     {#if state.screen === "index"}
-      <Index items={show_items} onitemclick={id => go({ screen: "item", id })} />
+      <div class="scroll" in:screen_enter out:screen_leave use:set_scroll>
+        <Index items={show_items} onitemclick={id => go({ screen: "item", id })} />
+      </div>
     {:else if state.screen === "item"}
-      <ItemScreen id={state.id} />
+      <div class="scroll" in:screen_enter out:screen_leave use:set_scroll>  
+        <ItemScreen id={state.id} />
+      </div>
     {/if}
    </div>
 

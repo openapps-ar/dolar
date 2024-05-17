@@ -218,7 +218,7 @@
         aria-label="Volver"
         onclick={() => onback()}
         use:ripple
-        transition:scale={{ duration: 200 }}
+        transition:scale={{ duration: 400 }}
       >
       <Icon d={mdiArrowLeft} />
     </button>

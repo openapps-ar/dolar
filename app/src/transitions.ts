@@ -10,7 +10,7 @@ import { type TransitionConfig } from "svelte/transition"
 //   })
 // }
 
-const duration = 500;
+const duration = 350;
 const offset = 20;
 import { expoInOut as easing } from "svelte/easing";
 

@@ -78,14 +78,7 @@
     }
   })
 
-  // let source = $derived(SOURCE_ID.$ && Object.hasOwn(sources, SOURCE_ID.$) ? sources[SOURCE_ID.$] : source_ambito);
   let items = $derived(NOW.$?.data.items ?? []);
-
-  // const show_items = $derived(items.filter(item => {
-  //   return item.buy != null || item.sell != null;
-  // }));
-
-  // TODO: filter hidden ones
   const show_items = $derived(items);
 
   const PREFERS_LIGHT = media("(prefers-color-scheme: light)");
@@ -113,17 +106,17 @@
     saved_state = { screen: "index", scroll: 0, version: STATE_VERSION };
     history.replaceState(saved_state, "", null);
   }
+
+  $effect(() => { history.scrollRestoration = "manual" });
   
   let state: State = $state(saved_state);
   let scroll: HTMLElement | null = null;
   let set_scroll = (node: HTMLElement) => {scroll = node};
 
-  history.scrollRestoration = "manual";
-
   const replace = (state: State) => history.replaceState(state, "", null);
   const push = (state: State) => history.pushState(state, "", null);
   const get = (): State => history.state
-  const update_current_scroll = () => replace({ ...get(), scroll: scroll?.scrollTop || 0 });
+  const update_current_scroll = () => replace({ ...get(), scroll: scroll?.scrollTop  ?? 0 });
   const go = async (screen: StateScreen) => {
     update_current_scroll();
     const new_state = { ...screen, scroll: 0, version: STATE_VERSION };
@@ -137,9 +130,7 @@
       return assert_never(state, "state.screen");
     }
 
-    // document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     state = new_state;
-    // await document_transition(() => state = new_state);  
   }
 
   const back = () => history.back();
@@ -156,18 +147,15 @@
         } else if(state.screen === "item") {
           set_direction("backward")
         } else {
-          return assert_never(state, "prev.screen");
+          return assert_never(state, "state.screen");
         }
-
       
         state = get();
         await tick();
         if(state.scroll !== 0 && scroll != null) scroll.scrollTop = state.scroll
-        // document.scrollingElement?.scrollTo({ top: state.scroll, left: 0, behavior: "smooth" });
       }
 
       fn();
-      // document_transition(fn)
     }
 
     window.addEventListener("popstate", onpop);

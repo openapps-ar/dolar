@@ -138,7 +138,15 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
 }
 
 export const map_item_days = (src: SourceItemDays): ItemDays => {
-  const [ header, ...entries ] = src;
+  let [ header, ...entries ] = src;
+
+  let dates = new Set<string>();
+  entries = entries.filter(item => {
+    if(dates.has(item[0])) return false;
+    dates.add(item[0]);
+    return true;
+  }) as typeof entries;
+
   const kind = map_item_days_kind(header);
 
   if(kind === "buy-sell") {

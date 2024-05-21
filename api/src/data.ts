@@ -140,6 +140,8 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
 export const map_item_days = (src: SourceItemDays): ItemDays => {
   let [ header, ...entries ] = src;
 
+  // remove duplicate values for the same date
+  // use only the most recent value (first one) for each date
   let dates = new Set<string>();
   entries = entries.filter(item => {
     if(dates.has(item[0])) return false;

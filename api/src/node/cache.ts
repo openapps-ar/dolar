@@ -1,13 +1,8 @@
 import { type Api } from "../api.js"
 import { make_hash } from "./hash.js"
-import { LRUCache } from "lru-cache";
 import { Compressed, compress } from "./compress.js";
 
-const compress_cache = new LRUCache<string, Compressed>({
-  // aprox files in Api is 3500
-  max: 5_000,
-})
-
+let compress_index = new Map<string, Compressed>();
 
 export type CacheItem = {
   hash: string
@@ -21,11 +16,7 @@ export type Cache = Record<keyof Api, CacheItem>
 
 export const make_cache = (api: Api): Cache => {
   
-  // let size = {
-  //   br: 0,
-  //   gzip: 0,
-  //   zstd: 0
-  // }
+  let new_compress_index = new Map<string, Compressed>();
 
   const start = performance.now();
   const cache: Cache = Object.create(null)
@@ -35,20 +26,15 @@ export const make_cache = (api: Api): Cache => {
     const buf = Buffer.from(text, "utf-8")
     const { hash, etag } = make_hash(buf);
     
-    let compressed: Compressed | null = compress_cache.get(hash) ?? null;
-    if(compressed == null) {
-      compressed = compress(buf);
-      compress_cache.set(hash, compressed)
-    }
+    let compressed: Compressed | null = compress_index.get(hash) ?? null;
+    if(compressed == null) compressed = compress(buf);
+    new_compress_index.set(hash, compressed)
     
-    // size.br += compressed.br.byteLength
-    // size.gzip += compressed.gzip.byteLength
-    // size.zstd += compressed.zstd.byteLength
-
     cache[key] = { hash, etag, text, buf, compressed  }
   }
 
   const end = performance.now();
+  compress_index = new_compress_index;
   console.log(`created cache in ${(end - start).toFixed(2)}ms`);
   // console.log("cache size", size);
 

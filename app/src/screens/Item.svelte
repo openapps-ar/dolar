@@ -70,7 +70,10 @@
   let selection_pos: { x: number, y: number, width: number, height: number } | null = $state(null);
 
   const selection_anchor = (node: HTMLElement) => {
-    tick().then(() => {
+   
+    let frame: number | null = null;
+   
+    const on_frame = () => {
       const parent = node.parentElement?.parentElement?.getBoundingClientRect();
       if(parent == null) return; 
       const { left, top, width, height } = node.getBoundingClientRect();
@@ -80,7 +83,16 @@
         width,
         height,
       }
-    })
+      frame = requestAnimationFrame(on_frame);
+    }
+
+    on_frame();
+
+    return {
+      destroy: () => {
+        frame && cancelAnimationFrame(frame);
+      }
+    }
   }
 
   const prev_value = $derived(item?.prev_value ?? null)

@@ -13,6 +13,7 @@
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
+  import { tick } from "svelte";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
@@ -71,13 +72,15 @@
   const selection_anchor = (node: HTMLElement) => {
     const parent = node.parentElement?.parentElement?.getBoundingClientRect();
     if(parent == null) return; 
-    const { left, top, width, height } = node.getBoundingClientRect();
-    selection_pos = {
-      x: left - parent.left,
-      y: top - parent.top,
-      width,
-      height,
-    }
+    tick().then(() => {
+      const { left, top, width, height } = node.getBoundingClientRect();
+      selection_pos = {
+        x: left - parent.left,
+        y: top - parent.top,
+        width,
+        height,
+      }
+    })
   }
 
   const prev_value = $derived(item?.prev_value ?? null)

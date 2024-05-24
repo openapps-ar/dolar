@@ -70,9 +70,9 @@
   let selection_pos: { x: number, y: number, width: number, height: number } | null = $state(null);
 
   const selection_anchor = (node: HTMLElement) => {
-    const parent = node.parentElement?.parentElement?.getBoundingClientRect();
-    if(parent == null) return; 
     tick().then(() => {
+      const parent = node.parentElement?.parentElement?.getBoundingClientRect();
+      if(parent == null) return; 
       const { left, top, width, height } = node.getBoundingClientRect();
       selection_pos = {
         x: left - parent.left,

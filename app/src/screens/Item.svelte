@@ -10,12 +10,9 @@
     id: string;
   } = $props();
 
-  import { screen_leave } from "../transitions";
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
-  import { screen_enter } from "../transitions";
-  import { tick } from "svelte";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
@@ -111,9 +108,9 @@
     maximumFractionDigits: 2,
   });
 
-  const format_prev_close = (v: number) => v % 1 === 0 ? f0.format(v) : f2.format(v);
-  const format_brecha = format_prev_close;
-  const format_variation = (v: number) => v % 1 === 0 ? f0.format(v) : f2.format(v);
+  const format_value = (v: number) => v % 1 === 0 ? f0.format(v) : f2.format(v);
+
+  const sign = (v: number) => v === 0 ? "" : v > 0 ? "+" : "-";
 </script>
 
 <style>
@@ -295,31 +292,32 @@
       <div class="day-summary-title">
         Resumen de la jornada
       </div>
-    
-      <div class="day-summary-items">
-        <div class="day-summary-item">
-          <div class="day-summary-item-name">Variación</div>
-          <div class="day-summary-item-value">
-            {(variation || 0) > 0 ? `+${format_variation(variation!)}` : format_variation(variation!)}
-          </div>
-        </div>
-        
+      
+       <div class="day-summary-items">
+  
         {#if prev_value != null}
           <div class="day-summary-item">
             <div class="day-summary-item-name">Cierre anterior</div>
             <div class="day-summary-item-value">
-              <span class="prev-close-sign">
-                $
-              </span>
-              {format_prev_close(prev_value)}
+              $ {format_value(prev_value)}
             </div>
           </div>
         {/if}
+
+        <div class="day-summary-item">
+          <div class="day-summary-item-name">Variación</div>
+          <div class="day-summary-item-value">
+            {sign(variation || 0)}
+            $
+            {format_value(Math.abs(variation!))}
+          </div>
+        </div>
+        
         
         {#if brecha != null}
           <div class="day-summary-item">
             <div class="day-summary-item-name">Brecha</div>
-            <div class="day-summary-item-value">{brecha > 0 ? "+" : ""}{format_brecha(brecha)}</div>
+            <div class="day-summary-item-value">{sign(brecha)} $ {format_value(Math.abs(brecha))}</div>
           </div>
         {/if}
       </div>

@@ -1,4 +1,5 @@
 import { get_all } from "../fetch.js";
+import { uptime_beat } from "../uptime-beat.js";
 import { create_api } from "./api.js";
 import { make_cache } from "./cache.js";
 
@@ -10,6 +11,7 @@ const start_interval = async () => {
     try {
       data = await get_all();
       set_data(data);
+      uptime_beat();
     } catch(e) {
       console.warn("error getting data", String(e));
     }

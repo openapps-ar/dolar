@@ -189,10 +189,16 @@
 
       --screen-max-width: 1100px;
 
-      font-size: 16px;
+      font-size: 18px;
       font-family: var(--font-family);
 
       -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (width <= 360px) {
+      :root {
+        font-size: 16px;
+      }
     }
 
     html, body, #app {

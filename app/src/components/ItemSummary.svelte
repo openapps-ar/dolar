@@ -258,7 +258,8 @@
 </style>
 
 {#snippet content({ item }: { item: NowItem })}
-  {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item}
+  <!-- this (item ?? null) prevents a bug in svelte where the variable item is null, even if it's statically checked to be not null -->
+  {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item ?? {}}
   <div class="start">
     <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
     <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
@@ -295,7 +296,7 @@
   </div>
 {/snippet}
 
-{#if item}
+{#if item != null}
   {#if onclick}
     <button
       class="item clickable ripple-c"

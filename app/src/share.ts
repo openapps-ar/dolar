@@ -1,7 +1,6 @@
 import type { ShareOptions } from "@capacitor/share";
 import { mods } from "./capacitor/mods";
 import { get, readonly, writable } from "svelte/store";
-import html2canvas from "html2canvas";
 
 const {
   share: { Share },
@@ -12,28 +11,13 @@ const {
 const native = Capacitor.isNativePlatform();
 
 export const share = async (data: ShareOptions): Promise<{ activityType: string | null }> => {
-  // if(native) {
-    const { activityType } = await Share.share(data);
-    return { activityType: activityType ?? null }
-  // } else {
-  //   if(typeof navigator.share !== "function") return { browser: true, activityType: null };
-  //   await navigator.share({
-  //     title: data.title,
-  //     text: data.text,
-  //     url: data.url
-  //   })
-  //   return { browser: true, activityType: null }
-  // }
+  const { activityType } = await Share.share(data);
+  return { activityType: activityType ?? null }
 }
 
 export const canShare = async (): Promise<boolean> => {
-  // if(native) {
-    const { value } = await Share.canShare();
-    return value;
-  // } else {
-  //   if(typeof navigator.canShare !== "function") return false;
-  //   return navigator.canShare(data);
-  // }
+  const { value } = await Share.canShare();
+  return value;
 }
 
 const current_share_element = writable<HTMLElement | null>(null);
@@ -54,29 +38,15 @@ export const shareable = (node: HTMLElement) => {
 export const shareCurrentElement = async () => {
   const element = get(current_share_element);
   if(element == null) return;
-  
-  const canvas = await html2canvas(element);
-  // const blob = await new Promise<Blob>((resolve, reject) => {
-  //   canvas.toBlob(result => {
-  //       if(result == null) {
-  //         reject(new Error("canvas.toBlob returned null"));
-  //       } else {
-  //         resolve(result)
-  //       }
-  //     },
-  //     "image/png"
-  //   )
-  // });
+
+  const { default: capture } = await mods.html2canvas();
+  const canvas = await capture(element);
+
+  const title = "Dolar";
+  const text = "Cotizaciones en Argentina";
 
   const base64 = canvas.toDataURL("image/png", 1);
-
   const path = `screenshots/dolar-screen-capture-${Date.now()}.png`;
-  
-  // await Filesystem.mkdir({
-  //   path: Directory.Library,
-  //   recursive: true,
-  // })
-
   const { uri } = await Filesystem.writeFile({
     path,
     data: base64,
@@ -84,19 +54,10 @@ export const shareCurrentElement = async () => {
     directory: Directory.Cache,
   })
 
-  const del = () => {
-    Filesystem.deleteFile({
-      path: uri,
-    })
-  }
+  const del = () => Filesystem.deleteFile({ path: uri });
 
   try {
-    await Share.share({
-      title: "Dolar",
-      text: "Cotizaciones en Argentina",
-      files: [ uri ]
-    })
-
+    await Share.share({ title, text, files: [ uri ] })
     del();
   } catch(e) {
     del();

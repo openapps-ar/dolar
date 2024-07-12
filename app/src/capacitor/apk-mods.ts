@@ -20,6 +20,7 @@ export const __MODS__ = {
   screen_orientation,
   in_app_review,
   haptics,
+  html2canvas: () => import("html2canvas"),
 }
 
 window.__MODS__ = __MODS__;

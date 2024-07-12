@@ -19,38 +19,28 @@
   import { COLOR_SCHEME } from '../storage.svelte';
   import type { Snippet } from "svelte";
   import Anchor from '../portal/Anchor.svelte';
-  // import { document_transition } from '../transitions';
-  import { mods } from '../capacitor/mods';
-  const { dialog: { Dialog } } = mods;
-
-  const share_params = {
-    title: title,
-    text: `${title} - cotizaciones de todos los dólares de Argentina en tiempo real a un solo click`,
-    url: `https://play.google.com/store/apps/details?id=ar.openapps.dolar`,
-  }
+  import { Capacitor } from '@capacitor/core';
 
   let can_share = $state(true);
-  let show_share = $derived(can_share && $shareableElement != null)
+  let show_share = $derived(Capacitor.isNativePlatform() && can_share && $shareableElement != null)
   onMount(() => {
-    canShare().then(v => can_share = v).catch(() => can_share = false);
+    (async () => {
+      try {
+        can_share = await canShare();
+      } catch(e) {
+        can_share = false;
+      }
+    })()
   })
 
   const share = async () => {
-    await shareCurrentElement().catch(e => {
-      Dialog.alert({
-        message: `share error: ${String(e)}\n\n${String(e.stack)}`,
-      })
-    });
-
+    await shareCurrentElement();
   }
 
-  // let source_menu_open: boolean = $state(false);
   let theme_menu_open: boolean = $state(false);
 
   const set_color_scheme = async (v: typeof COLOR_SCHEME.$) => {
-    // await document_transition(async () => {
-      COLOR_SCHEME.set(v)
-    // })
+    COLOR_SCHEME.set(v)
   }
 </script>
 
@@ -233,45 +223,15 @@
 
     {#if show_back}
       <button
-          class="btn ripple-c"
-          aria-label="Volver"
-          onclick={() => onback()}
-          use:ripple
-          transition:scale={{ duration: 400 }}
-        >
+        class="btn ripple-c"
+        aria-label="Volver"
+        onclick={() => onback()}
+        use:ripple
+        transition:scale={{ duration: 400 }}
+      >
         <Icon d={mdiArrowLeft} />
       </button>
     {/if}
-
-    <!-- <div class="top-menu-anchor">
-      <button
-        class="top-btn ripple-c"
-        class:open={source_menu_open}
-        aria-label="Cambiar fuente"
-        onclick={() => source_menu_open = !source_menu_open}
-        use:ripple
-        use:click_out={() => setTimeout(() => source_menu_open = false)}
-      >
-        <Icon d={mdiSwapHorizontal} />
-      </button>
-      {#if source_menu_open}
-        <div class="top-menu" transition:fly={{ duration: 300, y: -16, x: -8 }}>
-          {#each [source_ambito, source_dolarhoy] as item (item._id)}
-            {@const selected = source._id === item._id}
-            <button
-              class="top-menu-item ripple-c"
-              class:selected
-              aria-label="Cambiar fuente de datos a {item.name}"
-              onclick={() => SOURCE_ID.set(item._id)}
-              use:ripple
-            >
-              <span class="top-menu-item-radio"></span>
-              <b>{item.name}</b>
-            </button>
-          {/each}
-        </div>
-      {/if}
-    </div> -->
 
     <div class="center">
       <div class="title">

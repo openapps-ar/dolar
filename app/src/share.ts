@@ -74,6 +74,7 @@ export const shareCurrentElement = async () => {
   const { uri } = await Filesystem.writeFile({
     path: filename,
     data: base64,
+    recursive: true,
     directory: Directory.Documents,
   })
 

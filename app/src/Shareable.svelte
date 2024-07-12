@@ -55,9 +55,9 @@
     <div class="top">
       {title}
     </div>
-  </div>
-
-  <div class="page">
-    {@render children()}
+    
+    <div class="page">
+      {@render children()}
+    </div>
   </div>
 </div>

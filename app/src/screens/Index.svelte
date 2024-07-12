@@ -63,29 +63,28 @@
       <div class="summary" style:view-transition-name="item-box--{item.id}">  
         <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />
       </div>
+    {:else}
+      <div class="summary placeholder">  
+        <ItemSummary placeholder />
+      </div>
     {/each}
   </div>
 {/snippet}
 
 <div class="screen">
-  
-  {#if items.length !== 0}
-    {@render list()}
-  {:else}
-    <div class="items">
-      {#each {length: 8} as _}
-        <div class="summary placeholder">  
-          <ItemSummary placeholder />
-        </div>
-      {/each}
-    </div>
-  {/if}
+  {@render list()}
 </div>
 
 {#if items.length !== 0}
   <Shareable>
     <div class="share-screen">
-      {@render list()}
+      <div class="items">
+        {#each items as item (item.id)}
+          <div class="summary">  
+            <ItemSummary {item} kind="index" />
+          </div>
+        {/each}
+      </div>
     </div>
   </Shareable>
 {/if}

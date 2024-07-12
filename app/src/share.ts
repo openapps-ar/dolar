@@ -71,19 +71,24 @@ export const shareCurrentElement = async () => {
   const base64 = canvas.toDataURL("image/png", 1);
 
   const filename = `dolar-screen-capture-${Date.now()}.png`;
+  
+  await Filesystem.mkdir({
+    path: Directory.Library,
+    recursive: true,
+  })
+
   const { uri } = await Filesystem.writeFile({
     path: filename,
     data: base64,
     recursive: true,
-    directory: Directory.Documents,
+    directory: Directory.Library,
   })
 
-  // const del = () => {
-  //   Filesystem.deleteFile({
-  //     path: filename,
-  //     directory: Directory.Documents,
-  //   })
-  // }
+  const del = () => {
+    Filesystem.deleteFile({
+      path: uri,
+    })
+  }
 
   try {
     await Share.share({
@@ -92,9 +97,9 @@ export const shareCurrentElement = async () => {
       files: [ uri ]
     })
 
-    // del();
+    del();
   } catch(e) {
-    // del();
+    del();
     throw e;
   }
 }

@@ -12,7 +12,14 @@
 
 <style>
   .out {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+    position: fixed;
+    top: 0;
+    left: 0;
   }
 
   .shareable {
@@ -44,7 +51,7 @@
   }
 </style>
 
-<div class="out">
+<div class="out" inert>
   <div class="shareable" use:shareable>
     <div class="top">
       {title}

@@ -24,6 +24,14 @@
     flex-direction: column;
     align-items: center;
   }
+
+  .share-screen {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: stretch;
+  }
+
   .items {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(306px, 100% - 3rem), 1fr));
@@ -47,13 +55,6 @@
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       border-top-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
-  }
-
-  .share-screen {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    align-items: stretch;
   }
 </style>
 

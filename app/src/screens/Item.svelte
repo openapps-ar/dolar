@@ -132,7 +132,7 @@
 </script>
 
 <style>
-  .screen {
+  .screen, .share-screen {
     padding: 1rem 0.75rem;
     flex: 1;
     display: flex;
@@ -140,7 +140,7 @@
     align-items: stretch;
     min-width: 0;
   }
-
+  
   .box {
     display: flex;
     flex-direction: column;

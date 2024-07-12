@@ -31,7 +31,7 @@
   }
 
   .top {
-    height: 3.5rem;
+    height: 4.5rem;
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);
@@ -42,6 +42,7 @@
     text-align: center;
     justify-content: center;
     align-items: center;
+    font-size: 2rem;
   }
 
   .page {

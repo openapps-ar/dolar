@@ -136,7 +136,6 @@
     flex-direction: column;
     align-items: stretch;
     min-width: 0;
-    gap: 1rem;
   }
 
   .box {
@@ -209,20 +208,27 @@
     height: 300px;
   }
 
-  .day-summary-out {
-    width: min(100%, var(--screen-max-width));
-    margin: 0 auto;
+  .lists {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block-start: 2rem;
+    gap: 1.5rem;
   }
 
-  .day-summary-title {
-    margin: 1rem 0.75rem 0.5rem 0.75rem;
+  .list-out {
+    width: min(100%, var(--screen-max-width));
+  }
+
+  .list-title {
+    margin: 0 0.75rem 0.5rem 0.75rem;
     font-weight: 400;
     font-size: 1.05rem;
     color: var(--color-title-over-background);
     transition: color var(--theme-color-transition-duration)  var(--theme-color-transition-timing-function);
   }
 
-  .day-summary-items {
+  .list-items {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -230,7 +236,7 @@
     padding: 0.5rem 0;
   }
 
-  .day-summary-item {
+  .list-item {
     display: flex;
     flex-direction: row;
     padding: 0.9rem 1rem;
@@ -253,7 +259,7 @@
     }
   }
 
-  .day-summary-item-name {
+  .list-item-name {
     flex: 1;
   }
 </style>
@@ -301,41 +307,55 @@
     </div>
   </div>
 
-  <div class="day-summary-out">
-
-    {#if variation != null || prev_value != null || (item && item?.id !== "oficial")}
-      <div class="day-summary-title">
-        Resumen de la jornada
-      </div>
-      
-       <div class="day-summary-items">
-  
-        {#if prev_value != null}
-          <div class="day-summary-item">
-            <div class="day-summary-item-name">Cierre anterior</div>
-            <div class="day-summary-item-value">
-              $ {format_value(prev_value)}
-            </div>
-          </div>
-        {/if}
-
-        <div class="day-summary-item">
-          <div class="day-summary-item-name">Variación</div>
-          <div class="day-summary-item-value">
-            {sign(variation || 0)}
-            $
-            {format_value(Math.abs(variation!))}
-          </div>
+  <div class="lists">
+    <div class="list-out">
+      {#if variation != null || prev_value != null || (item && item?.id !== "oficial")}
+        <div class="list-title">
+          Resumen de la jornada
         </div>
         
-        
-        {#if brecha != null}
-          <div class="day-summary-item">
-            <div class="day-summary-item-name">Brecha</div>
-            <div class="day-summary-item-value">{sign(brecha)} $ {format_value(Math.abs(brecha))}</div>
+        <div class="list-items">
+    
+          {#if prev_value != null}
+            <div class="list-item">
+              <div class="list-item-name">Cierre anterior</div>
+              <div class="list-item-value">
+                $ {format_value(prev_value)}
+              </div>
+            </div>
+          {/if}
+
+          <div class="list-item">
+            <div class="list-item-name">Variación</div>
+            <div class="list-item-value">
+              {sign(variation || 0)}
+              $
+              {format_value(Math.abs(variation!))}
+            </div>
           </div>
-        {/if}
+          
+          
+          {#if brecha != null}
+            <div class="list-item">
+              <div class="list-item-name">Brecha</div>
+              <div class="list-item-value">{sign(brecha)} $ {format_value(Math.abs(brecha))}</div>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </div>
+
+    <div class="list-out">
+      <div class="list-title">
+        Fuente
       </div>
-    {/if}
+      <div class="list-items">
+        <div class="list-item">
+          <div class="list-item-name">
+            Ámbito Financiero
+        </div>
+      </div>
+      </div>
+    </div>
   </div>
 </div>

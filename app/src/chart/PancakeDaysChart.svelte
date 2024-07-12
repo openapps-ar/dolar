@@ -21,7 +21,7 @@
   import type { HISTORIC, NOW } from "../client/client.svelte";
   // @ts-ignore
   import * as Pancake from '@sveltejs/pancake';
-  import { Map } from "svelte/reactivity";
+  import { SvelteMap } from "svelte/reactivity";
   import { fade } from "svelte/transition";
 
   const DAY = 1000 * 60 * 60 * 24;
@@ -125,7 +125,7 @@
 
   let rect: { width: number } = $state({ width: 0 });
 
-  const y_label_widths = $state(new Map<number, number>());
+  const y_label_widths = $state(new SvelteMap<number, number>());
   const y_label_max_width = $derived(Math.max(10, ...y_label_widths.values()));
   
   let _id = 0;
@@ -139,7 +139,42 @@
         y_label_widths.delete(id)
       } 
     }
-  } 
+  }
+
+  let touched_day: typeof visible_days.items[number] | null = $state(null);
+  $inspect({ touched_day });
+
+  const onpointerdown = (event: PointerEvent & { currentTarget: HTMLElement }) => {
+    let node = event.currentTarget;
+
+    const pointerup = () => { 
+      remove();
+    }
+
+    const pointercancel = () => {
+      remove();
+    }
+
+    const pointermove = (event: PointerEvent) => {
+      const rect = node.getBoundingClientRect();
+      const x = Math.min(0, Math.max(rect.width, event.x - rect.left));
+      const x_percent = x / rect.width;
+      const x_index = Math.floor(x_percent * visible_days.items.length);
+      touched_day = visible_days.items[x_index];
+    }
+
+    let capture = { capture: true };
+
+    document.addEventListener("pointermove", pointermove, capture);
+    document.addEventListener("pointerup", pointerup, capture);
+    document.addEventListener("pointercancel", pointercancel, capture);
+  
+    const remove = () => {
+      document.removeEventListener("pointermove", pointermove, capture);
+      document.removeEventListener("pointerup", pointerup, capture);
+      document.removeEventListener("pointercancel", pointercancel, capture);
+    }
+  }
 </script>
 
 <div
@@ -148,6 +183,10 @@
   style:--y-label-width="{y_label_max_width}px"
   bind:contentRect={rect}
 >
+  <div class="touch-out">
+    <div class="touch" onpointerdown={onpointerdown}></div>
+  </div>
+
   <Pancake.Chart
     {x1}
     {x2}
@@ -183,6 +222,7 @@
 
 <style>
   .chart {
+    position: relative;
     height: 100%;
     padding-block-start: 1.5rem;
     padding-inline-end: 1.5em;
@@ -190,6 +230,23 @@
     padding-inline-start: calc(var(--y-label-width) + 1.5rem);
     box-sizing: border-box;
     overflow: hidden;
+  }
+
+  .touch-out {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: inherit;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .touch {
+    flex: 1;
   }
 
   /* .chart :global(svg) {

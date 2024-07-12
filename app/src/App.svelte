@@ -187,7 +187,7 @@
       /* --theme-color-transition-duration: 0ms;
       --theme-color-transition-timing-function: linear; */
 
-      --screen-max-width: 1100px;
+      --screen-max-width: 900px;
 
       font-size: 18px;
       font-family: var(--font-family);

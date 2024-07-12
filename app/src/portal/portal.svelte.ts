@@ -1,7 +1,7 @@
 export { default as Portals } from "./Portals.svelte";
 
 import { Snippet } from "svelte";
-import { Set } from "svelte/reactivity";
+import { SvelteSet } from "svelte/reactivity";
 
 export type PortalOptions = {
   snippet: PortalSnippet,
@@ -9,7 +9,7 @@ export type PortalOptions = {
 
 export type PortalSnippet = Snippet<[{ x: number, y: number }]>;
 
-export const portals: Set<{ snippet: PortalSnippet, x: number, y: number }> = $state(new Set());
+export const portals: SvelteSet<{ snippet: PortalSnippet, x: number, y: number }> = $state(new SvelteSet());
 
 // const add = (target: EventTarget, event: string, listener: EventListener, options: EventListenerOptions = {}) => {
 //   target.addEventListener(event, listener, options);

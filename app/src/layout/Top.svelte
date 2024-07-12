@@ -50,14 +50,11 @@
 <style>
   .top {
     height: 3.5rem;
-    padding: 0 0.5rem;
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     text-align: center;
     flex: none;
     z-index: var(--z-top);
@@ -74,8 +71,21 @@
     z-index: var(--z-top);
   }
 
+  .in {
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    justify-self: stretch;
+    flex: none;
+    width: min(100%, var(--screen-max-width));
+    height: 100%;
+  }
+
   .center {
-    flex: 1;
+    flex: 1; 
   }
 
   .title {
@@ -212,110 +222,113 @@
 
 <div class="top">
 
-  {#if show_back}
-    <button
-        class="btn ripple-c"
-        aria-label="Volver"
-        onclick={() => onback()}
-        use:ripple
-        transition:scale={{ duration: 400 }}
-      >
-      <Icon d={mdiArrowLeft} />
-    </button>
-  {/if}
+  <div class="in">
 
-  <!-- <div class="top-menu-anchor">
-    <button
-      class="top-btn ripple-c"
-      class:open={source_menu_open}
-      aria-label="Cambiar fuente"
-      onclick={() => source_menu_open = !source_menu_open}
-      use:ripple
-      use:click_out={() => setTimeout(() => source_menu_open = false)}
-    >
-      <Icon d={mdiSwapHorizontal} />
-    </button>
-    {#if source_menu_open}
-      <div class="top-menu" transition:fly={{ duration: 300, y: -16, x: -8 }}>
-        {#each [source_ambito, source_dolarhoy] as item (item._id)}
-          {@const selected = source._id === item._id}
-          <button
-            class="top-menu-item ripple-c"
-            class:selected
-            aria-label="Cambiar fuente de datos a {item.name}"
-            onclick={() => SOURCE_ID.set(item._id)}
-            use:ripple
-          >
-            <span class="top-menu-item-radio"></span>
-            <b>{item.name}</b>
-          </button>
-        {/each}
-      </div>
+    {#if show_back}
+      <button
+          class="btn ripple-c"
+          aria-label="Volver"
+          onclick={() => onback()}
+          use:ripple
+          transition:scale={{ duration: 400 }}
+        >
+        <Icon d={mdiArrowLeft} />
+      </button>
     {/if}
-  </div> -->
 
-  <div class="center">
-    <div class="title">
-      {title}
-    </div>
-  </div>
-
-  {#if can_share}
-    <button
-      class="btn ripple-c"  
-      aria-label="Compartir esta app"
-      onclick={() => share_app()}
-      use:ripple
-    >
-      <Icon d={mdiShare} />
-    </button>
-  {/if}
-
-  <div class="menu-btn-out">
-    <button
-      class="btn ripple-c"
-      class:open={theme_menu_open}
-      aria-label="Cambiar a tema claro/oscuro"
-      onclick={() => theme_menu_open = !theme_menu_open}
-      use:ripple
-      use:click_out={() => setTimeout(() => theme_menu_open = false)}
-    >
-      <Icon d={
-          COLOR_SCHEME.$ === "light" ? mdiWeatherSunny :
-          COLOR_SCHEME.$ === "dark" ? mdiMoonWaningCrescent :
-          mdiThemeLightDark
-        }
-      />
-    </button>
-
-    {#if theme_menu_open}
-      <Anchor inline="end" block="end" z="var(--z-top-menu)">
-        <div class="menu reverse menu-theme" transition:fly={{ duration: 300, y: -16, x: 8 }}>
-          {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
+    <!-- <div class="top-menu-anchor">
+      <button
+        class="top-btn ripple-c"
+        class:open={source_menu_open}
+        aria-label="Cambiar fuente"
+        onclick={() => source_menu_open = !source_menu_open}
+        use:ripple
+        use:click_out={() => setTimeout(() => source_menu_open = false)}
+      >
+        <Icon d={mdiSwapHorizontal} />
+      </button>
+      {#if source_menu_open}
+        <div class="top-menu" transition:fly={{ duration: 300, y: -16, x: -8 }}>
+          {#each [source_ambito, source_dolarhoy] as item (item._id)}
+            {@const selected = source._id === item._id}
             <button
-              class="menu-item ripple-c"
-              class:selected={COLOR_SCHEME.$ === v}
-              onclick={() => set_color_scheme(v)}
+              class="top-menu-item ripple-c"
+              class:selected
+              aria-label="Cambiar fuente de datos a {item.name}"
+              onclick={() => SOURCE_ID.set(item._id)}
               use:ripple
             >
-              <span class="menu-item-icon">
-                <Icon d={icon} />
-              </span>
-              <span>
-                {@render label()}
-              </span>
+              <span class="top-menu-item-radio"></span>
+              <b>{item.name}</b>
             </button>
-          {/snippet}
-          
-          {#snippet light()}Tema <b>claro</b>{/snippet}
-          {#snippet dark()}Tema <b>oscuro</b>{/snippet}
-          {#snippet system()}Tema del <b>sistema</b>{/snippet}
-
-          {@render item("light", mdiWeatherSunny, light)}
-          {@render item("dark", mdiMoonWaningCrescent, dark)}
-          {@render item(null, mdiThemeLightDark, system)}
+          {/each}
         </div>
-      </Anchor>
+      {/if}
+    </div> -->
+
+    <div class="center">
+      <div class="title">
+        {title}
+      </div>
+    </div>
+
+    {#if can_share}
+      <button
+        class="btn ripple-c"  
+        aria-label="Compartir esta app"
+        onclick={() => share_app()}
+        use:ripple
+      >
+        <Icon d={mdiShare} />
+      </button>
     {/if}
+
+    <div class="menu-btn-out">
+      <button
+        class="btn ripple-c"
+        class:open={theme_menu_open}
+        aria-label="Cambiar a tema claro/oscuro"
+        onclick={() => theme_menu_open = !theme_menu_open}
+        use:ripple
+        use:click_out={() => setTimeout(() => theme_menu_open = false)}
+      >
+        <Icon d={
+            COLOR_SCHEME.$ === "light" ? mdiWeatherSunny :
+            COLOR_SCHEME.$ === "dark" ? mdiMoonWaningCrescent :
+            mdiThemeLightDark
+          }
+        />
+      </button>
+
+      {#if theme_menu_open}
+        <Anchor inline="end" block="end" z="var(--z-top-menu)">
+          <div class="menu reverse menu-theme" transition:fly={{ duration: 300, y: -16, x: 8 }}>
+            {#snippet item(v: "light" | "dark" | null, icon: string, label: Snippet)}
+              <button
+                class="menu-item ripple-c"
+                class:selected={COLOR_SCHEME.$ === v}
+                onclick={() => set_color_scheme(v)}
+                use:ripple
+              >
+                <span class="menu-item-icon">
+                  <Icon d={icon} />
+                </span>
+                <span>
+                  {@render label()}
+                </span>
+              </button>
+            {/snippet}
+            
+            {#snippet light()}Tema <b>claro</b>{/snippet}
+            {#snippet dark()}Tema <b>oscuro</b>{/snippet}
+            {#snippet system()}Tema del <b>sistema</b>{/snippet}
+
+            {@render item("light", mdiWeatherSunny, light)}
+            {@render item("dark", mdiMoonWaningCrescent, dark)}
+            {@render item(null, mdiThemeLightDark, system)}
+          </div>
+        </Anchor>
+      {/if}
+    </div>
   </div>
 </div>

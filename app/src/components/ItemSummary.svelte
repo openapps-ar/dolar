@@ -8,14 +8,14 @@
     | {
       item: NowItem,
       kind: "index" | "item",
-      placeholder?: false,
       onclick?: () => void
+      placeholder?: false,
     }
     | {
       item?: undefined
       kind?: undefined
-      placeholder: true
       onclick?: undefined
+      placeholder: true
     };
 
   const { item, kind, onclick }: Props = $props();
@@ -258,42 +258,44 @@
 </style>
 
 {#snippet content({ item }: { item: NowItem })}
-  <!-- this (item ?? null) prevents a bug in svelte where the variable item is null, even if it's statically checked to be not null -->
+  <!-- this (item ?? {}) prevents a bug in svelte where the variable item is null, even if it's statically checked to be not null -->
   {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item ?? {}}
-  <div class="start">
-    <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
-    <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
-  </div>
-  <div class="end">
-    <div class="buy-sell-row">
-      {#if ref !=  null}
-        {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
-      {:else}
-        {#if buy != null}
-          {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
-        {/if}
-        {#if buy != null && sell != null && buy !== sell}
-          <div class="price-sep" style:view-transition-name="summary-price-sep--{id}">/</div>
-        {/if}
-        {#if buy !== sell}
-          {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
-        {/if}
-      {/if}
+  {#if id != null}
+    <div class="start">
+      <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
+      <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
     </div>
-    <div class="variation" data-kind={variation_kind}>
-      <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
-        <Icon d={
-            variation_kind === "up" ? mdiArrowUp :
-            variation_kind === "down" ? mdiArrowDown :
-            mdiEqual
-          }
-        />
+    <div class="end">
+      <div class="buy-sell-row">
+        {#if ref !=  null}
+          {@render price({ id: `${id}-ref`, price: ref, decimals: get_decimals(ref)})}
+        {:else}
+          {#if buy != null}
+            {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
+          {/if}
+          {#if buy != null && sell != null && buy !== sell}
+            <div class="price-sep" style:view-transition-name="summary-price-sep--{id}">/</div>
+          {/if}
+          {#if buy !== sell}
+            {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
+          {/if}
+        {/if}
       </div>
-      <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
-        {format_variation(variation)}
+      <div class="variation" data-kind={variation_kind}>
+        <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
+          <Icon d={
+              variation_kind === "up" ? mdiArrowUp :
+              variation_kind === "down" ? mdiArrowDown :
+              mdiEqual
+            }
+          />
+        </div>
+        <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
+          {format_variation(variation)}
+        </div>
       </div>
     </div>
-  </div>
+  {/if}
 {/snippet}
 
 {#if item != null}

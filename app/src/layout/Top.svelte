@@ -38,7 +38,7 @@
   const share = async () => {
     await shareCurrentElement().catch(e => {
       Dialog.alert({
-        message: `share error: ${String(e)}`,
+        message: `share error: ${String(e)}\n\n${String(e.stack)}`,
       })
     });
 

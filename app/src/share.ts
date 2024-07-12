@@ -81,7 +81,7 @@ export const shareCurrentElement = async () => {
     path,
     data: base64,
     recursive: true,
-    directory: Directory.Library,
+    directory: Directory.Cache,
   })
 
   const del = () => {

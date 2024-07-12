@@ -70,7 +70,7 @@ export const shareCurrentElement = async () => {
 
   const base64 = canvas.toDataURL("image/png", 1);
 
-  const filename = `dolar-screen-capture-${Date.now()}.png`;
+  const path = `screenshots/dolar-screen-capture-${Date.now()}.png`;
   
   // await Filesystem.mkdir({
   //   path: Directory.Library,
@@ -78,7 +78,7 @@ export const shareCurrentElement = async () => {
   // })
 
   const { uri } = await Filesystem.writeFile({
-    path: filename,
+    path,
     data: base64,
     recursive: true,
     directory: Directory.Library,

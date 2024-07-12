@@ -12,14 +12,13 @@
 
 <style>
   .out {
-    visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    width: 1px;
-    height: 1px;
     position: fixed;
     top: 0;
     left: 0;
+    width: 1px;
+    height: 1px;
   }
 
   .shareable {

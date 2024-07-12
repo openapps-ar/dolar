@@ -1,0 +1,57 @@
+<script lang="ts">
+  const {
+    children
+  }: {
+    children: Snippet<[]>,
+  } = $props();
+
+  import { shareable } from "./share";
+  import { title } from "./text";
+  import { Snippet } from "svelte";
+</script>
+
+<style>
+  .out {
+    display: none;
+  }
+
+  .shareable {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--color-item-list-bg);
+    overflow-x: clip;
+  }
+
+  .top {
+    height: 3.5rem;
+    background: var(--color-top-bg);
+    color: var(--color-top-text);
+    box-shadow: var(--shadow-top);
+    display: flex;
+    z-index: var(--z-top);
+    overflow-x: clip;
+    flex: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<div class="out">
+  <div class="shareable" use:shareable>
+    <div class="top">
+      {title}
+    </div>
+  </div>
+
+  <div class="page">
+    {@render children()}
+  </div>
+</div>

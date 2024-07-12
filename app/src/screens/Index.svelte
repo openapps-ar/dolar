@@ -13,6 +13,7 @@
   import { getContext, onMount } from "svelte";
   import { mdiTabUnselected } from "@mdi/js";
   import { shareable } from "../share";
+  import Shareable from "../Shareable.svelte";
 
   type Item = Exclude<typeof NOW.$, null>["data"]["items"][number];
 </script>
@@ -47,23 +48,47 @@
       border-top-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
   }
+
+  .share-screen {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: stretch;
+  }
 </style>
 
-<div class="screen">
-  
-  <div class="items" use:shareable>
+{#snippet list()}
+  <div class="items">
     {#each items as item (item.id)}
       <div class="summary" style:view-transition-name="item-box--{item.id}">  
         <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />
       </div>
-    {:else}
-      {#each Array(8).fill(0) as _}
-        <div class="summary placeholder">  
-          <ItemSummary placeholder />
-        </div>
-      {/each}
     {/each}
   </div>
+{/snippet}
+
+<div class="screen">
   
+  <div class="items" use:shareable>
+    {#if items.length === 0}
+      {@render list()}
+    {:else}
+      <div class="items">
+        {#each {length: 8} as _}
+          <div class="summary placeholder">  
+            <ItemSummary placeholder />
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
 </div>
+
+{#if items.length !== 0}
+  <Shareable>
+    <div class="share-screen">
+      {@render list()}
+    </div>
+  </Shareable>
+{/if}
 

@@ -6,8 +6,6 @@
     onready: () => void
   } = $props();
 
-  const title = "Dolarg";
-
   import { COLOR_SCHEME } from "./storage.svelte";
   import { NOW, HISTORIC }  from "./client/client.svelte";
   import { media } from "./media.svelte";
@@ -89,6 +87,7 @@
   import { screen_enter, screen_leave, set_direction } from "./transitions";
   import { Portals } from "./portal/portal.svelte";
   import { assert_never } from "../../api/src/assert_never";
+  import { title } from "./text";
 
   const STATE_VERSION = 0;
 

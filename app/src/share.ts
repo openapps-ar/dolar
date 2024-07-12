@@ -93,7 +93,7 @@ export const shareCurrentElement = async () => {
   try {
     await Share.share({
       title: "Dolar",
-      text: "Cotizaciones de todos los dólares de Argentina en tiempo real a un solo click",
+      text: "Cotizaciones en Argentina",
       files: [ uri ]
     })
 

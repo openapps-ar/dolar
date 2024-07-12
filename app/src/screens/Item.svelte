@@ -15,6 +15,8 @@
   import { HISTORIC, NOW } from "../client/client.svelte";
   import { tick } from "svelte";
   import { shareable } from "../share";
+  import { Share } from "@capacitor/share";
+  import Shareable from "../Shareable.svelte";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
@@ -263,9 +265,67 @@
   .list-item-name {
     flex: 1;
   }
+
+  .share-screen .range-btn.selected {
+    background: var(--color-chart-range-selected-bg);
+  }
 </style>
 
-<div class="screen" use:shareable>
+{#snippet lists()}
+<div class="lists">
+  <div class="list-out">
+    {#if variation != null || prev_value != null || (item && item?.id !== "oficial")}
+      <div class="list-title">
+        Resumen de la jornada
+      </div>
+      
+      <div class="list-items">
+  
+        {#if prev_value != null}
+          <div class="list-item">
+            <div class="list-item-name">Cierre anterior</div>
+            <div class="list-item-value">
+              $ {format_value(prev_value)}
+            </div>
+          </div>
+        {/if}
+
+        <div class="list-item">
+          <div class="list-item-name">Variación</div>
+          <div class="list-item-value">
+            {sign(variation || 0)}
+            $
+            {format_value(Math.abs(variation!))}
+          </div>
+        </div>
+        
+        
+        {#if brecha != null}
+          <div class="list-item">
+            <div class="list-item-name">Brecha</div>
+            <div class="list-item-value">{sign(brecha)} $ {format_value(Math.abs(brecha))}</div>
+          </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+
+  <div class="list-out">
+    <div class="list-title">
+      Fuente
+    </div>
+    <div class="list-items">
+      <div class="list-item">
+        <div class="list-item-name">
+          Ámbito Financiero
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{/snippet}
+
+<div class="screen">
   <div class="box box-1" style:view-transition-name="item-box--{item?.id}">
     <div class="summary">
       {#if item != null}
@@ -308,55 +368,38 @@
     </div>
   </div>
 
-  <div class="lists">
-    <div class="list-out">
-      {#if variation != null || prev_value != null || (item && item?.id !== "oficial")}
-        <div class="list-title">
-          Resumen de la jornada
-        </div>
-        
-        <div class="list-items">
-    
-          {#if prev_value != null}
-            <div class="list-item">
-              <div class="list-item-name">Cierre anterior</div>
-              <div class="list-item-value">
-                $ {format_value(prev_value)}
-              </div>
-            </div>
-          {/if}
-
-          <div class="list-item">
-            <div class="list-item-name">Variación</div>
-            <div class="list-item-value">
-              {sign(variation || 0)}
-              $
-              {format_value(Math.abs(variation!))}
-            </div>
-          </div>
-          
-          
-          {#if brecha != null}
-            <div class="list-item">
-              <div class="list-item-name">Brecha</div>
-              <div class="list-item-value">{sign(brecha)} $ {format_value(Math.abs(brecha))}</div>
-            </div>
-          {/if}
-        </div>
-      {/if}
-    </div>
-
-    <div class="list-out">
-      <div class="list-title">
-        Fuente
-      </div>
-      <div class="list-items">
-        <div class="list-item">
-          <div class="list-item-name">
-            Ámbito Financiero
-        </div>
-      </div>
-      </div>
-    </div>
-  </div>
+  {@render lists()}
 </div>
+
+<Shareable>
+  <div class="share-screen">
+    <div class="box box-1">
+      <div class="summary">
+        {#if item != null}
+          <ItemSummary {item} kind="item" />
+        {/if}
+      </div>
+  
+      <div class="chart-and-ranges">
+        <div class="ranges">
+          {#each selectable_ranges as r (r)}
+            {@const selected = range === r}
+            <button class="range-btn" class:selected>
+              {r}
+            </button>
+          {/each}
+        </div>
+  
+        <div class="chart">
+          {#if item != null && days != null}
+            {#key range}
+              <DaysChart {item} {days} {range} {ranges} />
+            {/key}
+          {/if}
+        </div>
+      </div>
+    </div>
+
+    {@render lists()}
+  </div>
+</Shareable>

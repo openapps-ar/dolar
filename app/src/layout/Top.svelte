@@ -56,16 +56,11 @@
     flex: none;
     z-index: var(--z-top);
     overflow-x: clip;
-    view-transition-name: top;
     
     transition: 
       background-color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function),
       box-shadow var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
-  }
-
-  ::view-transition-group(top) {
-    z-index: var(--z-top);
   }
 
   .in {

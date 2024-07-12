@@ -8,25 +8,27 @@
     | {
       item: NowItem,
       kind: "index" | "item",
+      copy?: boolean,
       onclick?: () => void
       placeholder?: false,
     }
     | {
       item?: undefined
       kind?: undefined
+      copy?: undefined
       onclick?: undefined
       placeholder: true
     };
 
-  const { item, kind, onclick }: Props = $props();
+  const { item, kind, copy = false, onclick }: Props = $props();
 
   import type { NowItem } from "../client/client.svelte";
   import { mdiArrowDown, mdiArrowUp, mdiEqual } from "@mdi/js";
   import Icon from "../Icon.svelte";
-  import copy from "copy-to-clipboard";
   import { ripple } from "../ripple";
   import { fly } from "svelte/transition";
   import Anchor from "../portal/Anchor.svelte";
+  import copy_to_clipboard from "copy-to-clipboard";
   import { mods } from "../capacitor/mods";
   const { haptics: { Haptics = null } = {} } = mods; 
 
@@ -205,9 +207,11 @@
     font-weight: 600;
     border-radius: 0.25rem;
     color: var(--color-item-price);
-    cursor: pointer;
-
     transition: color var(--theme-color-transition-duration) var(--theme-color-transition-timing-function);
+  }
+
+  button.price {
+    cursor: pointer;
   }
 
   .sign {
@@ -262,8 +266,8 @@
   {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item ?? {}}
   {#if id != null}
     <div class="start">
-      <div class="name" style:view-transition-name="summary-name--{id}">{name}</div>
-      <div class="date" style:view-transition-name="summary-date--{id}">{format_date(date)}</div>
+      <div class="name">{name}</div>
+      <div class="date">{format_date(date)}</div>
     </div>
     <div class="end">
       <div class="buy-sell-row">
@@ -274,7 +278,7 @@
             {@render price({ id: `${id}-buy`, price: buy, decimals: get_decimals(buy, sell) })} 
           {/if}
           {#if buy != null && sell != null && buy !== sell}
-            <div class="price-sep" style:view-transition-name="summary-price-sep--{id}">/</div>
+            <div class="price-sep">/</div>
           {/if}
           {#if buy !== sell}
             {@render price({ id: `${id}-sell`, price: sell, decimals: get_decimals(buy, sell) })}
@@ -282,7 +286,7 @@
         {/if}
       </div>
       <div class="variation" data-kind={variation_kind}>
-        <div class="variation-kind" style:view-transition-name="summary-variation-kind--{id}">
+        <div class="variation-kind">
           <Icon d={
               variation_kind === "up" ? mdiArrowUp :
               variation_kind === "down" ? mdiArrowDown :
@@ -290,7 +294,7 @@
             }
           />
         </div>
-        <div class="variation-num" style:view-transition-name="summary-variation-num--{id}">
+        <div class="variation-num">
           {format_variation(variation)}
         </div>
       </div>
@@ -302,14 +306,13 @@
   {#if onclick}
     <button
       class="item clickable ripple-c"
-      style:view-transition-name="summary--{item.id}"
       use:ripple
       onclick={() => onclick()}
     >
       {@render content({ item })}
     </button>
   {:else}
-    <div class="item" style:view-transition-name="summary--{item.id}">
+    <div class="item">
       {@render content({ item })}
     </div>
   {/if}
@@ -347,7 +350,7 @@
   id,
   price,
   decimals
-  }: {
+}: {
   id: string
   price: number
   decimals: number
@@ -356,28 +359,33 @@
   <div class="price-cell">
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div class="price-out">
-      <button
-        class="price ripple-c"
-        tabindex="-1"
-        use:ripple
-        out:price_btn_out|global={target}
-        onclick={event => {
-          event.stopPropagation();
-          copy(price.toFixed(2));
-          Haptics?.selectionStart();
-          show_copied = target;
-          clearTimeout(show_copied_timer);
-          show_copied_timer = setTimeout(() => show_copied = null, 1500)
-        }}
-        style:view-transition-name="summary-price--{id}"
-      >
+      {#if copy}
+        <button
+          class="price ripple-c"
+          tabindex="-1"
+          use:ripple
+          out:price_btn_out|global={target}
+          onclick={event => {
+            event.stopPropagation();
+            copy_to_clipboard(price.toFixed(2));
+            Haptics?.selectionStart();
+            show_copied = target;
+            clearTimeout(show_copied_timer);
+            show_copied_timer = setTimeout(() => show_copied = null, 1500)
+          }}
+        >
 
-        <span class="sign" style:view-transition-name="summary-price-sign--{id}">$</span>{format_price(price, decimals)}
-      </button>
+          <span class="sign">$</span>{format_price(price, decimals)}
+        </button>
+      {:else}
+        <div class="price">
+          <span class="sign">$</span>{format_price(price, decimals)}
+        </div>
+      {/if}
       
-      {#if show_copied === target}
+      {#if copy && show_copied === target}
         <Anchor inline="center" block="start" z="var(--z-copied)">
-          <div class="copied" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }} style:view-transition-name="summary-price-copied--{id}">
+          <div class="copied" in:fly={{ duration: 200, y: 8 }} out:fly={{ duration: 200, y: -32 }}>
             <div class="copied-text">Copiado</div>
             <div class="copied-arrow"></div>
           </div>

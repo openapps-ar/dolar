@@ -7,7 +7,7 @@
 
   import { shareable } from "./share";
   import { title } from "./text";
-  import { Snippet } from "svelte";
+  import type { Snippet } from "svelte";
 </script>
 
 <style>

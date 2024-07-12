@@ -326,7 +326,7 @@
 {/snippet}
 
 <div class="screen">
-  <div class="box box-1" style:view-transition-name="item-box--{item?.id}">
+  <div class="box box-1">
     <div class="summary">
       {#if item != null}
         <ItemSummary {item} kind="item" />

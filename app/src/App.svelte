@@ -235,15 +235,6 @@
     }
   }
 
-  /* ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
-
-  ::view-transition-new(*) {
-    z-index: 11000000;
-  } */
 
   .app[data-color-scheme=light] {
     

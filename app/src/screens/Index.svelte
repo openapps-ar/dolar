@@ -61,7 +61,7 @@
 {#snippet list()}
   <div class="items">
     {#each items as item (item.id)}
-      <div class="summary" style:view-transition-name="item-box--{item.id}">  
+      <div class="summary">  
         <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />
       </div>
     {:else}
@@ -82,7 +82,7 @@
       <div class="items">
         {#each items as item (item.id)}
           <div class="summary">  
-            <ItemSummary {item} kind="index" />
+            <ItemSummary {item} kind="index" copy={false} />
           </div>
         {/each}
       </div>

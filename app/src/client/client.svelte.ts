@@ -1,8 +1,7 @@
 import type { Api } from "../../../api/src/api"; 
 import { assert_never } from "../../../api/src/assert_never";
+import { env } from "../env/env";
 import { storage_var } from "../storage.svelte.js";
-
-const BASE_URL = "https://ar.dolar.openapps.ar/api/v1";
 
 export type NowStored = {
   hash: string,
@@ -24,7 +23,7 @@ export type ApiResult<T> =
 
 export const api_get = async <K extends keyof Api>(key: K, if_none_match: string | null): Promise<ApiResult<Api[K]>> => {
   const controller = new AbortController();
-  const res = await fetch(`${BASE_URL}/${key}`, { signal: controller.signal, mode: "cors" })
+  const res = await fetch(`${env.API_BASE_URL}/${key}`, { signal: controller.signal, mode: "cors" })
   if(!res.ok) throw new Error(`error fetching ${key}: status code not OK: ${res.status} ${res.statusText}`);
   const hash = res.headers.get("x-hash") ?? null;
   if(hash == null) throw new Error(`error fetching ${key}: no hash in headers`);

@@ -1,6 +1,6 @@
 export { default as Portals } from "./Portals.svelte";
 
-import { Snippet } from "svelte";
+import type { Snippet } from "svelte";
 import { SvelteSet } from "svelte/reactivity";
 
 export type PortalOptions = {

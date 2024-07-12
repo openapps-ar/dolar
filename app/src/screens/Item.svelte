@@ -14,6 +14,7 @@
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
   import { tick } from "svelte";
+  import { shareable } from "../share";
 
   const DAY = 1000 * 60 * 60 * 24;
   const MONTH = DAY * 30;
@@ -264,7 +265,7 @@
   }
 </style>
 
-<div class="screen">
+<div class="screen" use:shareable>
   <div class="box box-1" style:view-transition-name="item-box--{item?.id}">
     <div class="summary">
       {#if item != null}

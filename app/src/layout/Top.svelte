@@ -10,7 +10,7 @@
   } = $props();
 
   import { onMount } from 'svelte';
-  import { canShare, share } from '../share';
+  import { canShare, shareableElement, share, shareCurrentElement } from '../share';
   import { mdiArrowLeft, mdiMoonWaningCrescent, mdiShare, mdiThemeLightDark, mdiWeatherSunny } from "@mdi/js";
   import Icon from "../Icon.svelte";
   import { ripple } from "../ripple";
@@ -18,7 +18,6 @@
   import { fly, scale } from "svelte/transition";
   import { COLOR_SCHEME } from '../storage.svelte';
   import type { Snippet } from "svelte";
-  import { portal } from '../portal/portal.svelte';
   import Anchor from '../portal/Anchor.svelte';
   // import { document_transition } from '../transitions';
 
@@ -29,12 +28,13 @@
   }
 
   let can_share = $state(true);
+  let show_share = $derived(can_share && $shareableElement != null)
   onMount(() => {
     canShare().then(v => can_share = v).catch(() => can_share = false);
   })
 
-  const share_app = async () => {
-    await share(share_params);
+  const share_element = async () => {
+    await shareCurrentElement();
   }
 
   // let source_menu_open: boolean = $state(false);
@@ -272,11 +272,11 @@
       </div>
     </div>
 
-    {#if can_share}
+    {#if show_share}
       <button
         class="btn ripple-c"  
-        aria-label="Compartir esta app"
-        onclick={() => share_app()}
+        aria-label="Compartir"
+        onclick={() => shareCurrentElement()} 
         use:ripple
       >
         <Icon d={mdiShare} />

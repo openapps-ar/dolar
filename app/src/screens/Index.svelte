@@ -10,6 +10,9 @@
   import { screen_enter, screen_leave } from "../transitions";
   import type { NOW } from '../client/client.svelte';
   import ItemSummary from '../components/ItemSummary.svelte';
+  import { getContext, onMount } from "svelte";
+  import { mdiTabUnselected } from "@mdi/js";
+  import { shareable } from "../share";
 
   type Item = Exclude<typeof NOW.$, null>["data"]["items"][number];
 </script>
@@ -48,7 +51,7 @@
 
 <div class="screen">
   
-  <div class="items">
+  <div class="items" use:shareable>
     {#each items as item (item.id)}
       <div class="summary" style:view-transition-name="item-box--{item.id}">  
         <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />

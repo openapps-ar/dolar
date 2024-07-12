@@ -1,9 +1,12 @@
 import type { ShareOptions } from "@capacitor/share";
 import { mods } from "./capacitor/mods";
+import { get, readonly, writable } from "svelte/store";
+import html2canvas from "html2canvas";
 
 const {
   share: { Share },
-  core: { Capacitor }
+  core: { Capacitor },
+  filesystem: { Filesystem, Directory, Encoding }
 } = mods;
 
 const native = Capacitor.isNativePlatform();
@@ -31,4 +34,64 @@ export const canShare = async (): Promise<boolean> => {
   //   if(typeof navigator.canShare !== "function") return false;
   //   return navigator.canShare(data);
   // }
+}
+
+const current_share_element = writable<HTMLElement | null>(null);
+
+export const shareableElement = readonly(current_share_element);
+
+export const shareable = (node: HTMLElement) => {
+  current_share_element.set(node);
+  return {
+    destroy: () => {
+      if(get(current_share_element) === node) {
+        current_share_element.set(null);
+      }
+    }
+  }
+}
+
+export const shareCurrentElement = async () => {
+  const element = get(current_share_element);
+  if(element == null) return;
+  
+  const canvas = await html2canvas(element);
+  const blob = await new Promise<Blob>((resolve) => {
+    canvas.toBlob(result => {
+        if(result == null) {
+          throw new Error("canvas.toBlob returned null");
+        } else {
+          resolve(result)
+        }
+      },
+      "image/png"
+    )
+  });
+
+  const filename = `dolar-screen-capture-${Date.now()}.png`;
+  const file = await Filesystem.writeFile({
+    path: filename,
+    data: blob,
+    directory: Directory.Documents,
+  })
+
+  // const del = () => {
+  //   Filesystem.deleteFile({
+  //     path: filename,
+  //     directory: Directory.Documents,
+  //   })
+  // }
+
+  try {
+    await Share.share({
+      title: "Dolar",
+      text: "Cotizaciones de todos los dólares de Argentina en tiempo real a un solo click",
+      files: [ file.uri ]
+    })
+
+    // del();
+  } catch(e) {
+    // del();
+    throw e;
+  }
 }

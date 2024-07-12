@@ -72,10 +72,10 @@ export const shareCurrentElement = async () => {
 
   const filename = `dolar-screen-capture-${Date.now()}.png`;
   
-  await Filesystem.mkdir({
-    path: Directory.Library,
-    recursive: true,
-  })
+  // await Filesystem.mkdir({
+  //   path: Directory.Library,
+  //   recursive: true,
+  // })
 
   const { uri } = await Filesystem.writeFile({
     path: filename,

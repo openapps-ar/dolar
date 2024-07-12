@@ -56,22 +56,24 @@ export const shareCurrentElement = async () => {
   if(element == null) return;
   
   const canvas = await html2canvas(element);
-  const blob = await new Promise<Blob>((resolve) => {
-    canvas.toBlob(result => {
-        if(result == null) {
-          throw new Error("canvas.toBlob returned null");
-        } else {
-          resolve(result)
-        }
-      },
-      "image/png"
-    )
-  });
+  // const blob = await new Promise<Blob>((resolve, reject) => {
+  //   canvas.toBlob(result => {
+  //       if(result == null) {
+  //         reject(new Error("canvas.toBlob returned null"));
+  //       } else {
+  //         resolve(result)
+  //       }
+  //     },
+  //     "image/png"
+  //   )
+  // });
+
+  const base64 = canvas.toDataURL("image/png", 1);
 
   const filename = `dolar-screen-capture-${Date.now()}.png`;
-  const file = await Filesystem.writeFile({
+  const { uri } = await Filesystem.writeFile({
     path: filename,
-    data: blob,
+    data: base64,
     directory: Directory.Documents,
   })
 
@@ -86,7 +88,7 @@ export const shareCurrentElement = async () => {
     await Share.share({
       title: "Dolar",
       text: "Cotizaciones de todos los dólares de Argentina en tiempo real a un solo click",
-      files: [ file.uri ]
+      files: [ uri ]
     })
 
     // del();

@@ -263,7 +263,8 @@
 
 {#snippet content({ item }: { item: NowItem })}
   <!-- this (item ?? {}) prevents a bug in svelte where the variable item is null, even if it's statically checked to be not null -->
-  {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item ?? {}}
+  {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item}
+  <!-- {@const { id, name, date, ref, buy, sell, variation, variation_kind } = item ?? {}} -->
   {#if id != null}
     <div class="start">
       <div class="name">{name}</div>

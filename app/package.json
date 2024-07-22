@@ -14,7 +14,7 @@
     "dev": "VITE_DEV=1 vite --host --port 3000",
     "dev:build": "VITE_DEV=1 vite build",
     "dev:android": "VITE_DEV=1 cap run android",
-    "android": "cap run android", 
+    "android": "cap run android",
     "preview": "vite preview --host --port 3000",
     "assets": "npx @capacitor/assets generate --iconBackgroundColor='#4bae4f' --iconBackgroundColorDark='#4bae4f' --splashBackgroundColor='#4bae4f' --splashBackgroundColorDark='#4bae4f'"
   },
@@ -46,7 +46,7 @@
     "postcss": "^8.4.38",
     "rollup": "^4.17.2",
     "rollup-plugin-typescript": "^1.0.1",
-    "svelte": "^5.0.0-next.182",
+    "svelte": "^5.0.0-next.193",
     "typescript": "^5.4.2",
     "vite": "^5.2.10",
     "zx": "^8.0.2"

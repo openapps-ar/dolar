@@ -7,7 +7,7 @@ const server = process.env.VITE_DEV === "1" || process.env.VITE_DEV === "true" ?
     url: "http://192.168.1.4:3000"
   } :
   {
-    hostname: "https://app.dolar.openapps.ar",
+    hostname: "app.dolar.openapps.ar",
     androidScheme: "https",
   };
 

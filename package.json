@@ -11,9 +11,6 @@
   },
   "scripts": {
     "start": "node ./api/dist/node/server.js",
-    "install": "run-s install:api install:app",
-    "install:api": "cd api && npm ci",
-    "install:app": "cd app && npm ci",
     "build:api": "cd api && npm run build",
     "build:app": "cd app && npm run build",
     "build": "run-s build:app build:api",

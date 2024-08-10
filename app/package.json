@@ -16,7 +16,9 @@
     "dev:android": "VITE_DEV=1 cap run android",
     "android": "cap run android",
     "preview": "vite preview --host --port 3000",
-    "assets": "npx @capacitor/assets generate --iconBackgroundColor='#4bae4f' --iconBackgroundColorDark='#4bae4f' --splashBackgroundColor='#4bae4f' --splashBackgroundColorDark='#4bae4f'"
+    "assets": "npx @capacitor/assets generate --iconBackgroundColor='#4bae4f' --iconBackgroundColorDark='#4bae4f' --splashBackgroundColor='#4bae4f' --splashBackgroundColorDark='#4bae4f'",
+    "prepare": "ts-patch install && typia patch",
+    "check": "svelte-check --tsconfig ./tsconfig.json --threshold error"
   },
   "dependencies": {
     "@capacitor-community/in-app-review": "^6.0.0",
@@ -36,10 +38,11 @@
     "copy-to-clipboard": "^3.3.3",
     "html2canvas": "^1.4.1",
     "pancake": "./packages/pancake/package",
-    "svelte-check": "^3.7.1"
+    "svelte-check": "^3.7.1",
+    "typia": "^6.7.2"
   },
   "devDependencies": {
-    "@capacitor/cli": "latest",
+    "@capacitor/cli": "^6.0.0",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "cssnano": "^7.0.1",
@@ -47,7 +50,8 @@
     "rollup": "^4.17.2",
     "rollup-plugin-typescript": "^1.0.1",
     "svelte": "^5.0.0-next.193",
-    "typescript": "^5.4.2",
+    "ts-patch": "^3.2.1",
+    "typescript": "^5.5.2",
     "vite": "^5.2.10",
     "zx": "^8.0.2"
   },

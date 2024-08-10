@@ -1,9 +1,9 @@
 import { type FullItem, type ItemDays, parse_date_string } from "./data.js";
-import { API_DIR, type Id } from "./config.js";
+import { type Id } from "./config.js";
 import { DaysData, type Api, type TimeframeKey } from "./api.js";
 import fs from "fs/promises";
-import { th } from "date-fns/locale";
 
+// TODO: use date based filter instead of count
 export const timeframes: Record<TimeframeKey, number> = {
   "1d": 1,
   "7d": 7,
@@ -13,6 +13,8 @@ export const timeframes: Record<TimeframeKey, number> = {
   "1y": 365,
   "5y": 365 * 5,
   "10y": 365 * 10,
+  "25y": 365 * 25,
+  "all": Number.MAX_VALUE,
 }
 
 export const list_timeframes = () => {
@@ -38,14 +40,14 @@ const $dir = async (dir: string, path: string) => {
 
 const $rmdir = async (dir: string, path: string) => {
   try {
-    await fs.rmdir(`${dir}/${path}`, { recursive: true });
+    await fs.rm(`${dir}/${path}`, { recursive: true });
   } catch(e: any) {
     if(e.code !== "ENOENT") throw e;
   }
 }
 
-const p = (v: number | string, n = 2, c = "0"): `${number}` => String(v).padStart(n, c) as any;
-const p4 = (v: number | string): `${number}` => p(v, 4);
+export const p = (v: number | string, n = 2, c = "0"): `${number}` => String(v).padStart(n, c) as any;
+export const p4 = (v: number | string): `${number}` => p(v, 4);
 
 export const render = async (
   dir: string,

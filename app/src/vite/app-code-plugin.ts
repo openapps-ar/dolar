@@ -1,8 +1,8 @@
 import { Plugin } from "vite"
 import { $ } from "zx";
 import path from "path";
-import etag from "etag";
 import fs from "fs";
+import crypto from "crypto"
 
 const dist = path.resolve(__dirname, "../../dist");
 const dir = path.resolve(__dirname, "../../build");
@@ -15,11 +15,12 @@ const entry_code = (entry: Entry) => `export default ${JSON.stringify(entry)};`
 
 export const appCode = async (): Promise<Plugin> => {
   const mod = '$app-code'
-  const rmod = '\0' + mod
 
+  
+  await $`rm -rf ${`${dir}/*`}`;
   await $`npx vite build -c vite.app.config.ts`;
   const js = fs.readFileSync(`${dir}/app.js`, "utf-8");
-  const hash = etag(js).replaceAll('"', '');
+  const hash = crypto.createHash("md5").update(js).digest("hex");
 
   fs.writeFileSync(`${dir}/app-hash.txt`, hash);
   fs.writeFileSync(`${dir}/app-entry.js`, entry_code({ hash, js }));

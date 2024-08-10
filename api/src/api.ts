@@ -1,11 +1,11 @@
 import type { FullItem, Item, ItemDayAny, ItemDays } from "./data.js"
 import type { Id } from "./config.js"
 
-export type TimeframeKey = "1d" | "7d" | "30d" | "90d" | "6m" | "1y" | "5y" | "10y"
+export type TimeframeKey = "1d" | "7d" | "30d" | "90d" | "6m" | "1y" | "5y" | "10y" | "25y" | "all";
 
 export type FullData = { items: FullItem[] }
 
-export type TimeframeAll = { items: FullItem[] }
+export type TimeframeAll = { items: Pick<FullItem, "id" | "name" | "days">[] }
 
 export type NowAll = { items: Item[] }
 

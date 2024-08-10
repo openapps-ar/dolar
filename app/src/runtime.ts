@@ -4,6 +4,7 @@ export type Runtime = {
   current_app?: any
   current_hash?: string | null
   destroyers: (() => void)[]
+  splash_screen_hide_called: boolean
 }
 
 // @ts-expect-error

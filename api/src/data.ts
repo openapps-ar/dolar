@@ -22,7 +22,7 @@ export const parse_date_string = (src: DateString) => {
 export type SourceDatePattern = tags.Pattern<"^[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}$">
 
 /** DD/MM/YYYY - hh:mm */
-export type SourceDataTimePattern =  tags.Pattern<"^[0-9]{2}\\/[0-9]{2}\\/[0-9]{4} - [0-9]{2}:[0-9]{2}$">
+export type SourceDataTimePattern =  tags.Pattern<"^[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}\\s*\\-?\\s*[0-9]{2}:[0-9]{2}$">
 
 export type SourceItem = {
   compra: string
@@ -103,12 +103,12 @@ export const float = (src: string): number => {
 }
 
 export const datetime = (d: string): DateTimeString => {
-  const re = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) *\- *([0-9]{2})\:([0-9]{2})/
+  const re = /([0-9]{2})\/([0-9]{2})\/([0-9]{4})\s*\-?\s*([0-9]{2})\:([0-9]{2})/
   return d.replace(re, "$3/$2/$1 $4:$5") as DateTimeString
 }
 
 export const to_date = (src: string): Date => {
-  const re = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) *\- *([0-9]{2})\:([0-9]{2})/
+  const re = /([0-9]{2})\/([0-9]{2})\/([0-9]{4})\s*\-?\s*([0-9]{2})\:([0-9]{2})/
   const [_, d, m, y, h, mm] = src.match(re) as RegExpMatchArray;
   return new Date(`${y}-${m}-${d}T${h}:${mm}:00-03:00`)
 }
@@ -138,11 +138,31 @@ export const map_item_now = (src: SourceItem): Omit<Item, "id" | "name"> => {
 }
 
 export const map_item_days = (src: SourceItemDays): ItemDays => {
-  const [ header, ...entries ] = src;
+  let [ header, ...entries ] = src;
+
+  // remove duplicate values for the same date
+  // use only the most recent value (first one) for each date
+  let dates = new Set<string>();
+  entries = entries.filter(item => {
+    if(dates.has(item[0])) return false;
+    dates.add(item[0]);
+    return true;
+  }) as typeof entries;
+
   const kind = map_item_days_kind(header);
 
   if(kind === "buy-sell") {
-    const items: ItemDayComplex[] = entries.map(([d, b, s]) => [ date(d), float(b), float(s!) ])
+    let items: ItemDayComplex[] = entries.map(([d, b, s]) => [ date(d), float(b), float(s!) ] as ItemDayComplex)
+      // fix: typo in source
+      // see: https://mercados.ambito.com/dolar/mayorista/historico-general/2024-05-01/2024-05-20
+      // "8776.5" => "876.5"
+      .map(item => {
+        if(item[0] === "2024/05/02" && item[1] === 846.5 && item[2] === 8776.5) {
+          return [ "2024/05/02", 846.5, 876.5 ] as ItemDayComplex;
+        } else {
+          return item;
+        }
+      })
     return { kind, items }
   } else {
     const items: ItemDaySimple[] = entries.map(([d, r]) => [ date(d), float(r) ])

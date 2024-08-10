@@ -26,7 +26,7 @@ export default defineConfig({
     svelte({
       compilerOptions: {
         css: "injected",
-        runes: true,
+        // runes: true,
         preserveComments: false,
         preserveWhitespace: false,
       }

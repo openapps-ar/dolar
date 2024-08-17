@@ -65,9 +65,11 @@
         <ItemSummary {item} kind="index" onclick={() => onitemclick(item.id)} />
       </div>
     {:else}
-      <div class="summary placeholder">  
-        <ItemSummary placeholder />
-      </div>
+      {#each { length: 8 } as _}  
+        <div class="summary placeholder">  
+          <ItemSummary placeholder />
+        </div>
+      {/each}
     {/each}
   </div>
 {/snippet}

@@ -1,7 +1,7 @@
 import type { Api } from "../../../api/src/api"; 
 import { assert_never } from "../../../api/src/assert_never";
 import { env } from "../env/env";
-import { storage_var } from "../storage.svelte.js";
+import { HISTORIC_DATA_UPDATED_COUNT, NOW_DATA_UPDATED_COUNT, storage_var } from "../storage.svelte.js";
 
 export type NowStored = {
   hash: string,
@@ -40,6 +40,7 @@ export type StoredApiOptions<T> = {
   check_interval_ms: number,
   storage_key: string,
   initial: T | null
+  on_update?: (data: T) => void,
 }
 
 export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOptions<Stored<Api[K]>>) => {
@@ -58,13 +59,13 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
   const is_interval_started = () => timer != null;
   
   const start_interval = () => {
-    
     if(timer == null) {
       const fn = async () => {
         try {
           await refresh_if_stale()
-        } finally {
-          if(timer != null) timer = setTimeout(fn, options.check_interval_ms)
+          timer = setTimeout(fn, options.check_interval_ms);
+        } catch(e) {
+          timer = setTimeout(fn, 500);
         }
       }
       
@@ -84,13 +85,10 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
     const v = storage.$;
   
     if(v == null) {
-      
       await refresh();
-
       return true;
   
     } else {
-  
       const obtained_at = new Date(v.obtained_at);
   
       if(Date.now() - obtained_at.getTime() > options.stale_ms) {
@@ -122,6 +120,8 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
       const start_set = Date.now();
       storage.set(stored);
 
+      options.on_update?.(stored);
+
       const elapsed_set = Date.now() - start_set;
       console.log(`refresh set ${key} ${options.storage_key} in ${elapsed_set}ms`)
       
@@ -148,8 +148,9 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
 export const NOW = stored_api("now.json", {
   stale_ms: 1000 * 60 * 1, // 1 minute
   check_interval_ms: 1000 * 5,
-  storage_key: "data-now-v1",
-  initial: null
+  storage_key: "data-now-v2",
+  initial: null,
+  on_update: () => NOW_DATA_UPDATED_COUNT.increment(),
 })
 
 type HistoricStore = ReturnType<typeof stored_api<"all.json">>;
@@ -163,7 +164,8 @@ export const HISTORIC = () => {
       stale_ms: 1000 * 60 * 60 * 1, // 1 hour
       check_interval_ms: 1000 * 5, // 5 seconds
       storage_key: "data-historic-v2",
-      initial: null
+      initial: null,
+      on_update: () => HISTORIC_DATA_UPDATED_COUNT.increment(),
     })
   }
 

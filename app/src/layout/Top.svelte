@@ -46,7 +46,7 @@
 
 <style>
   .top {
-    height: 3.5rem;
+    height: var(--top-height);
     background: var(--color-top-bg);
     color: var(--color-top-text);
     box-shadow: var(--shadow-top);

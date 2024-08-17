@@ -1,4 +1,5 @@
 import { run } from "./runtime";
+import { uid } from "./uid";
 
 type MaybeFn<T> = T | (() => T);
 
@@ -67,6 +68,23 @@ export const bool = (key: string, initial: MaybeFn<boolean> = false, auto_initia
   });
 }
 
+export const date = (key: string, initial: MaybeFn<Date>, auto_initialize?: boolean) => storage_var<Date>(
+  key,
+  {
+    initial,
+    parse: v => {
+      const d = new Date(v);
+      if(isNaN(+d)) {
+        return get(initial);
+      } else {
+        return d
+      }
+    },
+    stringify: v => v.toJSON(),
+    auto_initialize,
+  }
+)
+
 export const nullable_date = (key: string, initial: MaybeFn<Date | null> = null, auto_initialize?: boolean) => storage_var<Date | null>(
   key,
   {
@@ -128,9 +146,37 @@ export const COLOR_SCHEME = storage_var<"light" | "dark" | null>("color-scheme",
 //   auto_initialize: false,
 // })
 
-export const ORDERS = storage_var<Record<string, string | undefined>>("item-orders", {
-  initial: {},
-  parse: JSON.parse,
-  stringify: JSON.stringify,
-  auto_initialize: false,
-})
+
+// USER_ID is created when first accesed and persisted in localStorage
+// it is not a reactive value
+export const USER_ID = (() => {
+  let v: string | null = null;
+  return {
+    get $() {
+      if(v != null) return v;
+      const key = "user-id";
+      const stored = localStorage.getItem(key)
+      if(stored == null) {
+        const created = uid(12);
+        localStorage.setItem(key, created);
+        v = created;
+        return created;
+      } else {
+        return stored;
+      }
+    }
+  }
+})()
+
+export const NOW_DATA_UPDATED_COUNT = num("now-data-updated-count", 0);
+export const HISTORIC_DATA_UPDATED_COUNT = num("historic-data-updated-count", 0);
+export const CODE_UPDATED_COUNT = num("code-updated-count", 0);
+
+export const FIRST_OPEN_AT = date("first-open-at", () => new Date(), true);
+
+// export const ORDERS = storage_var<Record<string, string | undefined>>("item-orders", {
+//   initial: {},
+//   parse: JSON.parse,
+//   stringify: JSON.stringify,
+//   auto_initialize: false,
+// })

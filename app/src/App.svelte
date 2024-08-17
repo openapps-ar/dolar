@@ -47,7 +47,7 @@
         } as const
       }
     }
-    if(+now - +NOW.$.obtained_at > 10 * 60 * 60) {
+    if(+now - +NOW.$.obtained_at > 10 * 60 * 1000) {
       const ms = +now - +new Date(NOW.$.obtained_at);
       const S = 1000;
       const M = 60 * S;

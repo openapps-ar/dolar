@@ -132,12 +132,22 @@ export const num = (key: string, initial = 0, auto_initialize?: boolean) => {
   }
 }
 
-export const COLOR_SCHEME = storage_var<"light" | "dark" | null>("color-scheme", {
-  initial: null,
-  parse: JSON.parse,
-  stringify: JSON.stringify,
-  auto_initialize: false,
-})
+const override_color_scheme = new URLSearchParams(location.search).get("color-scheme");
+export let COLOR_SCHEME: ReturnType<typeof storage_var<"light" | "dark" | null>>;
+if(override_color_scheme == "light" || override_color_scheme == "dark") {
+  COLOR_SCHEME = {
+    $: override_color_scheme,
+    remove: () => {},
+    set: () => {}
+  }
+} else {
+  COLOR_SCHEME = storage_var<"light" | "dark" | null>("color-scheme", {
+    initial: null,
+    parse: JSON.parse,
+    stringify: JSON.stringify,
+    auto_initialize: false,
+  })
+}
 
 // export const SOURCE_ID = storage_var<string | null>("source-id", {
 //   initial: null,

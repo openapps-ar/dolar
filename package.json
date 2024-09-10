@@ -26,6 +26,7 @@
     "deploy:reload": "pm2 reload pm2.config.cjs",
     "deploy:reset": "pm2 reset all",
     "apk": "zx apk.js",
+    "aab": "zx aab.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "ts-patch install && typia patch"
   },

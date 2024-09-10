@@ -160,7 +160,7 @@
   import { title } from "./text";
   import { online } from "./online.svelte";
   import { fly } from "svelte/transition";
-  import { mdiAlert, mdiNetworkOff, mdiNetworkStrengthOffOutline } from "@mdi/js";
+  import { mdiAlert, mdiDeleteAlertOutline, mdiNetworkOff, mdiNetworkStrengthOffOutline } from "@mdi/js";
   import Icon from "./Icon.svelte";
 
   const STATE_VERSION = 0;
@@ -176,7 +176,12 @@
 
   let saved_state: AppState | null = history.state;
   if(saved_state == null || saved_state.version !== STATE_VERSION) {
-    saved_state = { screen: "index", scroll: 0, version: STATE_VERSION };
+    const detail = new URLSearchParams(location.search).get("detail");
+    if(detail == null) {
+      saved_state = { screen: "index", scroll: 0, version: STATE_VERSION };
+    } else {
+      saved_state = { screen: "item", id: detail, scroll: 0, version: STATE_VERSION };
+    }
     history.replaceState(saved_state, "", null);
   }
 
@@ -237,7 +242,6 @@
       window.removeEventListener("popstate", onpop);
     }
   })
-
 </script>
 
 <style>

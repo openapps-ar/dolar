@@ -35,4 +35,4 @@ await within(async () => {
 })
 
 await $`mkdir -p apk`;
-await $`cp -v app/android/app/build/outputs/apk/release/app-release-signed.aab apk/dolar.aab`
+await $`cp -v app/android/app/build/outputs/bundle/release/app-release-signed.aab apk/dolar.aab`

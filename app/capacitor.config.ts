@@ -12,8 +12,8 @@ const server = process.env.VITE_DEV === "1" || process.env.VITE_DEV === "true" ?
   };
 
 const config: CapacitorConfig = {
-  appId: "ar.openapps.dolar.a3",
-  appName: "Dolarg",
+  appId: "ar.openapps.dolar",
+  appName: "Dolar",
   bundledWebRuntime: false,
   webDir: "dist",
   
@@ -21,7 +21,7 @@ const config: CapacitorConfig = {
 
   android: {
     buildOptions: {
-      signingType: "apksigner"
+      // signingType: "apksigner"
     }
   },
 

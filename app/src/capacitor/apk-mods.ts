@@ -6,7 +6,7 @@ import * as splash_screen from "@capacitor/splash-screen";
 import * as app_update from "@capawesome/capacitor-app-update";
 import * as screen_orientation from "@capawesome/capacitor-screen-orientation";
 import * as in_app_review from "@capacitor-community/in-app-review";
-import *  as haptics from "@capacitor/haptics";
+import * as haptics from "@capacitor/haptics";
 import * as filesystem from "@capacitor/filesystem";
 
 export const __MODS__ = {

@@ -4,6 +4,10 @@ import { CacheItem } from "./cache.js";
 import { shell } from "./app.js";
 import cors from "cors";
 import { send } from "./compress.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const api = () => {
 
@@ -37,16 +41,12 @@ app.use(cors({
   exposedHeaders: "*",
 }));
 
-app.get("/request", (req, res) => {
-  res.json({
-    method: req.method,
-    url: req.url,
-    headers: req.headers,
-  })
-})
-
 app.use("/api/v1", api());
 app.use("/shell/v1", shell());
+
+app.use(express.static(path.resolve(__dirname, "../../../static"), {
+  etag: true,
+}));
 
 // TODO: get from env
 app.listen(4000, () => {

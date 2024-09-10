@@ -65,7 +65,7 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
           await refresh_if_stale()
           timer = setTimeout(fn, options.check_interval_ms);
         } catch(e) {
-          timer = setTimeout(fn, 500);
+          timer = setTimeout(fn, 1_000);
         }
       }
       

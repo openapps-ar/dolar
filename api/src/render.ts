@@ -111,40 +111,40 @@ export const render_item = async (
   await $write(dir, `${item.id}/days/meta.json`, { first, last });
   await $write(dir, `${item.id}/days/data.json`, { days });
 
-  const first_y = first ? parse_date_string(first[0]).y : null;
-  const last_y = last ? parse_date_string(last[0]).y : null;
+  // const first_y = first ? parse_date_string(first[0]).y : null;
+  // const last_y = last ? parse_date_string(last[0]).y : null;
 
-  if(first_y != null && last_y != null) {
-    for(let y = first_y; y <= last_y; y++) {
-      const yyyy = p4(y);
-      const year_items = days.items.filter(d => parse_date_string(d[0]).y === y) as ItemDays["items"];
-      await $dir(dir, `${item.id}/days/${yyyy}`);
-      await $write(dir, `${item.id}/days/${yyyy}/data.json`, { days: { kind: days.kind, items: year_items } } as DaysData);
+  // if(first_y != null && last_y != null) {
+  //   for(let y = first_y; y <= last_y; y++) {
+  //     const yyyy = p4(y);
+  //     const year_items = days.items.filter(d => parse_date_string(d[0]).y === y) as ItemDays["items"];
+  //     await $dir(dir, `${item.id}/days/${yyyy}`);
+  //     await $write(dir, `${item.id}/days/${yyyy}/data.json`, { days: { kind: days.kind, items: year_items } } as DaysData);
       
-      const first = year_items[0] ?? null;
-      const last = year_items.at(-1) ?? null;
-      await $write(dir, `${item.id}/days/${yyyy}/meta.json`, { first, last })
+  //     const first = year_items[0] ?? null;
+  //     const last = year_items.at(-1) ?? null;
+  //     await $write(dir, `${item.id}/days/${yyyy}/meta.json`, { first, last })
 
-        const first_m = first ? parse_date_string(first[0]).m : 0;
-        const last_m = last ? parse_date_string(last[0]).m : 0;
+  //       const first_m = first ? parse_date_string(first[0]).m : 0;
+  //       const last_m = last ? parse_date_string(last[0]).m : 0;
 
-        for(let m = first_m; m <= last_m; m++) {
-          const mm = p(m);
-          const month_items = year_items.filter(d => parse_date_string(d[0]).m === m) as ItemDays["items"];
-          await $dir(dir, `${item.id}/days/${yyyy}/${mm}`);
-          await $write(dir, `${item.id}/days/${yyyy}/${mm}/data.json`, { days: { kind: days.kind, items: month_items } } as DaysData);
+  //       for(let m = first_m; m <= last_m; m++) {
+  //         const mm = p(m);
+  //         const month_items = year_items.filter(d => parse_date_string(d[0]).m === m) as ItemDays["items"];
+  //         await $dir(dir, `${item.id}/days/${yyyy}/${mm}`);
+  //         await $write(dir, `${item.id}/days/${yyyy}/${mm}/data.json`, { days: { kind: days.kind, items: month_items } } as DaysData);
 
-          const first = month_items[0] ?? null;
-          const last = month_items.at(-1) ?? null;
-          await $write(dir, `${item.id}/days/${yyyy}/${mm}/meta.json`, { first, last })
+  //         const first = month_items[0] ?? null;
+  //         const last = month_items.at(-1) ?? null;
+  //         await $write(dir, `${item.id}/days/${yyyy}/${mm}/meta.json`, { first, last })
 
-          if(render_days) {
-            for(const day of month_items) {
-            const dd = p(parse_date_string(day[0]).d);
-            await $write(dir, `${item.id}/days/${yyyy}/${mm}/${dd}.json`, { day });
-          }
-        }
-      }
-    }
-  }
+  //         if(render_days) {
+  //           for(const day of month_items) {
+  //           const dd = p(parse_date_string(day[0]).d);
+  //           await $write(dir, `${item.id}/days/${yyyy}/${mm}/${dd}.json`, { day });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }

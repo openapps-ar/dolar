@@ -5,9 +5,9 @@ import { shell } from "./app.js";
 import cors from "cors";
 import { send } from "./compress.js";
 import path from "path";
-import { fileURLToPath } from "url";
+import http from "http";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = new URL(".", import.meta.url).pathname;
 
 const api = () => {
 
@@ -48,9 +48,28 @@ app.use(express.static(path.resolve(__dirname, "../../../static"), {
   etag: true,
 }));
 
+const server = http.createServer(app);
+
 // TODO: get from env
-app.listen(4000, () => {
+server.listen(4000, () => {
   console.log("listening on http://localhost:4000");
   // pm2
   process.send && process.send("ready");
 });
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received, closing server");
+  
+  console.log("closing idle connections");
+  server.closeIdleConnections();
+
+  server.close(async () => {
+    console.log("server closed, stopping process");
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    console.log("close timeout reached, stopping process");
+    process.exit(0);
+  }, 10_000);
+})

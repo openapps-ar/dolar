@@ -23,7 +23,7 @@
     "deploy": "run-s deploy:pull deploy:ci build deploy:reload deploy:reset",
     "deploy:pull": "git pull",
     "deploy:ci": "npm ci",
-    "deploy:reload": "pm2 reload pm2.config.cjs",
+    "deploy:reload": "pm2 scale dolar 2 && pm2 scale dolar 1",
     "deploy:reset": "pm2 reset all",
     "apk": "zx apk.js",
     "aab": "zx aab.js",

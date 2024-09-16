@@ -34,9 +34,9 @@ export const create_api = (data: Data, { render_days = false } = {}): Api => {
   api[`now.json`] = { items: now };
 
 
-  for(const item of items) {
-    render_item(api, item, render_days)
-  }
+  // for(const item of items) {
+  //   render_item(api, item, render_days)
+  // }
   
   const end = performance.now();
   console.log(`created api in ${(end - start).toFixed(2)}ms`);
@@ -50,17 +50,17 @@ export const render_item = async (
   render_days = false,
 ) => {
   const { days, ...keep } = item;
-  api[`${item.id}/now.json`] = { ...keep };
+  // api[`${item.id}/now.json`] = { ...keep };
 
-  for(const [key, n] of list_timeframes()) {
-    api[`${item.id}/${key}.json`] = { days: slice_days(days, -n) };
-  }
+  // for(const [key, n] of list_timeframes()) {
+  //   api[`${item.id}/${key}.json`] = { days: slice_days(days, -n) };
+  // }
 
-  const first = days.items[0] ?? null;
-  const last = days.items.at(-1) ?? null;
+  // const first = days.items[0] ?? null;
+  // const last = days.items.at(-1) ?? null;
   
-  api[`${item.id}/days/meta.json`] = { first, last };
-  api[`${item.id}/days/data.json`] = { days };
+  // api[`${item.id}/days/meta.json`] = { first, last };
+  // api[`${item.id}/days/data.json`] = { days };
 
   // const first_y = first ? parse_date_string(first[0]).y : null;
   // const last_y = last ? parse_date_string(last[0]).y : null;

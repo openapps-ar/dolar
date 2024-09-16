@@ -13,9 +13,6 @@
   import DaysChart from "../chart/PancakeDaysChart.svelte";
   import ItemSummary from "../components/ItemSummary.svelte";
   import { HISTORIC, NOW } from "../client/client.svelte";
-  import { tick } from "svelte";
-  import { shareable } from "../share";
-  import { Share } from "@capacitor/share";
   import Shareable from "../Shareable.svelte";
 
   const DAY = 1000 * 60 * 60 * 24;

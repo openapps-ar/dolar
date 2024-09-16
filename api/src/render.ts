@@ -5,15 +5,15 @@ import fs from "fs/promises";
 
 // TODO: use date based filter instead of count
 export const timeframes: Record<TimeframeKey, number> = {
-  "1d": 1,
-  "7d": 7,
-  "30d": 30,
-  "90d": 90,
-  "6m": 180,
-  "1y": 365,
-  "5y": 365 * 5,
-  "10y": 365 * 10,
-  "25y": 365 * 25,
+//   "1d": 1,
+//   "7d": 7,
+//   "30d": 30,
+//   "90d": 90,
+//   "6m": 180,
+//   "1y": 365,
+//   "5y": 365 * 5,
+//   "10y": 365 * 10,
+//   "25y": 365 * 25,
   "all": Number.MAX_VALUE,
 }
 
@@ -82,9 +82,9 @@ export const render = async (
 
   await $write(dir, `now.json`, { items: now })
 
-  for(const item of items) {
-    await render_item(dir, item, render_days)
-  }
+  // for(const item of items) {
+  //   await render_item(dir, item, render_days)
+  // }
 } 
 
 export const render_item = async (
@@ -94,22 +94,22 @@ export const render_item = async (
 ) => {
   console.log(item.id);
 
-  await $dir(dir, item.id);
+  // await $dir(dir, item.id);
   
-  const { days, ...keep } = item;
-  await $write(dir, `${item.id}/now.json`, { ...keep });
+  // const { days, ...keep } = item;
+  // await $write(dir, `${item.id}/now.json`, { ...keep });
 
-  for(const [key, n] of list_timeframes()) {
-    await $write(dir, `${item.id}/${key}.json`, { days: slice_days(days, -n) })
-  }
+  // for(const [key, n] of list_timeframes()) {
+  //   await $write(dir, `${item.id}/${key}.json`, { days: slice_days(days, -n) })
+  // }
 
   
-  const first = days.items[0] ?? null;
-  const last = days.items.at(-1) ?? null;
+  // const first = days.items[0] ?? null;
+  // const last = days.items.at(-1) ?? null;
   
-  await $dir(dir, `${item.id}/days`);
-  await $write(dir, `${item.id}/days/meta.json`, { first, last });
-  await $write(dir, `${item.id}/days/data.json`, { days });
+  // await $dir(dir, `${item.id}/days`);
+  // await $write(dir, `${item.id}/days/meta.json`, { first, last });
+  // await $write(dir, `${item.id}/days/data.json`, { days });
 
   // const first_y = first ? parse_date_string(first[0]).y : null;
   // const last_y = last ? parse_date_string(last[0]).y : null;

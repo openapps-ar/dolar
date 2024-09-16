@@ -21,7 +21,7 @@ export const make_cache = (api: Api): Cache => {
   const start = performance.now();
   const cache: Cache = Object.create(null)
   
-  for(const [key, data] of Object.entries(api) as [keyof Api, any]) {
+  for(const [key, data] of Object.entries(api) as [keyof Api, any][]) {
     const text = JSON.stringify(data)
     const buf = Buffer.from(text, "utf-8")
     const { hash, etag } = make_hash(buf);

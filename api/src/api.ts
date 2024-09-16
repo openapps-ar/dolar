@@ -34,10 +34,10 @@ export type Api =
   & { [K in Id as `${K}/days/meta.json`]: DaysMeta }
   & { [K in Id as `${K}/days/data.json`]: DaysData }
 
-  & { [K in Id as `${K}/days/${number}/meta.json`]: DaysMeta }
-  & { [K in Id as `${K}/days/${number}/data.json`]: DaysData }
+  // & { [K in Id as `${K}/days/${number}/meta.json`]: DaysMeta }
+  // & { [K in Id as `${K}/days/${number}/data.json`]: DaysData }
 
-  & { [K in Id as `${K}/days/${number}/${number}/meta.json`]: DaysMeta }
-  & { [K in Id as `${K}/days/${number}/${number}/data.json`]: DaysData }
+  // & { [K in Id as `${K}/days/${number}/${number}/meta.json`]: DaysMeta }
+  // & { [K in Id as `${K}/days/${number}/${number}/data.json`]: DaysData }
 
-  & { [K in Id as `${K}/days/${number}/${number}/${number}.json`]: { day: ItemDayAny } }
+  // & { [K in Id as `${K}/days/${number}/${number}/${number}.json`]: { day: ItemDayAny } }

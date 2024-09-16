@@ -184,6 +184,13 @@ export const CODE_UPDATED_COUNT = num("code-updated-count", 0);
 
 export const FIRST_OPEN_AT = date("first-open-at", () => new Date(), true);
 
+export const APP_OPEN_COUNT = num("app-open-count", 0);
+const dedup_key = "app-open-count-dedup";
+if(sessionStorage.getItem(dedup_key) == null) {
+  sessionStorage.setItem(dedup_key, "1");
+  APP_OPEN_COUNT.increment()
+}
+
 // export const ORDERS = storage_var<Record<string, string | undefined>>("item-orders", {
 //   initial: {},
 //   parse: JSON.parse,

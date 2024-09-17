@@ -96,7 +96,7 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
         return true;
       }
     }
-  
+
     return false;
   }
   
@@ -111,6 +111,11 @@ export const stored_api = <K extends keyof Api>(key: K, options: StoredApiOption
 
     if(r.kind === "not-modified") {
       console.log(`obtained not modified response for ${key}`)
+      if(storage.$) {
+        const { hash, data } = storage.$;
+        const stored = { obtained_at: new Date(), hash, data }; 
+        storage.set(stored);
+      }
     } else if(r.kind === "new-data") {
       console.log(`obtained new data for ${key}`)
 

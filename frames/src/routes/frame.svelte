@@ -27,8 +27,8 @@
 
   .frame {
     box-sizing: content-box;
-    width: 74%;
-    height: 84%;
+    width: var(--frame-width, 74%);
+    height: var(--frame-height, 84%);
     display: flex;
     flex-direction: column;
     
@@ -39,8 +39,8 @@
     border-radius: 30px 30px 0 0;
     overflow: hidden;
     position: absolute;
-    bottom: -10px;
-    left: calc(13%);
+    bottom: var(--frame-bottom, -10px);
+    left: var(--frame-left, 13%);
   }
 
 

@@ -12,7 +12,7 @@
 
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const delay = 700;
+  const delay = 0;
   const each = 3500;
   const end = 3500;
 
@@ -44,6 +44,10 @@
   @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
   :global {
+    :root {
+      zoom: 1.5;
+    }
+
     html, body {
       margin: 0;
     }
@@ -82,7 +86,7 @@
     height: 20%;
     width: 35%;
     text-align: center;
-    font-size: 3vw;
+    font-size: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,9 +111,9 @@
   .frame-position {
     position: absolute;
     right: 18%;
-    transform: rotate(5deg);
-    bottom: -5%;
-    height: 95%;
+    /* transform: rotate(5deg); */
+    bottom: 0;
+    height: 90%;
     aspect-ratio: 9 / 16;
     --frame-width: 100%;
     --frame-height: 100%;

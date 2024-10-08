@@ -4,7 +4,8 @@
   import { page } from "$app/stores";
 
   $: video = $page.url.searchParams.has("video");
-  $: aspectRatio = video ? "16 / 9" : "1024 / 500";
+  $: aspectRatio = video ? "1920 / 1080" : "1024 / 500";
+  $: zoom = video ? "1.5" : "0.8"
 </script>
 <style>
   :global {
@@ -45,9 +46,10 @@
   .frame-position {
     position: absolute;
     right: 15%;
-    transform: rotate(5deg);
-    bottom: -5%;
-    height: 95%;
+    /* transform: rotate(5deg); */
+    /* bottom: -5%; */
+    bottom: 0;
+    height: 90%;
     aspect-ratio: 9 / 16;
     --frame-width: 100%;
     --frame-height: 100%;
@@ -88,7 +90,7 @@
   <div class="frame-position">
     <div class="frame-relative">
       <div class="scale-up">
-        <div class="scale-down">
+        <div class="scale-down" style:zoom={zoom}>
           <Frame theme="dark" />
         </div>
       </div>

@@ -19,9 +19,9 @@ const page = await browser.newPage();
 await page.emulate({
   userAgent: "video",
   viewport: {
-    width: 1280,
-    height: 720,
-    deviceScaleFactor: 2,
+    width: 1920,
+    height: 1080,
+    deviceScaleFactor: 1,
     hasTouch: true,
     isMobile: true,
   }

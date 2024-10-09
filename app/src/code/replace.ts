@@ -7,7 +7,7 @@ import { CODE_UPDATED_COUNT } from "../storage.svelte";
 export const replace_app = async (entry: Code) => {
     if(entry.hash === run.current_hash) {
       console.log("network code hash matches, skipping");
-      return;
+      throw new Error("network code matches, skipping update");
     }
 
     CODE_UPDATED_COUNT.increment();
@@ -27,10 +27,8 @@ export const replace_app = async (entry: Code) => {
       console.log("network code execured");
     }
 
-    // @ts-expect-error
     if(document.startViewTransition) {
       console.log("calling startViewTransition");
-      // @ts-expect-error
       await document.startViewTransition(replace);
     } else {
       await replace();

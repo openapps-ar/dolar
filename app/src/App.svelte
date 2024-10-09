@@ -89,6 +89,29 @@
     return null;
   })
 
+  const js_date = new Date();
+  const on_settled = async () => {
+    await sleep(300);
+    
+    HISTORIC().start_interval();
+    
+    // gtag
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-KPKZNMC5E7";
+    // @ts-ignore
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){
+      // @ts-ignore
+      dataLayer.push(arguments);
+    }
+    // @ts-ignore
+    gtag('js', js_date);
+    // @ts-ignore
+    gtag('config', 'G-KPKZNMC5E7');
+    document.head.appendChild(script);
+  }
+
   onMount(() => {
 
     if(!run.splash_screen_hide_called) {
@@ -103,8 +126,7 @@
       NOW.start_interval();
 
       if(env.DEV || run.current_code_origin === "network") {
-        await sleep(300);
-        HISTORIC().start_interval();
+        on_settled();
         
       } else {
         console.log("getting code from network");
@@ -113,9 +135,8 @@
           const entry = await get_code_from_network()
           console.log("network code obtained");
           await replace_app(entry)
-        } finally{
-          await sleep(300);
-          HISTORIC().start_interval();
+        } catch(e) {
+          on_settled();
         }
       }
     })

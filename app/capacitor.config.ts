@@ -21,15 +21,15 @@ const config: CapacitorConfig = {
 
   android: {
     buildOptions: {
-      // signingType: "apksigner"
+      signingType: "apksigner"
     }
   },
 
   plugins: {
     SplashScreen: {
-      // launchShowDuration: 0,
-      // launchFadeOutDuration: 1000,
-      // launchAutoHide: true,
+      launchShowDuration: 300,
+      launchFadeOutDuration: 0,
+      launchAutoHide: true,
       // splashImmersive: false,
       // splashFullScreen: false,
       // useDialog: false,

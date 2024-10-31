@@ -34,6 +34,7 @@
     "@capawesome/capacitor-app-update": "^6.0.0",
     "@capawesome/capacitor-screen-orientation": "^6.0.0",
     "@mdi/js": "^7.4.47",
+    "@sveltejs/adapter-static": "^3.0.6",
     "@sveltejs/pancake": "^0.0.18",
     "copy-to-clipboard": "^3.3.3",
     "html2canvas": "^1.4.1",

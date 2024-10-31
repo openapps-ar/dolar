@@ -114,10 +114,10 @@
 
   onMount(() => {
 
-    if(!run.splash_screen_hide_called) {
-      run.splash_screen_hide_called = true;
-      SplashScreen.hide()
-    }
+    // if(!run.splash_screen_hide_called) {
+    //   run.splash_screen_hide_called = true;
+    //   SplashScreen.hide()
+    // }
 
     const stop_online_interval = online.start_interval()
 

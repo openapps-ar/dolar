@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Item, Days, Range } from "../chart/PancakeDaysChart.svelte";
   export type { Item, Days, Range };
 </script>

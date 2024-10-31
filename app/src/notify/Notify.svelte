@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script module lang="ts">
   import { get, type Readable } from "svelte/store";
   export type Text = string | Readable<string>;
 </script>

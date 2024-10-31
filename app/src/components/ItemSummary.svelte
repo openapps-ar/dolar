@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   let show_copied: string | null = $state(null);
   let show_copied_timer: NodeJS.Timeout | undefined = undefined;
 </script>

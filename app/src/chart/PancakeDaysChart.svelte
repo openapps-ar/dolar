@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   export type Item = Exclude<typeof NOW.$, null>["data"]["items"][number];
   export type Days = Exclude<ReturnType<typeof HISTORIC>["$"], null>["data"]["items"][number]["days"]
   export type Range = "7D" | "1M" | "3M" | "6M" | "1A" | "5A" | "10A" | "MAX";

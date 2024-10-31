@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
 	import { getContext } from 'svelte';
 
 	const key = {};

@@ -2,7 +2,7 @@ apps:
   - name: dolar
     arg0: node
     args: ["./api/dist/node/server.js"]
-    instances: 1,
+    instances: 1
     wait_ready: true
     wait_ready_timeout: 60s
     kill_timeout: 60s

@@ -55,6 +55,8 @@ server.listen(4000, () => {
   console.log("listening on http://localhost:4000");
   // pm2
   process.send && process.send("ready");
+  // r2
+  console.warn("#r2.READY");
 });
 
 process.on("SIGINT", () => {

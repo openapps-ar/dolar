@@ -5,12 +5,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const API_DIR = path.resolve(__dirname, "../..", "generated/pages/api")
 
+// There is a bug dolar mep and ccl at 2025-08-13 that errors when trying to fetch data from that day
+export const DEFAULT_FROM: Partial<Record<Id, Date>> = {
+  "mep": new Date(2025, 8 - 1, 14),
+  "ccl": new Date(2025, 8 - 1, 14),
+}
+
 export type Id = 
   | "informal"
   | "oficial"
   | "bna"
-  // | "mep"
-  // | "ccl"
+  | "mep"
+  | "ccl"
   | "turista"
   | "mayorista"
   | "cripto"
@@ -22,8 +28,8 @@ export type Id =
     "informal",
     "oficial",
     "bna",
-    // "mep",
-    // "ccl",
+    "mep",
+    "ccl",
     "turista",
     "mayorista",
     "cripto",
@@ -36,8 +42,8 @@ export const NAMES: Record<Id, string> = {
   "informal": "Blue",
   "oficial": "Oficial",
   "bna": "BNA",
-  // "mep": "MEP",
-  // "ccl": "CCL",
+  "mep": "MEP",
+  "ccl": "CCL",
   "turista": "Turista",
   "mayorista": "Mayorista",
   "cripto": "Cripto",
@@ -50,8 +56,8 @@ export const VARIATION_URLS: Record<Id, string> = {
   "informal": "https://mercados.ambito.com/dolar/informal/variacion",
   "oficial": "https://mercados.ambito.com/dolar/oficial/variacion",
   "bna": "https://mercados.ambito.com/dolarnacion/variacion",
-  // "mep": "https://mercados.ambito.com/dolarrava/mep/variacion",
-  // "ccl": "https://mercados.ambito.com/dolarrava/cl/variacion",
+  "mep": "https://mercados.ambito.com/dolarrava/mep/variacion",
+  "ccl": "https://mercados.ambito.com/dolarrava/cl/variacion",
   "turista": "https://mercados.ambito.com/dolarturista/variacion",
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/variacion",
   "cripto": "https://mercados.ambito.com/dolarcripto/variacion",

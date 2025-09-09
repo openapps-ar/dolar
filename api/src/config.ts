@@ -7,8 +7,8 @@ export const API_DIR = path.resolve(__dirname, "../..", "generated/pages/api")
 
 // There is a bug dolar mep and ccl at 2025-08-13 that errors when trying to fetch data from that day
 export const DEFAULT_FROM: Partial<Record<Id, Date>> = {
-  "mep": new Date(2025, 8 - 1, 14),
-  "ccl": new Date(2025, 8 - 1, 14),
+  "mep": new Date(2025, 8 - 1, 15),
+  "ccl": new Date(2025, 8 - 1, 15),
 }
 
 export type Id = 

@@ -10,7 +10,7 @@ export type Id =
   | "oficial"
   | "bna"
   // | "mep"
-  | "ccl"
+  // | "ccl"
   | "turista"
   | "mayorista"
   | "cripto"
@@ -23,7 +23,7 @@ export type Id =
     "oficial",
     "bna",
     // "mep",
-    "ccl",
+    // "ccl",
     "turista",
     "mayorista",
     "cripto",
@@ -37,7 +37,7 @@ export const NAMES: Record<Id, string> = {
   "oficial": "Oficial",
   "bna": "BNA",
   // "mep": "MEP",
-  "ccl": "CCL",
+  // "ccl": "CCL",
   "turista": "Turista",
   "mayorista": "Mayorista",
   "cripto": "Cripto",
@@ -51,7 +51,7 @@ export const VARIATION_URLS: Record<Id, string> = {
   "oficial": "https://mercados.ambito.com/dolar/oficial/variacion",
   "bna": "https://mercados.ambito.com/dolarnacion/variacion",
   // "mep": "https://mercados.ambito.com/dolarrava/mep/variacion",
-  "ccl": "https://mercados.ambito.com/dolarrava/cl/variacion",
+  // "ccl": "https://mercados.ambito.com/dolarrava/cl/variacion",
   "turista": "https://mercados.ambito.com/dolarturista/variacion",
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/variacion",
   "cripto": "https://mercados.ambito.com/dolarcripto/variacion",
@@ -65,7 +65,7 @@ export const HISTORIC_URLS: Record<Id, string> = {
   "oficial": "https://mercados.ambito.com/dolar/oficial/historico-general",
   "bna": "https://mercados.ambito.com/dolarnacion/historico-general",
   // "mep": "https://mercados.ambito.com/dolarrava/mep/historico-general",
-  "ccl": "https://mercados.ambito.com/dolarrava/cl/historico-general",
+  // "ccl": "https://mercados.ambito.com/dolarrava/cl/historico-general",
   "turista": "https://mercados.ambito.com/dolarturista/historico-general",
   "mayorista": "https://mercados.ambito.com/dolar/mayorista/historico-general",
   "cripto": "https://mercados.ambito.com/dolarcripto/historico-general",

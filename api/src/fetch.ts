@@ -43,8 +43,11 @@ export const get_item_now = async (id: Id): Promise<Item> => {
 export const get_source_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<SourceItemDays> => {
   const url = item_days_url(id, from, to);
   const raw = await get_json(url);
-  const array = assert<any[]>(raw);
-  const data = array.map((raw_item, i) => {
+  const [head_raw, ...lines_raw] = assert<any[]>(raw);
+
+  const head = assert<SourceItemDays[0]>(head_raw);
+
+  const lines = lines_raw.map((raw_item, i) => {
     try {
       return assert<SourceItemDays[number]>(raw_item);
     } catch(e) {
@@ -52,7 +55,8 @@ export const get_source_item_days = async (id: Id, from = default_from(id), to =
       return null;
     }
   }).filter(item => item !== null);
-  return data;
+  
+  return assert<SourceItemDays>([head, ...lines]);
 }
 
 export const get_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<ItemDays> => {

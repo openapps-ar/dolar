@@ -43,13 +43,16 @@ export const get_item_now = async (id: Id): Promise<Item> => {
 export const get_source_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<SourceItemDays> => {
   const url = item_days_url(id, from, to);
   const raw = await get_json(url);
-  try {
-    const data = assert<SourceItemDays>(raw);
-    return data;
-  } catch(e) {
-    console.warn(`error parsing item days response for ${url}`, e);
-    throw e;
-  }
+  const array = assert<any[]>(raw);
+  const data = array.map((raw_item, i) => {
+    try {
+      return assert<SourceItemDays[number]>(raw_item);
+    } catch(e) {
+      console.warn(`error parsing item days response for ${id}: ${url}, item #${i}: ${JSON.stringify(raw_item)}`, e);
+      return null;
+    }
+  }).filter(item => item !== null);
+  return data;
 }
 
 export const get_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<ItemDays> => {

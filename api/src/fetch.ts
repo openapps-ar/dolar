@@ -43,8 +43,13 @@ export const get_item_now = async (id: Id): Promise<Item> => {
 export const get_source_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<SourceItemDays> => {
   const url = item_days_url(id, from, to);
   const raw = await get_json(url);
-  const data = assert<SourceItemDays>(raw);
-  return data;
+  try {
+    const data = assert<SourceItemDays>(raw);
+    return data;
+  } catch(e) {
+    console.warn(`error parsing item days response for ${url}`, e);
+    throw e;
+  }
 }
 
 export const get_item_days = async (id: Id, from = default_from(id), to = new Date): Promise<ItemDays> => {

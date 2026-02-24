@@ -49,7 +49,7 @@ export const get_source_item_days = async (id: Id, from = default_from(id), to =
 
   const lines = lines_raw.map((raw_item, i) => {
     try {
-      return assert<SourceItemDays[number]>(raw_item);
+      return assert<Exclude<SourceItemDays[number], SourceItemDays[0]>>(raw_item);
     } catch(e) {
       console.warn(`error parsing item days response for ${id}: ${url}, item #${i}: ${JSON.stringify(raw_item)}`, e);
       return null;
